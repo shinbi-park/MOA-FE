@@ -5,13 +5,12 @@ import styled from "styled-components";
 const EditorWrapper = styled.div`
   margin-top: 40px;
 
-  h2{
+  h2 {
     text-align: left;
     margin-left: 15px;
     margin-bottom: 5px;
   }
 `;
-
 
 const Line = styled.hr`
   width: 95%;
@@ -38,8 +37,8 @@ const Editor = () => {
       [{ header: "1" }, { header: "2" }],
       ["bold", "italic", "underline", "strike"],
       [{ list: "ordered" }, { list: "bullet" }],
-      ["blockquote", "code-block", "link", "image"]
-    ]
+      ["blockquote", "code-block", "link", "image"],
+    ],
   };
 
   return (
