@@ -64,7 +64,7 @@ const TagList = React.memo(({ tags, onRemove }) => (
 
 const TagBox = () => {
   const [input, setInput] = useState("");
-  const [localTags, setLocalTags] = useState(["tag1"]);
+  const [localTags, setLocalTags] = useState(["태그를 입력하세요"]);
 
   const intertTag = useCallback(
     (tag) => {

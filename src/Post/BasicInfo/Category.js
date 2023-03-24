@@ -30,7 +30,7 @@ export const Select = styled.select`
 export default function Category() {
   return (
     <CategoryBlock>
-      <Label for="category"> 카테고리 </Label>
+      <Label htmlFor="category"> 카테고리 </Label>
       <Select name="select-category" id="category">
         <option value="programming">프로그래밍</option>
         <option value="language"> 어학 </option>

@@ -1,22 +1,8 @@
 import React, { useState, useRef } from "react";
 import PostionList from "./PositionList";
 import PostionTemplate from "./PositionTemplate";
-import styled from "styled-components";
-import Category from "../Category";
 
-const Line = styled.hr`
-  width: 95%;
-  margin: 10px 15px;
-  border: 1px solid #ddd;
-`;
-
-const ProjectIntro = styled.h2`
-  text-align: left;
-  margin-left: 15px;
-  margin-bottom: 5px;
-`;
-
-export default function App() {
+export default function Position() {
   const nextId = useRef(2);
 
   const [positions, setPosition] = useState([
@@ -27,11 +13,11 @@ export default function App() {
     }
   ]);
 
-  const onInsert = (pos) => {
+  const onInsert = () => {
     const position = {
       id: nextId.current,
       people: 1,
-      position: pos
+      position: ""
     };
     setPosition((positions) => positions.concat(position));
     nextId.current += 1;
@@ -40,20 +26,32 @@ export default function App() {
   const onRemove = (id) => {
     setPosition((positions) => {
       if (positions.length > 1) {
-        positions.filter((position) => position.id !== id);
+        return positions.filter((position) => position.id !== id);
       }
+      else return positions;
+    });
+  };
+
+  const handlePositionChange = (id, num, value) => {
+    setPosition((positions) => {
+      const index = positions.findIndex((position) => position.id === id);
+      const updatedPositions = [...positions];
+      updatedPositions[index].position = value;
+      updatedPositions[index].people = num;
+      return updatedPositions;
     });
   };
 
   console.log(positions);
   return (
-    <div className="App">
+    <div className="Position">
 
       <PostionTemplate>
         <PostionList
           positions={positions}
           onRemove={onRemove}
           onInsert={onInsert}
+          onPositionChange={handlePositionChange}
         />
       </PostionTemplate>
     </div>
