@@ -1,7 +1,7 @@
 import BasicInfo from "./BasicInfo/BasicInfo";
 import Editor from "./Editor/Editor";
 import styled from "styled-components";
-import WriteActionButton from "./BasicInfo/WriteButton";
+import WriteActionButton from "./WriteButton";
 
 
 const Post = () => {
