@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 
 const Block = styled.div`
-  color: red;
+  color: black;
 `;
 
 const InputText = styled.input`
@@ -29,21 +29,35 @@ const Button = styled.button`
   }
 `;
 
-const PositionListItem = () => {
+const PositionListItem = ({ position, onPositionChange }) => {
   const [num, setNum] = useState(1);
-  const [value, setValue] = useState("");
+  const [positionName, setPositionName] = useState("");
+
   const onChange = useCallback((e) => {
-    setValue(e.target.value);
-  }, []);
+    setPositionName(e.target.value);
+    onPositionChange(position.id, num, e.target.value);
+
+  }, [position.id, num, onPositionChange]);
+  
 
   const addPeople = (event) => {
     event.preventDefault();
-    setNum(num + 1);
+    setNum((prevNum) => {
+      const newNum = prevNum + 1;
+      onPositionChange(position.id, newNum, positionName);
+      return newNum;
+    });
   };
 
   const removePeople = (event) => {
     event.preventDefault();
-    if (num > 1) setNum(num - 1);
+    event.preventDefault();
+    setNum((prevNum) => {
+      const newNum = prevNum - 1;
+      onPositionChange(position.id, newNum, positionName);
+      return newNum;
+    });
+    
   };
 
   return (
@@ -51,7 +65,7 @@ const PositionListItem = () => {
       <Block>
         <InputText
           placeholder="ex. 프론트엔드"
-          value={value}
+          value={positionName}
           onChange={onChange}
         />
         <Button onClick={removePeople}> - </Button> {num}

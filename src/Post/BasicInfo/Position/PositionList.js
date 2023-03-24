@@ -32,9 +32,14 @@ const Button = styled.button`
   }
 `;
 
-const PostionList = ({ positions, onInsert, onRemove }) => {
-  const { id, people, pos } = positions[positions.length - 1];
-  //id === undefined 수정
+const PostionList = ({ positions, onInsert, onRemove,  onPositionChange}) => {
+  const lastPosition = positions[positions.length - 1];
+  const lastId = lastPosition ? lastPosition.id : 0;
+
+  const handlePositionChange = (id, num, value) => {
+    onPositionChange(id, num, value);
+  };
+
   return (
     <PositionBlock className="PositionList">
       {positions.map((position) => (
@@ -43,11 +48,12 @@ const PostionList = ({ positions, onInsert, onRemove }) => {
           key={position.id}
           onRemove={onRemove}
           onInsert={onInsert}
+          onPositionChange={handlePositionChange}
         />
       ))}
       <div>
         <Button onClick={() => onInsert()}> 추가 </Button>
-        <Button onClick={() => onRemove(id)}> 삭제 </Button>
+        <Button onClick={() => onRemove(lastId)}> 삭제 </Button>
       </div>
     </PositionBlock>
   );
