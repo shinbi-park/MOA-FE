@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const PostInfoCurrent = () => {
+  const [data, setData] = useState([]);
+  // useEffect(async() => {
+  //   const response = await axios.get(`http://localhost:8080/recruitment/${recruitmentId}`);
+  // setData(response.data);
+  // },[])
+
   return (
     <div>
       <h1>모집 현황</h1>

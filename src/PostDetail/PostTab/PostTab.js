@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import Notice from "../Notice/Notice";
 import PostInfo from "../PostInfo/PostInfo";
 
 const Tabwrap = styled.div`
@@ -26,7 +27,11 @@ const PostTab = () => {
     },
     {
       tabTitle: <div onClick={() => onClickTab(2)}>공지사항</div>,
-      tabContent: <div>공지사항 내용</div>,
+      tabContent: (
+        <div>
+          <Notice />
+        </div>
+      ),
     },
     {
       tabTitle: <div onClick={() => onClickTab(3)}>관리자</div>,
