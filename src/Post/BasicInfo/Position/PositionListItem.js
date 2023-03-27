@@ -29,33 +29,36 @@ const Button = styled.button`
   }
 `;
 
-const PositionListItem = ({ position, onPositionChange }) => {
+const PositionListItem = ({ position }) => {
   const [num, setNum] = useState(1);
   const [positionName, setPositionName] = useState("");
 
   const onChange = useCallback((e) => {
     setPositionName(e.target.value);
-    onPositionChange(position.id, num, e.target.value);
-
-  }, [position.id, num, onPositionChange]);
+  }, [position.id, num, ]);
   
 
   const addPeople = (event) => {
     event.preventDefault();
     setNum((prevNum) => {
-      const newNum = prevNum + 1;
-      onPositionChange(position.id, newNum, positionName);
-      return newNum;
+      if(prevNum < 8){ // 최대 8명까지
+        const newNum = prevNum + 1;
+        
+        return newNum;
+      }
+      else return 8;
     });
   };
 
   const removePeople = (event) => {
     event.preventDefault();
-    event.preventDefault();
+
     setNum((prevNum) => {
-      const newNum = prevNum - 1;
-      onPositionChange(position.id, newNum, positionName);
-      return newNum;
+      if(prevNum > 1){ //최소 1명
+        const newNum = prevNum - 1;
+        return newNum;
+      }
+      else return 1;
     });
     
   };

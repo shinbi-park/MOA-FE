@@ -27,17 +27,22 @@ export const Select = styled.select`
   background-color: transparent;
 `;
 
-export default function Category() {
+export default function Category({setCategories}) {
+  const handleCategoryChange = (e) => {
+    setCategories(e.target.value); 
+  };
+
   return (
     <CategoryBlock>
       <Label htmlFor="category"> 카테고리 </Label>
-      <Select name="select-category" id="category">
+      <Select name="select-category" id="category" 
+      defaultValue="programming" onChange = {handleCategoryChange}>
         <option value="programming">프로그래밍</option>
         <option value="language"> 어학 </option>
         <option value="job">취업</option>
         <option value="public">고시/공무</option>
         <option value="hobby">자율</option>
-        <option value="etx">기타</option>
+        <option value="etc">기타</option>
       </Select>
     </CategoryBlock>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import profile from "./profile.png";
+import profile from "./profileImg.png";
 
 const Side = styled.div`
   display: flex;
@@ -46,15 +46,16 @@ const deactiveStyle = {
 
 function Sidebar() {
   const menus = [
-    { name: "ÇÁ·ÎÇÊ", path: "/profile" },
-    { name: "ÀÛ¼ºÇÑ ±Û", path: "/mylist" },
-    { name: "°ü½É±Û", path: "/likedlist" },
-    { name: "Á¤º¸¼³Á¤", path: "/setting" },
-    { name: "·Î±×¾Æ¿ô", path: "/logout" }
+    { name: "í”„ë¡œí•„", path: "/mypage/profile" },
+    { name: "ë‚´ í™œë™", path: "/mypage/activity" },
+    { name: "ì‘ì„±í•œ ê¸€", path: "/mypage/mylist" },
+    { name: "ê´€ì‹¬ê¸€", path: "/mypage/likedlist" },
+    { name: "ì •ë³´ì„¤ì •", path: "/mypage/setting" },
+    { name: "íšŒì›íƒˆí‡´", path: "/withdraw" }
   ];
   return (
     <Side>
-      <Profile src={profile} alt="ÇÁ·ÎÇÊ »çÁø"></Profile>
+      <Profile src={profile} alt="í”„ë¡œí•„ ì‚¬ì§„"></Profile>
       <h3>username</h3>
       <Menu>
         {menus.map((menu, index) => {

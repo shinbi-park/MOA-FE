@@ -63,11 +63,11 @@ const SignInForm = () => {
     event.preventDefault();
 
     const logInData = {
-      email,
-      password
+      email: email,
+      password: password
     };
 
-    fetch("/api/signUp", {
+    fetch("/user/login", {
       method: "POST",
       body: JSON.stringify(logInData),
       headers: {

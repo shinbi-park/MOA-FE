@@ -11,7 +11,7 @@ const TagBoxBlock = styled.div`
   }
 `;
 
-const TagForm = styled.form`
+const TagForm = styled.div`
   border-radius: 4px;
   width: 80%;
   overflow: hidden;
@@ -62,7 +62,7 @@ const TagList = React.memo(({ tags, onRemove }) => (
   </TagListBlock>
 ));
 
-const TagBox = () => {
+const TagBox = ({setTags}) => {
   const [input, setInput] = useState("");
   const [localTags, setLocalTags] = useState(["태그를 입력하세요"]);
 
@@ -70,16 +70,19 @@ const TagBox = () => {
     (tag) => {
       if (!tag) return;
       if (localTags.includes(tag)) return;
-      setLocalTags([...localTags, tag]);
+      const newTags = [...localTags, tag];
+      setLocalTags(newTags);
+      setTags(newTags);
     },
-    [localTags]
+    [localTags, setTags]
   );
 
-  const onRemove = useCallback(
-    (tag) => {
-      setLocalTags(localTags.filter((t) => t !== tag));
+  const onRemove = useCallback((tag) => {
+      const newTags = localTags.filter((t) => t !== tag);
+      setLocalTags(newTags);
+      setTags(newTags);
     },
-    [localTags]
+    [localTags, setTags]
   );
 
   const onChange = useCallback((e) => {
@@ -96,17 +99,18 @@ const TagBox = () => {
   );
   return (
     <TagBoxBlock>
-      <h4> 태그 </h4>
-      <TagForm onSubmit={onSubmit}>
-        <input
-          placeholder="태그를 입력하세요!"
-          value={input}
-          onChange={onChange}
-        />
-        <button type="submit"> 추가 </button>
-      </TagForm>
-      <TagList tags={localTags} onRemove={onRemove} />
-    </TagBoxBlock>
+    <h4> 태그 </h4>
+    <TagForm>
+      <input
+        placeholder="태그를 입력하세요!"
+        value={input}
+        onChange={onChange}
+      />
+      <button type="submit" onClick={onSubmit}> 추가 </button>
+    </TagForm>
+    <TagList tags={localTags} onRemove={onRemove} />
+  </TagBoxBlock>
+
   );
 };
 

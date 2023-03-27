@@ -33,15 +33,12 @@ const TitleInput = styled.input`
   display: flex;
 `;
 
-const Editor = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+const Editor = ( {setTitle, setContent} ) => {
 
   const handleContentChange = (value) => {
     setContent(value);
   }
 
-  console.log(title, content);
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }],
@@ -60,7 +57,6 @@ const Editor = () => {
         style={{ height: "300px", marginLeft: "30px", width: "80%" }}
         modules={modules}
         placeholder="내용을 입력해주세요"
-        value = {content}
         onChange={handleContentChange}
       ></ReactQuill>
     </EditorWrapper>
