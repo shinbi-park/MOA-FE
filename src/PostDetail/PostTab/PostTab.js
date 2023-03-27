@@ -4,10 +4,40 @@ import Notice from "../Notice/Notice";
 import PostInfo from "../PostInfo/PostInfo";
 
 const Tabwrap = styled.div`
-  height: 84px;
-  border: 1px solid #000;
   border-left: none;
   border-right: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const TabList = styled.div`
+  width: 25%;
+  line-height: 50px;
+  text-align: center;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  border-right: 1px solid #d9d9d9;
+  border-top: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
+  color: #000;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &.active_tab {
+    border-bottom: none;
+    background-color: #5d5fef;
+    color: #fff;
+  }
+`;
+
+const PostTabContent = styled.div`
+  padding: 0 5%;
 `;
 
 const PostTab = () => {
@@ -46,10 +76,17 @@ const PostTab = () => {
     <div>
       <Tabwrap>
         {tabArr.map((tab, index) => {
-          return <div key={index}>{tab.tabTitle}</div>;
+          return (
+            <TabList
+              key={index}
+              className={activeTabId === index && "active_tab"}
+            >
+              {tab.tabTitle}
+            </TabList>
+          );
         })}
       </Tabwrap>
-      <div>{tabArr[activeTabId].tabContent}</div>
+      <PostTabContent>{tabArr[activeTabId].tabContent}</PostTabContent>
     </div>
   );
 };

@@ -1,31 +1,85 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import Dropdownbutton from "./Dropdownbutton";
 
-const NoticeList = ({ item, isChecked }) => {
+const NoticeListWrap = styled.div`
+  width: 1045px;
+  height: 143px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  margin-top: 32px;
+`;
+
+const NoticeListHeader = styled.div`
+  padding: 10px;
+  padding-left: 2%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const NoticeListDate = styled.span`
+  color: #6c6b6b;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+`;
+
+const NoticeListContent = styled.div`
+  padding: 10px;
+  padding-left: 2%;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+`;
+
+const VotingBtnDiv = styled.div`
+  display: flex;
+  justify-content: end;
+  padding-right: 10px;
+`;
+
+const VotingPositive = styled.button`
+  border: none;
+  background: none;
+  color: #63b730;
+  cursor: pointer;
+  margin-right: 5px;
+`;
+
+const VotingNegative = styled.button`
+  border: none;
+  background: none;
+  color: #ff4242;
+  cursor: pointer;
+`;
+
+const NoticeList = ({ newnotice }) => {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
-  const [btnOpen, setBtnOpen] = useState(false);
-  const [menu, setMenu] = useState([
-    { id: 1, text: "수정" },
-    { id: 2, text: "참여도 수정" },
-    { id: 3, text: "삭제" },
-  ]);
+  const [dropOpen, setDropOpen] = useState(false);
+
   return (
     <div>
-      <div>
-        <div>
-          <span>{date}</span>
-          <button onClick={() => setBtnOpen(!btnOpen)}>=</button>
+      <NoticeListWrap>
+        <NoticeListHeader>
           <div>
-            {btnOpen &&
-              menu.map((item) => (
-                <ul key={item.id}>
-                  <Dropdownbutton item={item} />
-                </ul>
-              ))}
+            <NoticeListDate>{date}</NoticeListDate>
           </div>
-        </div>
-        <div>{item}</div>
-      </div>
+          <div>
+            <button onClick={() => setDropOpen(!dropOpen)}>=</button>
+
+            <Dropdownbutton dropOpen={dropOpen} />
+          </div>
+        </NoticeListHeader>
+        <NoticeListContent>{newnotice.content}</NoticeListContent>
+        {newnotice.check && (
+          <VotingBtnDiv>
+            <VotingPositive>V</VotingPositive>
+            <VotingNegative>X</VotingNegative>
+          </VotingBtnDiv>
+        )}
+      </NoticeListWrap>
     </div>
   );
 };
