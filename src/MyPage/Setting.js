@@ -18,9 +18,15 @@ const Main = styled.div`
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 50px;
   flex-direction: column;
   height: 100%;
+  border: solid black;
+  border-radius: 20px;
+  padding-top: 20px;
+  margin-top: 50px;
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-bottom: 600px;
 `;
 
 const Profile = styled.div`
@@ -41,19 +47,44 @@ const Form = styled.form`
   align-items: center;
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
 `;
 
-const EmailContainer = styled.div`
+const InputContainer = styled.div`
   align-items: left;
   font-weight: bold;
   flex-direction: column;
+  display: flex;
   h4 {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 10px;
   }
 `;
+
+const PwdContainer = styled.div`
+  align-items: left;
+  font-weight: bold;
+  flex-direction: column;
+  display: flex;
+  margin-bottom: 20px;
+  h4 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+`;
+
+const PwdInput = styled.input`
+  align-items: center;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  font-size: 16px;
+  width: 400px;
+`;
+
 
 const Input = styled.input`
   align-items: center;
@@ -138,7 +169,8 @@ function UserEdit() {
         <Avatar src={profile} alt="프로필 사진" />
         <h3>username</h3>
       </Profile>
-      <EmailContainer>
+
+      <InputContainer>
         <h4>E-mail</h4>
         <Input
           type="email"
@@ -147,36 +179,44 @@ function UserEdit() {
           value={user.email}
           onChange={handleChange}
         />
-      </EmailContainer>
+      </InputContainer>
+      
       <Form onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          name="name"
-          placeholder="이름 변경하기"
-          value={user.name}
-          onChange={handleChange}
-        />
-        <Input
-          type="password"
-          name="password"
-          placeholder="현재 비밀번호"
-          value={user.password}
-          onChange={handleChange}
-        />
-        <Input
-          type="password"
-          name="password"
-          placeholder="새 비밀번호"
-          value={user.password}
-          onChange={handleChange}
-        />
-        <Input
-          type="password"
-          name="password"
-          placeholder="새 비밀번호 확인"
-          value={user.password}
-          onChange={handleChange}
-        />
+        <InputContainer>
+          <h4>닉네임 변경</h4>
+          <Input
+            type="text"
+            name="name"
+            placeholder="닉네임 변경하기"
+            value={user.name}
+            onChange={handleChange}
+          />
+        </InputContainer>
+
+        <PwdContainer>
+          <h4>비밀번호 변경</h4>
+          <Input
+            type="password"
+            name="password"
+            placeholder="현재 비밀번호"
+            value={user.password}
+            onChange={handleChange}
+          />
+          <PwdInput
+            type="password"
+            name="password"
+            placeholder="새 비밀번호"
+            value={user.password}
+            onChange={handleChange}
+          />
+          <PwdInput
+            type="password"
+            name="password"
+            placeholder="새 비밀번호 확인"
+            value={user.password}
+            onChange={handleChange}
+          />
+        </PwdContainer>
           <Button type="submit" backgroundColor={"black"}>
             업데이트
           </Button>
