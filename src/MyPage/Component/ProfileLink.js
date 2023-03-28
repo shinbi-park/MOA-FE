@@ -63,17 +63,17 @@ const LinkListBlock = styled.div`
   align-items: column;
 `;
 
-const TagItem = React.memo(({ tag, onRemove }) => (
+const LinkItem = React.memo(({ link, onRemove }) => (
     <ItemContainer>
-    <Link > <a href = { "http://" + tag} target="_blank" rel="noreferrer">{tag}</a></Link>
-    <RemoveButton onClick={() => onRemove(tag)}> x </RemoveButton>
+    <Link > <a href = { "http://" + link} target="_blank" rel="noreferrer">{link}</a></Link>
+    <RemoveButton onClick={() => onRemove(link)}> x </RemoveButton>
     </ItemContainer>
   ));
   
   const LinkList = React.memo(({ links, onRemove }) => (
     <LinkListBlock>
       {links.map((link) => (
-        <TagItem key={link} tag={link} onRemove={onRemove} />
+        <LinkItem key={link} link={link} onRemove={onRemove} />
       ))}
     </LinkListBlock>
   ));
