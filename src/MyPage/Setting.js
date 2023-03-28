@@ -19,14 +19,14 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 100%;
+  height: 680px;
   border: solid black;
   border-radius: 20px;
-  padding-top: 20px;
+  padding-top: 15px;
   margin-top: 50px;
   margin-left: 100px;
   margin-right: 100px;
-  margin-bottom: 600px;
+  margin-bottom: 100px;
 `;
 
 const Profile = styled.div`
