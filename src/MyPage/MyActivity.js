@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import Sidebar from "./Sidebar/Sidebar";
 
@@ -18,6 +18,7 @@ const Container = styled.div`
   text-decoration:
 `;
 
+
 const CurrentProject = styled.div`
   display: flex;
 `;
@@ -31,6 +32,10 @@ const PreviousProject = styled.div`
 `;
 
 const MyActivity = () => {
+    const [currentProject, setCurrentProject] = useState([["현재 참여중인 프로젝트 1"], ["현재 참여중인 프로젝트 2"]]);
+    const [applyProject, setApplyProject] = useState([["지원한 프로젝트 1"], ["지원한 프로젝트 2"]]);
+    const [pastProject, setPastProject] = useState([["완료한 프로젝트 1"], ["완료한 프로젝트 2"]]);
+
     return (
         <Wrapper>
             <Sidebar />

@@ -16,16 +16,7 @@ const Line = styled.hr`
   border: 1px solid #ddd;
 `;
 
-const BasicInfo = ({ setCategories, setMemberFields, setTags }) => {
-
-  const handleFieldsChange = (newFields) => {
-    const newMemberFields = newFields.map((field) => ({
-      field: field.field,
-      total: field.total,
-    }));
-    
-    setMemberFields(newMemberFields);
-  };
+const BasicInfo = ({ setCategories, handleFieldsChange, setTags }) => {
 
     return (
         <>
@@ -33,7 +24,7 @@ const BasicInfo = ({ setCategories, setMemberFields, setTags }) => {
             <Line />
 
             <Category setCategories={setCategories}/>
-            <Postion onFieldsChange={handleFieldsChange}/>
+            <Postion handleFieldsChange={handleFieldsChange}/>
             <TagBox setTags={setTags}/>
 
         </>

@@ -18,15 +18,9 @@ const Post = () => {
     const [content, setContent] = useState("");
 
     const handleFieldsChange = (newFields) => {
-        const newMemberFields = newFields.map((field) => ({
-          field: field.field,
-          total: field.total,
-        }));
-        
-        setMemberFields(newMemberFields);
+        setMemberFields(newFields);
     };
 
-    console.log(memberFields);
     const handleSubmit = (event) => {
         event.preventDefault();
         const postData = {
@@ -36,7 +30,6 @@ const Post = () => {
           categories: categories,
           tags: tags,
         };
-        console.log(postData);
         //데이터 전송
         fetch("/recruitment", {
             method: "POST",
@@ -51,7 +44,7 @@ const Post = () => {
 
             <BasicInfo 
                 setCategories = {setCategories}
-                setMemberFields = {setMemberFields}
+                handleFieldsChange = {handleFieldsChange}
                 setTags = {setTags}
             />
             

@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import PostionList from "./PositionList";
 import PostionTemplate from "./PositionTemplate";
 
-export default function Position({onFieldsChange}) {
+export default function Position({handleFieldsChange}) {
   const nextId = useRef(2);
 
   const [positions, setPosition] = useState([
@@ -13,45 +13,47 @@ export default function Position({onFieldsChange}) {
     }
   ]);
 
-  const onInsert = () => {
+  const onInsert = useCallback(() => {
     const position = {
       id: nextId.current,
       total: 1,
-      field: ""
+      field: "",
     };
     const newPosition = (positions) => positions.concat(position);
     setPosition(newPosition);
-    onFieldsChange(newPosition); 
     nextId.current += 1;
-  };
+  }, []);
 
-  const onRemove = (id) => {
-    setPosition((positions) => {
-      if (positions.length > 1) {
-        const newPosition = positions.filter((position) => position.id !== id);
-        onFieldsChange(newPosition); 
-        return newPosition;
-      }
-      else return positions;
-    });
-  };
+  const onRemove = useCallback(
+    (id) => {
+      setPosition((positions) => {
+        if (positions.length > 1) {
+          const newPosition = positions.filter(
+            (position) => position.id !== id
+          );
+          return newPosition;
+        } else return positions;
+      });
+    },
+    []
+  );
 
-  const handlePositionChange = (id, num, value) => {
-    if (value.trim() === '') return;
-    setPosition((positions) => {
-      const index = positions.findIndex((position) => position.id === id);
-      const updatedPositions = [...positions];
-      updatedPositions[index].field = value;
-      updatedPositions[index].total = num;
-      onFieldsChange(updatedPositions); 
-      return updatedPositions;
-    });
-    
-  };
-
-  console.log(positions);
+  const handlePositionChange = useCallback(
+    (id, num, value) => {
+      if (value.trim() === "") return;
+      setPosition((positions) => {
+        const index = positions.findIndex((position) => position.id === id);
+        const updatedPositions = [...positions];
+        updatedPositions[index].field = value;
+        updatedPositions[index].total = num;
+        handleFieldsChange(updatedPositions);
+        return updatedPositions;
+      });
+    },
+    [handleFieldsChange]
+  );
   
-  
+
   return (
     <div className="Position">
 

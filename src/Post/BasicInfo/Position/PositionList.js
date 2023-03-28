@@ -36,8 +36,8 @@ const PostionList = ({ positions, onInsert, onRemove,  onPositionChange}) => {
   const lastPosition = positions[positions.length - 1];
   const lastId = lastPosition ? lastPosition.id : 0;
 
-  const handlePositionChange = (id, num, value) => {
-    onPositionChange(id, num, value);
+  const handlePositionChange = (id, total, field) => {
+    onPositionChange(id, total, field);
   };
 
   return (
