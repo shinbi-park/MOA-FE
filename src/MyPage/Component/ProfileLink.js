@@ -46,7 +46,7 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-const Tag = styled.div`
+const Link = styled.div`
   font-size: 1rem;
   color: black;
   text-decoration: underline;
@@ -56,7 +56,7 @@ const Tag = styled.div`
   
 `;
 
-const TagListBlock = styled.div`
+const LinkListBlock = styled.div`
   margin-left: 20px;
   margin-bottom: 35px;
   display: flex;
@@ -65,17 +65,17 @@ const TagListBlock = styled.div`
 
 const TagItem = React.memo(({ tag, onRemove }) => (
     <ItemContainer>
-    <Tag > <a href = { "http://" + tag} target="_blank" rel="noreferrer">{tag}</a></Tag>
+    <Link > <a href = { "http://" + tag} target="_blank" rel="noreferrer">{tag}</a></Link>
     <RemoveButton onClick={() => onRemove(tag)}> x </RemoveButton>
     </ItemContainer>
   ));
   
-  const TagList = React.memo(({ tags, onRemove }) => (
-    <TagListBlock>
-      {tags.map((tag) => (
-        <TagItem key={tag} tag={tag} onRemove={onRemove} />
+  const LinkList = React.memo(({ links, onRemove }) => (
+    <LinkListBlock>
+      {links.map((link) => (
+        <TagItem key={link} tag={link} onRemove={onRemove} />
       ))}
-    </TagListBlock>
+    </LinkListBlock>
   ));
 
 const ProfileLink = () => {
@@ -83,21 +83,21 @@ const ProfileLink = () => {
     const [localLink, setLocalLinks] = useState(["LINK"]);
     
     const intertLink = useCallback(
-        (tag) => {
-          if (!tag) return;
-          if (localLink.includes(tag)) return;
+        (link) => {
+          if (!link) return;
+          if (localLink.includes(link)) return;
           if(localLink.length > 2 ) {
               alert('링크는 최대 3개까지만 등록 가능합니다!'); 
               return;
             }
-          setLocalLinks([...localLink, tag]);
+          setLocalLinks([...localLink, link]);
         },
         [localLink]
       );
     
       const onRemove = useCallback(
-        (tag) => {
-            setLocalLinks(localLink.filter((t) => t !== tag));
+        (link) => {
+            setLocalLinks(localLink.filter((l) => l !== link));
         },
         [localLink]
       );
@@ -125,7 +125,7 @@ const ProfileLink = () => {
             <AddButton type="submit" onClick={onSubmit}>추가</AddButton>
         </Container>
 
-        <TagList tags={localLink} onRemove={onRemove} />
+        <LinkList links={localLink} onRemove={onRemove} />
         </Wrapper>
         
     )
