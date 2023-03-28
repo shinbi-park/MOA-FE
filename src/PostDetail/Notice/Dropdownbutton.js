@@ -3,34 +3,67 @@ import styled from "styled-components";
 
 const DropdownDiv = styled.div`
   position: absolute;
-  width: 87px;
-  height: 123px;
+  width: 100px;
+  height: 130px;
   background-color: #efefef;
-  border: 1px solid gray;
+  border: 1px solid #d9d9d9;
   margin: 0 auto;
-  padding: 10px;
   line-height: 2;
+
+  &.simple_active {
+    height: 65px;
+    line-height: 2;
+  }
 `;
 
-const DropDownList = styled.div``;
+const DropDownList = styled.div`
+  text-align: center;
+  cursor: default;
+  :hover {
+    background-color: #ddd;
+  }
+`;
 
-const Dropdownbutton = ({ dropOpen }) => {
-  const [menu, setMenu] = useState([
-    { id: 1, text: "수정" },
-    { id: 2, text: "참여도 수정" },
-    { id: 3, text: "투표마감" },
-    { id: 4, text: "삭제" },
-  ]);
+const Dropdownbutton = ({
+  newnotice,
+  onNoticeDelete,
+  isEditSetting,
+  voteFinishHandler,
+}) => {
+  const [dropOpen, setDropOpen] = useState(false);
 
+  const isEditDeliver = () => {
+    setDropOpen(false);
+    isEditSetting(dropOpen);
+  };
+
+  const VotingToggle = (id) => {
+    setDropOpen(false);
+    voteFinishHandler(id, false);
+  };
   return (
     <div>
-      {dropOpen && (
-        <DropdownDiv>
-          {menu.map((item) => (
-            <div key={item.id}> {item.text}</div>
-          ))}
-        </DropdownDiv>
-      )}
+      <button onClick={() => setDropOpen(!dropOpen)}>=</button>
+      {dropOpen &&
+        (newnotice.check ? (
+          <DropdownDiv>
+            <DropDownList onClick={isEditDeliver}>수정</DropDownList>
+            <DropDownList>참여도 수정</DropDownList>
+            <DropDownList onClick={() => VotingToggle(newnotice.noticeId)}>
+              투표마감
+            </DropDownList>
+            <DropDownList onClick={() => onNoticeDelete(newnotice.noticeId)}>
+              삭제
+            </DropDownList>
+          </DropdownDiv>
+        ) : (
+          <DropdownDiv className="simple_active">
+            <DropDownList onClick={isEditDeliver}>수정</DropDownList>
+            <DropDownList onClick={() => onNoticeDelete(newnotice.noticeId)}>
+              삭제
+            </DropDownList>
+          </DropdownDiv>
+        ))}
     </div>
   );
 };

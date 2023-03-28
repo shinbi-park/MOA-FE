@@ -44,7 +44,7 @@ const PostTitle = () => {
       <PostRecruitwrap>
         <RecruitPart>Team Leader</RecruitPart>{" "}
         <RecruitState>모집 중</RecruitState>
-        <p>해쉬태그 map으로 뿌려주기</p>
+        <p>#서울스터디 #개발스터디 </p>
       </PostRecruitwrap>
     </div>
   );

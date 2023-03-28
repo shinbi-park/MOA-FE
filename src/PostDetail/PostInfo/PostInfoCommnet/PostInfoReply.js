@@ -1,5 +1,21 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import PostReplyItem from "./PostReplyItem";
+
+const ReplyBtnDiv = styled.div`
+  padding-left: 1%;
+`;
+
+const ReplyBtn = styled.button`
+  background-color: #d9d9d9;
+  width: 54px;
+  border: none;
+  border-radius: 10px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+`;
 
 const ReplyForm = styled.form`
   padding-left: 1%;
@@ -40,48 +56,7 @@ const ReplyUl = styled.ul`
   list-style: none;
 `;
 
-const ReplyUserName = styled.li`
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 17px;
-  line-height: 21px;
-  margin-top: 10px;
-`;
-
-const ReplyTime = styled.li`
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 16px;
-  color: #818181;
-`;
-
-const ReplyContent = styled.li`
-  white-space: pre-line;
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 16px;
-  margin: 10px 0;
-  padding-left: 1%;
-`;
-
-const ReplyEditBtnWrap = styled.div`
-  display: flex;
-  justify-content: flex-start;
-`;
-
-const ReplyEditBtn = styled.button`
-  border: none;
-  background-color: #fff;
-  color: #707070;
-  font-size: 12px;
-`;
-
-const PostInfoReply = ({ commentId, replyToggle, curCommentId }) => {
+const PostInfoReply = ({ commentId }) => {
   const [reply, setReply] = useState({
     userName: "user2",
     content: "",
@@ -90,6 +65,7 @@ const PostInfoReply = ({ commentId, replyToggle, curCommentId }) => {
   });
 
   const [newReply, setNewReply] = useState([]);
+  const [replyToggle, setReplyToggle] = useState(false);
 
   const onReplySubmit = (e) => {
     e.preventDefault();
@@ -107,13 +83,28 @@ const PostInfoReply = ({ commentId, replyToggle, curCommentId }) => {
     });
   };
 
+  const onReplyToggle = () => {
+    setReplyToggle(!replyToggle);
+  };
+
   const onDeleteReply = (id) => {
     setNewReply(newReply.filter((it) => it.replyId !== id));
   };
 
+  const onEditReply = (id, newContent) => {
+    setNewReply(
+      newReply.map((item) =>
+        item.replyId === id ? { ...item, content: newContent } : item
+      )
+    );
+  };
+
   return (
     <div>
-      {commentId === curCommentId && replyToggle && (
+      <ReplyBtnDiv>
+        <ReplyBtn onClick={onReplyToggle}>답글</ReplyBtn>
+      </ReplyBtnDiv>
+      {replyToggle && (
         <ReplyForm onSubmit={onReplySubmit}>
           <ReplyInput
             placeholder="답글을 입력해주세요"
@@ -134,15 +125,11 @@ const PostInfoReply = ({ commentId, replyToggle, curCommentId }) => {
       {newReply.map((item) => {
         return (
           <ReplyUl key={item.replyId}>
-            <ReplyUserName>{item.userName}</ReplyUserName>
-            <ReplyTime> {item.created_time}</ReplyTime>
-            <ReplyContent> {item.content}</ReplyContent>
-            <ReplyEditBtnWrap>
-              <ReplyEditBtn>수정</ReplyEditBtn>
-              <ReplyEditBtn onClick={() => onDeleteReply(item.replyId)}>
-                삭제
-              </ReplyEditBtn>
-            </ReplyEditBtnWrap>
+            <PostReplyItem
+              item={item}
+              onDeleteReply={onDeleteReply}
+              onEditReply={onEditReply}
+            />
           </ReplyUl>
         );
       })}

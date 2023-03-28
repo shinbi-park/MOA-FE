@@ -42,6 +42,7 @@ const NoticeAddBtn = styled.button`
 
 const AddNotice = () => {
   const [notice, setNotice] = useState({
+    noticeId: 0,
     content: "",
     check: "",
   });
@@ -52,8 +53,29 @@ const AddNotice = () => {
     e.preventDefault();
     notice.check = isChecked;
     setNewNotice([notice, ...newNotice]);
-    setNotice({ content: "", check: "" });
+    setNotice({ noticeId: notice.noticeId + 1, content: "", check: "" });
     setisChecked(false);
+  };
+
+  const onNoticeDelete = (id) => {
+    setNewNotice(newNotice.filter((item) => item.noticeId !== id));
+  };
+
+  const onEditNotice = (id, newContent) => {
+    setNewNotice(
+      newNotice.map((item) =>
+        item.noticeId === id ? { ...item, content: newContent } : item
+      )
+    );
+  };
+
+  const onVoteFinish = (id, votestate) => {
+    setisChecked(votestate);
+    setNewNotice(
+      newNotice.map((item) =>
+        item.noticeId === id ? { ...item, check: isChecked } : item
+      )
+    );
   };
 
   return (
@@ -85,8 +107,15 @@ const AddNotice = () => {
           </NoticeAddBtnDiv>
         </form>
       </div>
-      {newNotice.map((newnotice, index) => (
-        <NoticeList key={index} newnotice={newnotice} />
+      {newNotice.map((newnotice) => (
+        <div key={newnotice.noticeId}>
+          <NoticeList
+            newnotice={newnotice}
+            onNoticeDelete={onNoticeDelete}
+            onEditNotice={onEditNotice}
+            onVoteFinish={onVoteFinish}
+          />
+        </div>
       ))}
     </div>
   );

@@ -47,10 +47,23 @@ const PartApply = styled.button`
   font-size: 16px;
   background-color: #66b933;
   cursor: pointer;
+  &::after {
+    content: "지원하기";
+  }
+
+  &.applying {
+    background-color: gray;
+    &::after {
+      content: "지원완료";
+    }
+  }
 
   &.applyDone {
     cursor: no-drop;
     background-color: #ff5e5e;
+    &::after {
+      content: "모집완료";
+    }
   }
 `;
 
@@ -61,6 +74,7 @@ const HrLine = styled.hr`
 
 const PostInfoCurrent = () => {
   const [data, setData] = useState([]);
+  const [applyToggle, setApplyToggle] = useState(false);
   // useEffect(async() => {
   //   const response = await axios.get(`http://localhost:8080/recruitment/${recruitmentId}`);
   // setData(response.data);
@@ -72,12 +86,15 @@ const PostInfoCurrent = () => {
       <CurrentPartWrap>
         <PartSection>프론트엔드</PartSection>{" "}
         <PartSectionCount>1/3</PartSectionCount>
-        <PartApply>지원하기</PartApply>
+        <PartApply
+          onClick={() => setApplyToggle(!applyToggle)}
+          className={applyToggle ? "applying" : ""}
+        />
       </CurrentPartWrap>
       <CurrentPartWrap>
         <PartSection>백엔드</PartSection>{" "}
         <PartSectionCount>4/4</PartSectionCount>{" "}
-        <PartApply className="applyDone">모집완료</PartApply>
+        <PartApply className="applyDone" />
       </CurrentPartWrap>
       <HrLine />
     </div>
