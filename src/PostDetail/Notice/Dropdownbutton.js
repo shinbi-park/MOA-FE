@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 const DropdownDiv = styled.div`
@@ -31,6 +31,20 @@ const Dropdownbutton = ({
   voteFinishHandler,
 }) => {
   const [dropOpen, setDropOpen] = useState(false);
+  const dropRef = useRef();
+
+  useEffect(() => {
+    let dropClose = (e) => {
+      if (!dropRef.current.contains(e.target)) {
+        setDropOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", dropClose);
+
+    return () => {
+      document.removeEventListener("mousedown", dropClose);
+    };
+  });
 
   const isEditDeliver = () => {
     setDropOpen(false);
@@ -42,7 +56,7 @@ const Dropdownbutton = ({
     voteFinishHandler(id, false);
   };
   return (
-    <div>
+    <div ref={dropRef}>
       <button onClick={() => setDropOpen(!dropOpen)}>=</button>
       {dropOpen &&
         (newnotice.check ? (

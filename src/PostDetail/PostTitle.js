@@ -33,9 +33,17 @@ const RecruitState = styled.span`
   font-style: normal;
   font-weight: 400;
   font-size: 20px;
+
+  &.recruitDone {
+    color: red;
+  }
+
+  &.projectDone {
+    color: blue;
+  }
 `;
 
-const PostTitle = () => {
+const PostTitle = ({ titleState }) => {
   return (
     <div>
       <PostTitlewrap>
@@ -43,7 +51,14 @@ const PostTitle = () => {
       </PostTitlewrap>
       <PostRecruitwrap>
         <RecruitPart>Team Leader</RecruitPart>{" "}
-        <RecruitState>모집 중</RecruitState>
+        <RecruitState
+          className={
+            (titleState === "모집 완료" && "recruitDone") ||
+            (titleState === "프로젝트 완료" && "projectDone")
+          }
+        >
+          {titleState}
+        </RecruitState>
         <p>#서울스터디 #개발스터디 </p>
       </PostRecruitwrap>
     </div>

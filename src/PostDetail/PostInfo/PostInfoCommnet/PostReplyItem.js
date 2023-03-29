@@ -27,7 +27,6 @@ const ReplyContent = styled.li`
   font-size: 16px;
   line-height: 16px;
   margin: 10px 0;
-  padding-left: 1%;
 `;
 
 const ReplyEditBtn = styled.button`
