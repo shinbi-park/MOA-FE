@@ -24,13 +24,11 @@ export default function Position({handleFieldsChange}) {
     nextId.current += 1;
   }, []);
 
-  const onRemove = useCallback(
-    (id) => {
+  const onRemove = useCallback((id) => {
       setPosition((positions) => {
         if (positions.length > 1) {
           const newPosition = positions.filter(
-            (position) => position.id !== id
-          );
+            (position) => position.id !== id);
           return newPosition;
         } else return positions;
       });
@@ -38,33 +36,28 @@ export default function Position({handleFieldsChange}) {
     []
   );
 
-  const handlePositionChange = useCallback(
-    (id, num, value) => {
-      if (value.trim() === "") return;
-      setPosition((positions) => {
-        const index = positions.findIndex((position) => position.id === id);
-        const updatedPositions = [...positions];
-        updatedPositions[index].field = value;
-        updatedPositions[index].total = num;
-        handleFieldsChange(updatedPositions);
-        return updatedPositions;
-      });
-    },
-    [handleFieldsChange]
-  );
+  const onPositionChange = useCallback((id, num, value) => {
+    if (value.trim() === "") return;
+    setPosition((positions) => {
+      const index = positions.findIndex((position) => position.id === id);
+      const updatedPositions = [...positions];
+      updatedPositions[index].field = value;
+      updatedPositions[index].total = num;
+      handleFieldsChange(updatedPositions);
+      return updatedPositions;
+    });
+  }, [handleFieldsChange]);
+  
   
 
   return (
-    <div className="Position">
-
       <PostionTemplate>
         <PostionList
           positions={positions}
           onRemove={onRemove}
           onInsert={onInsert}
-          onPositionChange={handlePositionChange}
+          onPositionChange={onPositionChange}
         />
       </PostionTemplate>
-    </div>
   );
 }

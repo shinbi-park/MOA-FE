@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useCallback } from "react";
 import BasicInfo from "./BasicInfo/BasicInfo";
 import Editor from "./Editor/Editor";
 import WriteActionButton from "./WriteButton";
@@ -6,30 +6,46 @@ import WriteActionButton from "./WriteButton";
 
 const Post = () => {
     const [categories, setCategories] = useState("programming");
-    const [memberFields, setMemberFields] = useState([
-        {
-          id: 1,
-          total: 1,
-          field: ""
-        }
-      ]);
+    const [memberFields, setMemberFields] = useState([]);
     const [tags, setTags] = useState([]);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
-    const handleFieldsChange = (newFields) => {
-        setMemberFields(newFields);
+    const [postData, setPostData] = useState({});
+
+    const handleCategoriesChange = (event) => {
+      setCategories(event.target.value);
     };
+
+    const handleFieldsChange = useCallback((updatedFields) => {
+      setMemberFields(updatedFields);
+    }, []);
+
+    const handleTagsChange = (tagslist) => {
+      setTags(tagslist);
+    };
+
+    const handleTitleChange = (event) => {
+      setTitle(event.target.value);
+    };
+
+    const handleContentChange = (event) => {
+      setContent(event);
+    };
+
+    console.log("memberFields", memberFields);
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const postData = {
+
+        setPostData({
           title: title,
           content: content,
           memberFields: memberFields,
           categories: categories,
           tags: tags,
-        };
+        })
+
         //데이터 전송
         fetch("/recruitment", {
             method: "POST",
@@ -43,14 +59,14 @@ const Post = () => {
         <form onSubmit={handleSubmit}>
 
             <BasicInfo 
-                setCategories = {setCategories}
+                handleCategoriesChange = {handleCategoriesChange}
                 handleFieldsChange = {handleFieldsChange}
-                setTags = {setTags}
+                handleTagsChange = {handleTagsChange}
             />
             
             <Editor 
-                setTitle={setTitle} 
-                setContent={setContent}
+                handleTitleChange={handleTitleChange} 
+                handleContentChange={handleContentChange}
             />
             <WriteActionButton/>
         </form>

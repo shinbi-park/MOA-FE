@@ -16,16 +16,16 @@ const Line = styled.hr`
   border: 1px solid #ddd;
 `;
 
-const BasicInfo = ({ setCategories, handleFieldsChange, setTags }) => {
+const BasicInfo = ({ handleCategoriesChange, handleFieldsChange, handleTagsChange }) => {
 
     return (
         <>
             <ProjectIntro>프로젝트 기본 정보</ProjectIntro>
             <Line />
 
-            <Category setCategories={setCategories}/>
+            <Category handleCategoriesChange={handleCategoriesChange}/>
             <Postion handleFieldsChange={handleFieldsChange}/>
-            <TagBox setTags={setTags}/>
+            <TagBox handleTagsChange={handleTagsChange}/>
 
         </>
     )

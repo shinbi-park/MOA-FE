@@ -69,7 +69,7 @@ const PositionListItem = ({ position, onPositionChange}) => {
     <>
       <Block>
         <InputText
-          placeholder="ex. 프론트엔드"
+          placeholder="Ex. 프론트엔드"
           value={positionName}
           onChange={onChange}
         />

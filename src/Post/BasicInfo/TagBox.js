@@ -62,7 +62,7 @@ const TagList = React.memo(({ tags, onRemove }) => (
   </TagListBlock>
 ));
 
-const TagBox = ({setTags}) => {
+const TagBox = ({handleTagsChange}) => {
   const [input, setInput] = useState("");
   const [localTags, setLocalTags] = useState(["태그를 입력하세요"]);
 
@@ -72,17 +72,18 @@ const TagBox = ({setTags}) => {
       if (localTags.includes(tag)) return;
       const newTags = [...localTags, tag];
       setLocalTags(newTags);
-      setTags(newTags);
+      handleTagsChange(newTags); // 태그 상태 업데이트
     },
-    [localTags, setTags]
+    [localTags, handleTagsChange]
   );
 
-  const onRemove = useCallback((tag) => {
+  const onRemove = useCallback(
+    (tag) => {
       const newTags = localTags.filter((t) => t !== tag);
       setLocalTags(newTags);
-      setTags(newTags);
+      handleTagsChange(newTags); // 태그 상태 업데이트
     },
-    [localTags, setTags]
+    [localTags, handleTagsChange]
   );
 
   const onChange = useCallback((e) => {
