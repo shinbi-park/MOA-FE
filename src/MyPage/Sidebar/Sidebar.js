@@ -13,9 +13,11 @@ const Side = styled.div`
   align-content: center;
   align-items: center;
   padding: 16px;
+  font-weight: 650;
   h3 {
     display: flex;
     margin: 0px;
+    text-shadow: 0px 1px 2px gray;
   }
 `;
 const Profile = styled.img`
@@ -40,7 +42,7 @@ const activeStyle = {
   textDecoration: "underline"
 };
 const deactiveStyle = {
-  color: "gray",
+  color: "#292929",
   textDecoration: "none"
 };
 
