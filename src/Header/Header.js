@@ -26,7 +26,7 @@ const NavList = styled.ul`
   list-style: none;
   margin: 0;
   margin-right: 10px;
-  font-weight: 600px;
+  font-weight: 600;
 `;
 
 const NavItem = styled.li`

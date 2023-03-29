@@ -71,18 +71,15 @@ const SaveButton = styled.button`
   padding: 8px;
   border: none;
   background-color: ${(props) => props.backgroundColor};
-  color: black;
+  color: #ffffff;
   font-size: 16px;
-  margin-left: 10px;
-  align-items: right;
-  justify-content: flex-end;
 `;
 
 const SaveButtonContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   display: flex;
-  width: 500px;
+  width: 580px;
   margin-top: 30px;
 `;
 
@@ -122,7 +119,7 @@ const Profile = () => {
       </EditorWrapper>
 
         <SaveButtonContainer>
-          <SaveButton type="submit">저장하기</SaveButton>
+        <SaveButton type="submit" backgroundColor={"black"} >저장하기</SaveButton>
         </SaveButtonContainer>
       </Container>
       </Wrapper>
