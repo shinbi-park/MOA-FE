@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   align-items: center;
   flex-direction: column;
   height: 680px;
-  border: solid black;
+  border: solid #A2A2A2;
   border-radius: 20px;
   padding-top: 15px;
   margin-top: 50px;
@@ -61,40 +61,26 @@ const InputContainer = styled.div`
   }
 `;
 
-const PwdContainer = styled.div`
-  align-items: left;
-  font-weight: bold;
-  flex-direction: column;
-  display: flex;
-  margin-bottom: 20px;
-  h4 {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
+const inputStyle = `
+  align-items: center;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 400px;
+  border: 1px solid #A2A2A2;
 `;
 
 const PwdInput = styled.input`
-  align-items: center;
+  ${inputStyle}
   margin-bottom: 5px;
   margin-top: 5px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  font-size: 16px;
-  width: 400px;
 `;
-
 
 const Input = styled.input`
-  align-items: center;
+  ${inputStyle}
   margin-bottom: 16px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  font-size: 16px;
-  width: 400px;
 `;
+
 
 const Button = styled.button`
   width: 100px;
@@ -104,6 +90,7 @@ const Button = styled.button`
   color: #ffffff;
   font-size: 16px;
   margin-left: 10px;
+  margin-top: 30px;
 `;
 
 function UserEdit() {
@@ -193,7 +180,7 @@ function UserEdit() {
           />
         </InputContainer>
 
-        <PwdContainer>
+        <InputContainer>
           <h4>비밀번호 변경</h4>
           <Input
             type="password"
@@ -216,7 +203,7 @@ function UserEdit() {
             value={user.password}
             onChange={handleChange}
           />
-        </PwdContainer>
+        </InputContainer>
           <Button type="submit" backgroundColor={"black"}>
             업데이트
           </Button>
