@@ -26,55 +26,28 @@ const Project = styled.div`
   margin-left: 0.5rem;
   margin-right: 0.2rem;
   font-size: 18px;
-  color: ${(props) => props.color || 'black'};
   border: solid 2px #A2A2A2;
   border-radius: 3px;
   margin-bottom: 20px;
   padding: 10px;
   display: flex;
   flex-direction: row;
-  font-weight: 400px;
   width: 600px;
+  font-weight: 650;
   justify-content: space-between;
   padding-left: 30px;
   align-items: center;
-  font-weight: 650;
+  color: ${(props) => props.color || 'black'};
+  box-shadow: 2px 1px 2px #707070;
+  .Apply{
+    font-size: 16px;
+  }
 `;
 
 const ProjectListBlock = styled.div`
   margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
-  
-`;
-
-const Apply = styled.div`
-  margin-left: 0.5rem;
-  margin-right: 0.2rem;
-  
-  color: 'black';
-  border: solid 2px #A2A2A2;
-  border-radius: 3px;
-  margin-bottom: 20px;
-  padding: 10px;
-  display: flex;
-  flex-direction: row;
-  font-size: 20px;
-  width: 600px;
-  justify-content: space-between;
-  padding-left: 30px;
-  align-items: center;
-  font-size: 16px;
-  font-weight: 650;
-
-  .title{
-    font-size: 18px;
-    font-weight: 650;
-  }
-  .span{
-    justify-content: center;
-    align-Items: 'center'
-  }
 `;
 
 const ButtonContainer = styled.div`
@@ -93,20 +66,24 @@ const Button = styled.button`
   font-weight: 700;
 `;
 
-const ProjectItem = React.memo(({ project, color }) => (
-  <Project color= {color}> {project} <Button> 상세보기 </Button> </Project>
+const ProjectItem = React.memo(({ title, link , color, className }) => (
+  <Project color= {color}> {title} 
+  <Button 
+    style={{color: className==='past' ? color : 'black',
+    borderColor: className === 'past' ? color : 'black'}}> 상세보기 </Button> 
+  </Project>
 ));
 
-const ProjectList = React.memo(({ projects, color }) => (
+const ProjectList = React.memo(({ projects, color, className }) => (
   <ProjectListBlock>
-    {projects.map((project) => (
-      <ProjectItem key={project.title} project={project} color = {color} />
+    {projects.map((project, index) => (
+      <ProjectItem key={index} title={project.title} link={project.link} color = {color} className={className} />
     ))}
   </ProjectListBlock>
 ));
 
 const ApplyItem = React.memo(({ title, position, status }) => (
-  <Apply> 
+  <Project className="Apply"> 
     <span className="title">{title}</span> <span>{position}</span> 
     <span style={{ color: 
     status === '수락' ? 'green' : 
@@ -116,7 +93,7 @@ const ApplyItem = React.memo(({ title, position, status }) => (
   <ButtonContainer>
     <Button style={{visibility: status==='승인 대기중' ? "visible" : "hidden"}}> 지원취소 </Button> <Button> 상세보기 </Button>
     </ButtonContainer> 
-  </Apply>
+  </Project>
 ));
 
 const ApplyList = React.memo(({ projects }) => (
@@ -134,39 +111,56 @@ const ApplyList = React.memo(({ projects }) => (
 
 
 const MyActivity = () => {
-    const [currentProject, setCurrentProject] = useState([["현재 참여중인 프로젝트 1"], ["현재 참여중인 프로젝트 2"]]);
-    const applyProject = 
-        [
-          {
-            title: "지원한 프로젝트 1",
-            position: "프론트엔드",
-            status: "승인 대기중"
-          },
-          {
-            title: "지원한 프로젝트 2",
-            position: "백엔드",
-            status: "거절"
-          },
-          {
-            title: "지원한 프로젝트 3",
-            position: "디자이너",
-            status: "수락"
-          }
-        ]
-    const [pastProject, setPastProject] = useState([["완료한 프로젝트 1"], ["완료한 프로젝트 2"]]);
+  
+  const currentProject = [{
+    title: "현재 참여중인 프로젝트 1",
+    link: "www.link1.com"
+  },
+  {
+    title: "현재 참여중인 프로젝트 2",
+    link: "www.link2.com"
+  },
+
+  ]
+    
+  const applyProject = [
+    {
+      title: "지원한 프로젝트 1",
+      position: "프론트엔드",
+      status: "승인 대기중"
+    },
+    {
+      title: "지원한 프로젝트 2",
+      position: "백엔드",
+      status: "거절"
+    },
+    {
+      title: "지원한 프로젝트 3",
+      position: "디자이너",
+      status: "수락"
+    }]
+
+    const pastProject = [{
+      title: "완료한 프로젝트 1",
+      link: "www.link1.com"
+    },
+    {
+      title: "완료한 프로젝트 2",
+      link: "www.link2.com"
+    },]
 
     return (
         <Wrapper>
             <Sidebar />
             <Container>
               <H3>현재 참여중인 프로젝트</H3>
-              <ProjectList color = '#5d5fef' projects={currentProject}/>
+              <ProjectList color = '#5d5fef' projects={currentProject} className="current"/>
 
               <H3>지원한 프로젝트</H3>
               <ApplyList projects = {applyProject}/>
 
               <H3>완료한 프로젝트</H3>
-              <ProjectList color = '#707070' projects={pastProject}/>
+              <ProjectList color = '#707070' projects={pastProject} className="past"/>
                 
             </Container>
         </Wrapper>
