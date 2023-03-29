@@ -14,9 +14,10 @@ const Label = styled.label`
 `;
 
 export const Select = styled.select`
-  margin-left: 28px;
+  margin-left: 32px;
   display: block;
-  width: 30%;
+  width: 312px;
+  height: 30px;
   padding: 2px 5px;
   font-size: inherit;
   text-align: center;

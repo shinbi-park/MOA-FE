@@ -17,6 +17,7 @@ const TagForm = styled.div`
   overflow: hidden;
   display: flex;
   border: 1px solid;
+  font-size: inherit;
   input,
   button {
     outline: none;
@@ -28,6 +29,8 @@ const TagForm = styled.div`
     padding: 0.5rem;
     flex: 1;
     min-width: 0;
+    height: 20px;
+    font-size: inherit;
   }
 
   button {

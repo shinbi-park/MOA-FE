@@ -17,7 +17,7 @@ const EditorWrapper = styled.div`
 
   border-radius: 4px;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #A2A2A2;
   width: 570px;
   padding-top: 0;
   min-height: 200px;
@@ -51,7 +51,7 @@ const Input = styled.input`
   margin-bottom: 30px;
   padding: 8px;
   border-radius: 4px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #A2A2A2;
   font-size: 16px;
   width: 500px;
 `;
