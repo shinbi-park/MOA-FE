@@ -4,7 +4,7 @@ import NoticeList from "./NoticeList";
 
 const NoticeWrap = styled.div`
   width: 1025px;
-  border: 1px solid #000;
+  border: 2px solid #000;
   border-radius: 6px;
   padding: 10px;
 `;
@@ -34,7 +34,7 @@ const NoticeAddBtnDiv = styled.div`
 const NoticeAddBtn = styled.button`
   margin-top: 14px;
   border-radius: 10px;
-  border: 1px solid #000;
+  border: 2px solid #000;
   background-color: #fff;
   width: 87px;
   height: 28px;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TiStar } from "react-icons/ti";
 import styled from "styled-components";
+import ParticipantRate from "./ParticipantRate";
 
 const RatingStar = styled(TiStar)`
   cursor: pointer;
@@ -37,7 +38,7 @@ const MemberListItem = ({ name }) => {
   return (
     <div>
       <MemberListItemDiv>
-        <span>{name}</span>
+        <div>{name}</div>
         <div>
           {starArray.map((array, index) => (
             <RatingStar
@@ -49,7 +50,10 @@ const MemberListItem = ({ name }) => {
           ))}
         </div>
 
-        <span>현재 참여도: 그래프추가 </span>
+        <div style={{ display: "flex" }}>
+          현재 참여도 <ParticipantRate />
+        </div>
+
         <MemberKickOut>강퇴하기</MemberKickOut>
       </MemberListItemDiv>
     </div>

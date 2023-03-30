@@ -54,9 +54,7 @@ const ApplicantList = () => {
     <ApplicantListDiv>
       <h1>
         지원자 현황
-        <button onClick={() => setToggle(!toggle)}>
-          지원자 확인용 임시버튼
-        </button>
+        <button onClick={() => setToggle(!toggle)}>*</button>
       </h1>
 
       <ApplicantListBox>

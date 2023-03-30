@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Notice from "../Notice/Notice";
 import PostAdmin from "../PostAdmin/PostAdmin";
 import PostInfo from "../PostInfo/PostInfo";
+import Schedule from "../Schedule/Schedule";
 
 const Tabwrap = styled.div`
   border-left: none;
@@ -54,7 +55,11 @@ const PostTab = () => {
     },
     {
       tabTitle: <div onClick={() => onClickTab(1)}>회의시간 조사</div>,
-      tabContent: <div>회의시간 조사 내용</div>,
+      tabContent: (
+        <div>
+          <Schedule />
+        </div>
+      ),
     },
     {
       tabTitle: <div onClick={() => onClickTab(2)}>공지사항</div>,
