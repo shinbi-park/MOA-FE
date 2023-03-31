@@ -8,7 +8,7 @@ const Side = styled.div`
   border-right: 1px solid #e0e0e0;
   background-color: #f5f5f5;
   width: 180px;
-  height: 100%;
+  height: 110vh;
   flex-direction: column;
   align-content: center;
   align-items: center;

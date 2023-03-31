@@ -4,7 +4,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Sidebar from "./Sidebar/Sidebar";
 import ProfileLink from "./Component/ProfileLink"
-import TagBox from "../Post/BasicInfo/TagBox";
+import ProfileTag from "./Component/ProfileTag"
 
 const Wrapper = styled.div`
   height: 92vh;
@@ -14,13 +14,12 @@ const Wrapper = styled.div`
 `;
 
 const EditorWrapper = styled.div`
-
   border-radius: 4px;
   padding: 8px;
   border: 1px solid #A2A2A2;
   width: 570px;
   padding-top: 0;
-  min-height: 200px;
+  min-height: 300px;
   font-size: 30px;
   .ql-container {
     border: none !important;
@@ -34,7 +33,6 @@ const Container = styled.div`
   margin-left: 65px;
   align-items: left;
   flex-direction: column;
-  height: 100%;
   
 `;
 const Label = styled.label`
@@ -54,16 +52,7 @@ const Input = styled.input`
   border: 1px solid #A2A2A2;
   font-size: 16px;
   width: 500px;
-`;
-
-const LinkContainer = styled.div`
-  display: flex;
-`;
-
-const TagContainer = styled.div`
-  display: flex;
-  margin-left: -40px;
-  margin-bottom: 40px;
+  height: 20px;
 `;
 
 const SaveButton = styled.button`
@@ -73,11 +62,12 @@ const SaveButton = styled.button`
   background-color: ${(props) => props.backgroundColor};
   color: #ffffff;
   font-size: 16px;
+  margin-bottom: 40px;
 `;
 
 const SaveButtonContainer = styled.div`
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   display: flex;
   width: 580px;
   margin-top: 30px;
@@ -100,13 +90,9 @@ const Profile = () => {
         <Input placeholder="지하철역을 입력해주세요!" />
 
         <Label>링크</Label>
-        <LinkContainer>
-          <ProfileLink />
-        </LinkContainer>
+        <ProfileLink />
 
-        <TagContainer>
-        <TagBox />
-        </TagContainer>
+        <ProfileTag /> 
 
         <Label>상세 소개</Label>
         <EditorWrapper>

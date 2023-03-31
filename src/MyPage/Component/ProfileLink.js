@@ -1,46 +1,49 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 
-const Input = styled.input`
-  align-items: center;
-  margin-bottom: 15px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #A2A2A2;
-  font-size: 16px;
-  width: 500px;
-
-`;
-
-const AddButton = styled.button`
-  width: 50px;
-  height: 40px;
-  padding: 8px;
-  border: none;
-  background-color: ${(props) => props.backgroundColor};
-  font-weight: bold;
-  color: black;
-  font-size: 16px;
-  margin-left: 10px;
-`;
-
-const RemoveButton = styled.button`
-  border: none;
-  background-Color: white;
-  margin-left: 10px;
-  margin-right: 10px;
-  &:hover{
-    cursor: pointer;
-  }
-`;
-
 const ItemContainer = styled.div`
   display: inline-flex;
+  button{
+    border: none;
+    background-Color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+    &:hover{
+      cursor: pointer;
+    }
+  }
 `;
 
 const Container = styled.div`
   display: flex;
+
+  input{
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #A2A2A2;
+    font-size: 16px;
+    width: 500px;
+    height: 20px;
+  }
+
+  button{
+    width: 50px;
+    height: 40px;
+    padding: 8px;
+    border: none;
+    background-color: ${(props) => props.backgroundColor};
+    font-weight: bold;
+    color: black;
+    font-size: 16px;
+    margin-left: 10px;
+    &:hover{
+      cursor: pointer;
+    }
+  }
 `;
+
 const Wrapper = styled.div`
   display: inline-block;
   flex-direction: column;
@@ -66,7 +69,7 @@ const LinkListBlock = styled.div`
 const LinkItem = React.memo(({ link, onRemove }) => (
     <ItemContainer>
     <Link > <a href = { "http://" + link} target="_blank" rel="noreferrer">{link}</a></Link>
-    <RemoveButton onClick={() => onRemove(link)}> x </RemoveButton>
+    <button onClick={() => onRemove(link)}> x </button>
     </ItemContainer>
   ));
   
@@ -118,11 +121,11 @@ const ProfileLink = () => {
     return(
         <Wrapper>
         <Container >
-            <Input type="text"
+            <input type="text"
                 placeholder="링크를 추가하세요!"
                 value={input}
                 onChange={onChange}/>
-            <AddButton type="submit" onClick={onSubmit}>추가</AddButton>
+            <button type="submit" onClick={onSubmit}>추가</button>
         </Container>
 
         <LinkList links={localLink} onRemove={onRemove} />
