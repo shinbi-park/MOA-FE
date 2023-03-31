@@ -9,10 +9,6 @@ const Wrapper = styled.div`
   flex-direction: row;
 `;
 
-const H3 = styled.h3`
-  text-shadow: 0px 0px 10px #5d5fef;
-`;
-
 const Container = styled.div`
   display: "flex";
   flex: 2;
@@ -20,6 +16,9 @@ const Container = styled.div`
   margin-left: 65px;
   font-size: 17px;
   text-decoration: none;
+  h3{
+    text-shadow: 0px 0px 10px #5d5fef;
+  }
 `;
 
 const Project = styled.div`
@@ -65,6 +64,20 @@ const Button = styled.button`
   border-radius: 10px;
   font-weight: 700;
 `;
+
+const EmptyProject = styled.div`
+  display: flex;
+  width: 850px;
+  height: 150px;
+  background: #E8E8E8;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
 
 const ProjectItem = React.memo(({ title, link , color, className }) => (
   <Project color= {color}> {title} 
@@ -139,7 +152,8 @@ const MyActivity = () => {
       position: "디자이너",
       status: "수락"
     }]
-
+    const pastProject = [{}];
+    /*
     const pastProject = [{
       title: "완료한 프로젝트 1",
       link: "www.link1.com"
@@ -148,19 +162,34 @@ const MyActivity = () => {
       title: "완료한 프로젝트 2",
       link: "www.link2.com"
     },]
-
+*/
     return (
         <Wrapper>
             <Sidebar />
             <Container>
-              <H3>현재 참여중인 프로젝트</H3>
-              <ProjectList color = '#5d5fef' projects={currentProject} className="current"/>
+              <h3>현재 참여중인 프로젝트</h3>
+              {
+                currentProject.length > 1 ?
+                <ProjectList color = '#5d5fef' projects={currentProject} className="current"/>:
+                <EmptyProject> 현재 참여중인 프로젝트가 없습니다 </EmptyProject>
+              }
+             
 
-              <H3>지원한 프로젝트</H3>
-              <ApplyList projects = {applyProject}/>
+              <h3>지원한 프로젝트</h3>
+              {
+                applyProject.length > 1 ? 
+                <ApplyList projects = {applyProject}/> : 
+                <EmptyProject> 지원한 프로젝트가 없습니다 </EmptyProject>
+              }
+              
 
-              <H3>완료한 프로젝트</H3>
-              <ProjectList color = '#707070' projects={pastProject} className="past"/>
+              <h3>완료한 프로젝트</h3>
+              {
+                pastProject.length > 1 ? 
+                <ProjectList color = '#707070' projects={pastProject} className="past"/> :
+                 <EmptyProject> 완료한 프로젝트가 없습니다 </EmptyProject>
+              }
+              
                 
             </Container>
         </Wrapper>
