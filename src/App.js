@@ -15,7 +15,7 @@ function App() {
     <Header />
     <Routes> 
       <Route path="/post" element={<Post />} />
-      <Route path="/mypage/" element={<MyPage />} />
+      <Route path="/mypage/" element={<Profile />} />
       <Route path="/mypage/profile" element={<Profile />} />
       <Route path="/mypage/activity" element={<MyActivity />} />
       <Route path="/mypage/setting" element={<Setting />} />
