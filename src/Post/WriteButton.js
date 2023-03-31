@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const WriteButtonBlock = styled.div`
+  width: 500px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
