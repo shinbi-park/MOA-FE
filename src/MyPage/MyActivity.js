@@ -67,7 +67,7 @@ const Button = styled.button`
 
 const EmptyProject = styled.div`
   display: flex;
-  width: 850px;
+  width: 650px;
   height: 150px;
   background: #E8E8E8;
   justify-content: center;
