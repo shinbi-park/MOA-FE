@@ -9,6 +9,7 @@ import MyPage from './MyPage/MyPage';
 import Setting from './MyPage/Setting';
 import MyActivity from './MyPage/MyActivity';
 import InfoDeatil from './PostDetail/InfoDetail';
+import MyPostList from './MyPage/MyPostList';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <Route path="/login" element={<SignInForm />} />
       <Route path="/register" element={<SignupForm />} />
       <Route path="/applicantDetail" element={<InfoDeatil />} />
+      <Route path="/mypage/mylist" element={<MyPostList />} />
       
     </Routes>
     </>
