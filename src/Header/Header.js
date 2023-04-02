@@ -6,18 +6,29 @@ import SignupForm from "../LogIn/SignupForm";
 import SignInForm from "../LogIn/SignInForm";
 
 const Nav = styled.nav`
-  background-color: #5d5fef;
-  color: #fff;
+  background-color: white;
+  color: black;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  height: 35px;
+  height: 40px;
 `;
 
 const Logo = styled.h1`
   margin: 0px;
-  margin-left: 25px;
+  margin-left: 50px;
+  font-size: 30px;
+  color: #5d5fef;
+  a {
+    text-decoration: none;
+    border-bottom: none;
+    &.visited, &:visited {
+      text-decoration: none;
+      border-bottom: none;
+      color: #5d5fef;
+    }
+  }
 `;
 
 const NavList = styled.ul`
@@ -26,7 +37,8 @@ const NavList = styled.ul`
   list-style: none;
   margin: 0;
   margin-right: 10px;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 17px;
 `;
 
 const NavItem = styled.li`
@@ -50,9 +62,10 @@ const Header = () => {
   return (
     <header>
       <Nav>
-        <Logo>MO:A</Logo>
+      
+        <Logo><Link to="/">MO:A</Link></Logo>
+      
         <NavList>
-          <NavItem><Link to="/">Home</Link></NavItem>
           <NavItem><Link to="/post">새 글쓰기</Link></NavItem>
           <NavItem><Link to="/mypage">마이페이지</Link></NavItem>
           <NavItem><Link to="/signout">로그아웃</Link></NavItem>
