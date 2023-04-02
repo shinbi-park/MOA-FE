@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import { titleContext } from "./PostDetail";
 
 const PostTitlewrap = styled.div`
   margin-top: 34px; ;
@@ -43,7 +44,8 @@ const RecruitState = styled.span`
   }
 `;
 
-const PostTitle = ({ titleState }) => {
+const PostTitle = () => {
+  const { titleState } = useContext(titleContext);
   return (
     <div>
       <PostTitlewrap>

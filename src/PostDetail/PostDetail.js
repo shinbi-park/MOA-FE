@@ -9,13 +9,14 @@ const PostDetailDiv = styled.div`
 `;
 
 export const titleContext = createContext();
+
 const PostDetail = () => {
   const [titleState, setTitleState] = useState("모집 중");
 
   return (
     <titleContext.Provider value={{ titleState, setTitleState }}>
       <PostDetailDiv>
-        <PostTitle titleState={titleState} />
+        <PostTitle />
         <PostTab />
       </PostDetailDiv>
     </titleContext.Provider>
