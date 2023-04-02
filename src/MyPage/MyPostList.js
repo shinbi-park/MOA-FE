@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Sidebar from "./Sidebar/Sidebar";
+import PostComponent from "../component/PostComponent";
 
 const Wrapper = styled.div`
   height: 92vh;
@@ -12,45 +13,29 @@ const Wrapper = styled.div`
 const Content = styled.div`
   flex: 2;
   margin: 20px;
-  padding: 20px;
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-`;
-const Th = styled.th`
-  padding: 8px;
-  text-align: center;
-  border: 1px solid #ddd;
-  background-color: #E2E3FF;
-  &:first-child {
-    width: 70%;
-  }
-  &:nth-child(2) {
-    width: 30%;
+  h3{
+    margin-left: 30px;
+    font-size:23px;
   }
 `;
 
-const Td = styled.td`
-  padding: 8px;
-  padding-left:20px;
-  text-align: left;
-  border: 1px solid #ddd;
-  &:first-child {
-    width: 70%;
-  }
-  &:nth-child(2) {
-    width: 30%;
-    text-align: center;
-  }
+const EmptyPost = styled.div`
+  display: flex;
+  width: 650px;
+  height: 300px;
+  background: #E8E8E8;
+  border-radius: 4px;
+  justify-content: center;
+  align-items: center;
+  margin-left: 30px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 550;
 `;
 
-
-const Link = styled.a`
-  text-decoration: none;
-  color: #0077cc;
+const ComponentWrapper = styled.div`
+  margin-left: 50px;
 `;
 
 const MyPostList = () => {
@@ -76,25 +61,13 @@ const MyPostList = () => {
     <Wrapper>
       <Sidebar />
       <Content>
-        <h3>내가 작성한 글</h3>
-        <Table>
-          <thead>
-            <tr>
-              <Th>제목</Th>
-              <Th>작성일</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.map((post) => (
-              <tr key={post.id}>
-                <Td>
-                  <Link href={`/post/${post.id}`}>{post.title}</Link>
-                </Td>
-                <Td>{post.date}</Td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <h3>내 작성글</h3>
+        {posts.length < 1 ? <EmptyPost>관심글을 등록해보세요!</EmptyPost> 
+          : <ComponentWrapper>
+              <PostComponent/>
+            </ComponentWrapper>
+        }
+        
       </Content>
     </Wrapper>
   );
