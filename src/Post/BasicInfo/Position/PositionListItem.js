@@ -7,6 +7,7 @@ const Block = styled.div`
 
 const InputText = styled.input`
   margin-left: 5px;
+  margin-bottom: 10px;
   padding: 2px 5px;
   font-size: inherit;
   text-align: center;
@@ -19,13 +20,15 @@ const InputText = styled.input`
   display: inline-flex;
   align-items: center;
   background-color: transparent;
+  box-shadow: 2px 1px 5px #BDBDBD;
 `;
 const Button = styled.button`
   margin: 10px;
   border: none;
   display: inline;
+  text-align: center;
   & + & {
-    margin: 10px;
+    margin-left: 15px;
   }
 `;
 
@@ -69,7 +72,7 @@ const PositionListItem = ({ position, onPositionChange}) => {
     <>
       <Block>
         <InputText
-          placeholder="Ex. 프론트엔드"
+          placeholder="예시) 프론트엔드"
           value={positionName}
           onChange={onChange}
         />

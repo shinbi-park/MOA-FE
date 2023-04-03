@@ -10,6 +10,7 @@ import Setting from './MyPage/Setting';
 import MyActivity from './MyPage/MyActivity';
 import InfoDeatil from './PostDetail/InfoDetail';
 import MyPostList from './MyPage/MyPostList';
+import Likedlist from './MyPage/Likedlist';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
       <Route path="/register" element={<SignupForm />} />
       <Route path="/applicantDetail" element={<InfoDeatil />} />
       <Route path="/mypage/mylist" element={<MyPostList />} />
+      <Route path="/mypage/likedlist" element={<Likedlist />} />
       
     </Routes>
     </>

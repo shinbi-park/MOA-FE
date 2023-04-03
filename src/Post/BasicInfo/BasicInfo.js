@@ -11,9 +11,10 @@ const ProjectIntro = styled.h2`
 `;
 
 const Line = styled.hr`
-  width: 95%;
-  margin: 16px 15px;
-  border: 1px solid #ddd;
+  width: 750px;
+  margin: 10px 15px 30px;
+  border: 1px solid #5d5fef;
+  box-shadow: 2px 1px 2px #BDBDBD;
 `;
 
 const BasicInfo = ({ handleCategoriesChange, handleFieldsChange, handleTagsChange }) => {

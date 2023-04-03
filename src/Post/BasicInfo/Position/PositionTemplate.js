@@ -5,6 +5,7 @@ const Wrapper = styled.div`
   align-content: left;
   margin-top: 7px;
   margin-left: 40px;
+  margin-bottom: 20px;
 `;
 
 const Label = styled.label`
@@ -12,6 +13,7 @@ const Label = styled.label`
   text-align: left;
   margin-top: 10px;
   font-weight: bold;
+  font-size: 19px;
 `;
 
 const PostionTemplate = ({ children }) => {

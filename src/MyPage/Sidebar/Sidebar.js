@@ -1,23 +1,24 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import profile from "./profileImg.png";
+import profile from "../../component/profileImg.png";
 
 const Side = styled.div`
   display: flex;
-  border-right: 1px solid #e0e0e0;
-  background-color: #f5f5f5;
-  width: 180px;
+  border-right: 1.5px solid #e0e0e0;
+  box-shadow: 2.5px 0 5px 0 rgba(0, 0, 0, 0.1);
+  background-color: white;
+  width: 220px;
   height: 110vh;
   flex-direction: column;
   align-content: center;
   align-items: center;
   padding: 16px;
   font-weight: 650;
+  font-size: 19px;
   h3 {
     display: flex;
     margin: 0px;
-    text-shadow: 0px 1px 2px gray;
   }
 `;
 const Profile = styled.img`
@@ -34,6 +35,10 @@ const Menu = styled.div`
   .active {
     color: black;
     text-decoration: underline;
+  }
+  p{
+    margin-bottom: 18px;
+    margin-top: 18px;
   }
 `;
 

@@ -9,15 +9,21 @@ const Wrapper = styled.div`
   flex-direction: row;
 `;
 
+const SidebarContainer = styled.div`
+  flex: 1;
+`;
+
 const Container = styled.div`
   display: "flex";
+  justify-content: center;
   flex: 2;
-  margin-top: 50px;
-  margin-left: 65px;
+  margin-top: 23px;
   font-size: 17px;
   text-decoration: none;
   h3{
-    text-shadow: 0px 0px 10px #5d5fef;
+    display: inline-block;
+    font-size: 22px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -37,7 +43,7 @@ const Project = styled.div`
   padding-left: 30px;
   align-items: center;
   color: ${(props) => props.color || 'black'};
-  box-shadow: 2px 1px 2px #707070;
+  box-shadow: 2px 1px 2px #BDBDBD;
   .Apply{
     font-size: 16px;
   }
@@ -76,6 +82,7 @@ const EmptyProject = styled.div`
   margin-bottom: 20px;
   font-size: 20px;
   font-weight: bold;
+  box-shadow: 2px 1px 2px #BDBDBD;
 `;
 
 
@@ -165,7 +172,9 @@ const MyActivity = () => {
 */
     return (
         <Wrapper>
+          <SidebarContainer>
             <Sidebar />
+          </SidebarContainer>
             <Container>
               <h3>현재 참여중인 프로젝트</h3>
               {

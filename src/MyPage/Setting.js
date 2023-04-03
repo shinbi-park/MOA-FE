@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import profile from "./Sidebar/profileImg.png";
+import profile from "../component/profileImg.png";
+import { AiOutlineEdit } from "react-icons/ai";
 import Sidebar from "./Sidebar/Sidebar";
 
 const Center = styled.div`
@@ -20,25 +21,32 @@ const Wrapper = styled.div`
   align-items: center;
   flex-direction: column;
   height: 680px;
-  border: solid #A2A2A2;
+  border: 0.5px solid #A2A2A2;
   padding: 20px;
   border-radius: 20px;
   padding-top: 15px;
-  margin-top: 50px;
+  margin-top: 40px;
   margin-left: 100px;
   margin-right: 100px;
   margin-bottom: 100px;
+  box-shadow: 1px 1px 5px 1px #C0C0C0;
 `;
 
 const Profile = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: center;
   margin-right: 32px;
   text-decoration: underline;
+  
+`;
+
+const EditIcon = styled(AiOutlineEdit)`
+  flex: 0 0 auto;
 `;
 
 const Avatar = styled.img`
+  margin-top: 15px;
+  display: flex;
   width: 120px;
   height: 120px;
   border-radius: 50%;
@@ -82,41 +90,98 @@ const Input = styled.input`
   margin-bottom: 16px;
 `;
 
+const EmailInput = styled.input`
+  align-items: center;
+  padding: 8px;
+  font-size: 16px;
+  width: 400px;
+  border: none;
+  background-color: #D1D1D1;
+  margin-bottom: 5px;
+  pointer-events: none;
+`;
 
-const Button = styled.button`
+
+const SaveButton = styled.button`
   width: 100px;
   padding: 8px;
   border: none;
   background-color: ${(props) => props.backgroundColor};
   color: #ffffff;
   font-size: 16px;
-  margin-left: 10px;
+  font-weight: 600;
+  margin-bottom: 40px;
   margin-top: 30px;
+  &:hover{
+      cursor: pointer;
+    }
 `;
 
 function UserEdit() {
   const [user, setUser] = useState({
-    email: "",
-    name: "",
+    email: "example@gmail.com",
+    name: "username",
+    nickname: "nickname",
     password: ""
   });
+  const [nicknameInput, setNicknameInput] = useState(user.nickname);
+  const [usernameInput, setUsernameInput] = useState(user.name);
+  const [isEditing, setIsEditing] = useState(false);
 
   const [currentPwd, setCurrentPwd] = useState("");
   const [newPwd, setNewPwd] = useState("");
   const [newPwdConfirm, setPwdConfirm] = useState("");
   const [newUsername, setNewUsername] = useState("");
   const [error, setError] = useState("");
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+/*
+  const handleUsernameChange = (event) => {
+    const { username, value } = event.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [name]: value
+      [username]: value
+    }));
+  };
+*/
+const handleEditClick = () => {
+  setIsEditing(true);
+};
+
+  const handleNicknameChange = (event) => {
+    setNicknameInput(event.target.value);
+  };
+
+  const handleUsernameChange = (event) => {
+    setUsernameInput(event.target.value);
+  };
+
+  const handlePwdChange = (event) => {
+    const { nickname, value } = event.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [nickname]: value
+    }));
+  };
+
+  const handleNewPwdChange = (event) => {
+    const { nickname, value } = event.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [nickname]: value
+    }));
+  };
+
+  const handleNewPwdConfirmChange = (event) => {
+    const { nickname, value } = event.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [nickname]: value
     }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if(nicknameInput.trim() !== '' && nicknameInput !== user.nickname)
+      setUser({ ...user, nickname: nicknameInput });
 
     //새 비밀번호와 비밀번호 확인이 다르면 리턴
     if (newPwd !== newPwdConfirm) {
@@ -153,19 +218,26 @@ function UserEdit() {
           <Sidebar />
       <Main> 
     <Wrapper>
+    <Avatar src={profile} alt="프로필 사진" /> <EditIcon/>
       <Profile>
-        <Avatar src={profile} alt="프로필 사진" />
-        <h3>username</h3>
+        {isEditing ? (
+  
+          <input type="text" value={usernameInput} onChange={handleUsernameChange} />
+
+      ) : (
+        <h3 onClick={handleEditClick}>
+          {usernameInput} <EditIcon onClick={handleEditClick}/>
+        </h3>
+      )}
       </Profile>
 
       <InputContainer>
         <h4>E-mail</h4>
-        <Input
+        <EmailInput
           type="email"
           name="email"
           placeholder="이메일"
           value={user.email}
-          onChange={handleChange}
         />
       </InputContainer>
       
@@ -176,8 +248,8 @@ function UserEdit() {
             type="text"
             name="name"
             placeholder="닉네임 변경하기"
-            value={user.name}
-            onChange={handleChange}
+            value={nicknameInput}
+            onChange={handleNicknameChange}
           />
         </InputContainer>
 
@@ -185,29 +257,26 @@ function UserEdit() {
           <h4>비밀번호 변경</h4>
           <Input
             type="password"
-            name="password"
+            name="Currentpassword"
             placeholder="현재 비밀번호"
-            value={user.password}
-            onChange={handleChange}
+            onChange={handlePwdChange}
           />
           <PwdInput
             type="password"
-            name="password"
+            name="Newpassword"
             placeholder="새 비밀번호"
-            value={user.password}
-            onChange={handleChange}
+            onChange={handleNewPwdChange}
           />
           <PwdInput
             type="password"
-            name="password"
+            name="NewpasswordConfirm"
             placeholder="새 비밀번호 확인"
-            value={user.password}
-            onChange={handleChange}
+            onChange={handleNewPwdConfirmChange}
           />
         </InputContainer>
-          <Button type="submit" backgroundColor={"black"}>
-            업데이트
-          </Button>
+          <SaveButton type="submit" backgroundColor={"black"}>
+            저장하기
+          </SaveButton>
       </Form>
     </Wrapper>
     </Main>

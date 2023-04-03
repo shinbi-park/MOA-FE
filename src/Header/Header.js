@@ -52,6 +52,10 @@ const NavItem = styled.li`
     color: inherit;
     text-decoration: none;
   }
+
+  &:hover{
+    border-bottom: 2px solid #5d5fef;
+  }
 `;
 
 const Header = () => {
@@ -60,11 +64,9 @@ const Header = () => {
   const [userLogIn, setUserLogIn] = useState('');
 
   return (
-    <header>
+    <>
       <Nav>
-      
         <Logo><Link to="/">MO:A</Link></Logo>
-      
         <NavList>
           <NavItem><Link to="/post">새 글쓰기</Link></NavItem>
           <NavItem><Link to="/mypage">마이페이지</Link></NavItem>
@@ -86,7 +88,7 @@ const Header = () => {
           <SignInForm />
         </Modal>
       )}
-    </header>
+    </>
   );
 };
 

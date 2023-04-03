@@ -2,22 +2,24 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 
 const TagBoxBlock = styled.div`
-  width: 60%;
   margin-left: 40px;
   h4 {
     text-align: left;
     margin-top: 0;
     margin-bottom: 0.5rem;
+    font-size: 19px;
   }
+  
 `;
 
 const TagForm = styled.div`
   border-radius: 4px;
-  width: 80%;
   overflow: hidden;
   display: flex;
   border: 1px solid;
   font-size: inherit;
+  width: 550px;
+  box-shadow: 2px 1px 5px #BDBDBD;
   input,
   button {
     outline: none;
@@ -28,7 +30,7 @@ const TagForm = styled.div`
   input {
     padding: 0.5rem;
     flex: 1;
-    min-width: 0;
+    
     height: 20px;
     font-size: inherit;
   }

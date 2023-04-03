@@ -15,16 +15,17 @@ const EditorWrapper = styled.div`
 
 
 const Line = styled.hr`
-  width: 95%;
-  margin: 16px 15px;
-  border: 1px solid #ddd;
+  width: 750px;
+  margin: 10px 15px 30px;
+  border: 1px solid #5d5fef;
+  box-shadow: 2px 1px 2px #BDBDBD;
 `;
 
 const TitleInput = styled.input`
   font-size: 1rem;
   border: 1px solid #495057;
   border-radius: 3px;
-  width: 79%;
+  width: 700px;
   height: 40px;
   padding-left: 5px;
   margin-bottom: 1rem;
@@ -50,7 +51,7 @@ const Editor = ( {handleTitleChange, handleContentChange} ) => {
       <Line />
       <TitleInput onChange={handleTitleChange} placeholder="제목을 입력해주세요" />
       <ReactQuill
-        style={{ height: "300px", marginLeft: "30px", width: "80%" }}
+        style={{ height: "300px", width:"710px", marginLeft: "30px" }}
         onChange={handleContentChange}
         modules={modules}
         placeholder="내용을 입력해주세요"

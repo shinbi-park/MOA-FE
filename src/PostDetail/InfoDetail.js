@@ -15,6 +15,7 @@ const Table = styled.table`
   height: 40px;
   font-weight: 550;
   margin-bottom: 20px;
+  box-shadow: 2px 1px 5px #BDBDBD;
   
   td {
     text-align: center;

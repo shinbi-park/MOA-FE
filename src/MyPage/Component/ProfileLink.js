@@ -22,10 +22,11 @@ const Container = styled.div`
     margin-bottom: 15px;
     padding: 8px;
     border-radius: 4px;
-    border: 1px solid #A2A2A2;
+    border: 1px solid #707070;
     font-size: 16px;
     width: 500px;
-    height: 20px;
+    height: 25px;
+    box-shadow: 2px 1px 5px #BDBDBD;
   }
 
   button{
@@ -38,6 +39,7 @@ const Container = styled.div`
     color: black;
     font-size: 16px;
     margin-left: 10px;
+    box-shadow: 2px 1px 5px #BDBDBD;
     &:hover{
       cursor: pointer;
     }
@@ -53,6 +55,7 @@ const Link = styled.div`
   font-size: 1rem;
   color: black;
   text-decoration: underline;
+  font-size: 17px;
   &+&{
     margin-left: 20px;
   }
@@ -61,7 +64,7 @@ const Link = styled.div`
 
 const LinkListBlock = styled.div`
   margin-left: 20px;
-  margin-bottom: 35px;
+  margin-bottom: 20px;
   display: flex;
   align-items: column;
 `;

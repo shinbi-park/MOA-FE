@@ -4,7 +4,7 @@ import profileImg from "./profileImg.png";
 import { AiOutlineComment, AiFillHeart } from "react-icons/ai";
 
 const Wrapper = styled.div`
-  height: 330px;
+  height: 350px;
   width: 300px;
   display: flex;
   flex-direction: column;
@@ -164,7 +164,7 @@ const PostComponent = () => {
                 
                 <h3>{posts.title}</h3>
                 <TagListBlock>
-                    {posts.tags.map(tag => <Tag>#{tag}</Tag>)}
+                    {posts.tags.map(tag => <Tag key={tag}>#{tag}</Tag>)}
                 </TagListBlock>
                 
                 <Line/>

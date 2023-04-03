@@ -1,7 +1,14 @@
 import React, { useState,useCallback } from "react";
+import styled from "styled-components";
 import BasicInfo from "./BasicInfo/BasicInfo";
 import Editor from "./Editor/Editor";
 import WriteActionButton from "./WriteButton";
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 2rem;  
+`;
 
 
 const Post = () => {
@@ -56,6 +63,7 @@ const Post = () => {
           })
       };
     return(
+      <Wrapper>
         <form onSubmit={handleSubmit}>
 
             <BasicInfo 
@@ -70,6 +78,7 @@ const Post = () => {
             />
             <WriteActionButton/>
         </form>
+        </Wrapper>
     )
 }
 

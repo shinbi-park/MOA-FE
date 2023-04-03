@@ -4,13 +4,16 @@ import styled from "styled-components";
 const CategoryBlock = styled.div`
   text-align: left;
   display: flex;
-  margin-left: 40px;
+  margin-left: 45px;
   font-weight: bold;
+  margin-bottom: 20px;
 `;
 
 const Label = styled.label`
   display: block;
+  align-items: center;
   margin-top: 3px;
+  font-size: 19px;
 `;
 
 export const Select = styled.select`
@@ -26,6 +29,7 @@ export const Select = styled.select`
   border-radius: 4px;
   color: inherit;
   background-color: transparent;
+  box-shadow: 2px 1px 5px #BDBDBD;
 `;
 
 export default function Category({handleCategoriesChange}) {

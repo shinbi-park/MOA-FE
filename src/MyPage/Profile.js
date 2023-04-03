@@ -13,14 +13,19 @@ const Wrapper = styled.div`
   flex-direction: row;
 `;
 
+const SidebarContainer = styled.div`
+  flex: 1;
+`;
+
 const EditorWrapper = styled.div`
   border-radius: 4px;
   padding: 8px;
-  border: 1px solid #A2A2A2;
+  border: 1px solid #707070;
   width: 570px;
   padding-top: 0;
   min-height: 300px;
   font-size: 30px;
+  box-shadow: 2px 1px 5px #BDBDBD;
   .ql-container {
     border: none !important;
   }
@@ -29,30 +34,25 @@ const EditorWrapper = styled.div`
 const Container = styled.div`
   display: flex;
   flex: 2;
-  margin-top: 50px;
-  margin-left: 65px;
+  margin-top: 23px;
   align-items: left;
   flex-direction: column;
-  
-`;
-const Label = styled.label`
-  font-weight: bold;
-  font-size: 16px;
-  margin-right: 15px;
-  align-items: left;
-  display: block;
-  margin-bottom: 10px;
+  h3{
+    margin-bottom: 20px;
+    font-size: 22px;
+  }  
 `;
 
 const Input = styled.input`
   align-items: center;
-  margin-bottom: 30px;
+  box-shadow: 2px 1px 5px #BDBDBD;
+  margin-bottom: 20px;
   padding: 8px;
   border-radius: 4px;
-  border: 1px solid #A2A2A2;
+  border: 1px solid #707070;
   font-size: 16px;
   width: 500px;
-  height: 20px;
+  min-height: 25px;
 `;
 
 const SaveButton = styled.button`
@@ -62,7 +62,11 @@ const SaveButton = styled.button`
   background-color: ${(props) => props.backgroundColor};
   color: #ffffff;
   font-size: 16px;
+  font-weight: 600;
   margin-bottom: 40px;
+  &:hover{
+      cursor: pointer;
+    }
 `;
 
 const SaveButtonContainer = styled.div`
@@ -84,30 +88,34 @@ const Profile = () => {
     };
     return (
         <Wrapper>
-        <Sidebar />
-      <Container>
-        <Label>선호 지역</Label>
-        <Input placeholder="지하철역을 입력해주세요!" />
+          <SidebarContainer>
+            <Sidebar />
+          </SidebarContainer>
 
-        <Label>링크</Label>
-        <ProfileLink />
+          <Container>
+            <h3>선호 지역</h3>
+            <Input placeholder="지하철역을 입력해주세요!" />
 
-        <ProfileTag /> 
+            <h3>링크</h3>
+            <ProfileLink />
 
-        <Label>상세 소개</Label>
-        <EditorWrapper>
-        <ReactQuill
-          value={introduce}
-          onChange={handleContentChange}
-          modules={modules}
-          theme="snow"
-        />
-      </EditorWrapper>
+            <h3>관심 태그</h3>
+            <ProfileTag /> 
 
-        <SaveButtonContainer>
-        <SaveButton type="submit" backgroundColor={"black"} >저장하기</SaveButton>
-        </SaveButtonContainer>
-      </Container>
+            <h3>상세 소개</h3>
+            <EditorWrapper>
+              <ReactQuill
+                value={introduce}
+                onChange={handleContentChange}
+                modules={modules}
+                theme="snow"
+              />
+          </EditorWrapper>
+
+            <SaveButtonContainer>
+            <SaveButton type="submit" backgroundColor={"black"} >저장하기</SaveButton>
+            </SaveButtonContainer>
+          </Container>
       </Wrapper>
   );
 }

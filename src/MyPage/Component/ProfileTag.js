@@ -2,12 +2,7 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 
 const TagBoxBlock = styled.div`
-  h4 {
-    text-align: left;
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-  }
-  margin-bottom: 35px;
+  margin-bottom: 10px;
 `;
 
 const TagForm = styled.div`
@@ -15,11 +10,12 @@ const TagForm = styled.div`
   font-size: inherit;
   input {
     padding: 0.5rem;
-    height: 20px;
+    height: 25px;
     font-size: inherit;
     width: 500px;
     border-radius: 4px;
-    border: 1px solid #A2A2A2;
+    border: 1px solid #707070;
+    box-shadow: 2px 1px 5px #BDBDBD;
   }
 
   button {
@@ -32,6 +28,7 @@ const TagForm = styled.div`
     color: black;
     font-size: 16px;
     margin-left: 10px;
+    box-shadow: 2px 1px 5px #BDBDBD;
     &:hover{
         cursor: pointer;
     }
@@ -42,8 +39,11 @@ const TagForm = styled.div`
 const Tag = styled.div`
   margin-left: 20px;
   margin-right: 0.2rem;
-  font-size: 1rem;
+  font-size: 17px;
   color: gray;
+  &:hover{
+      cursor: pointer;
+  }
 `;
 
 const TagListBlock = styled.div`
@@ -100,7 +100,6 @@ const ProfileTag = () => {
   );
   return (
     <TagBoxBlock>
-        <h4> 태그 </h4>
         <TagForm>
         <input
             placeholder="태그를 입력하세요!"
