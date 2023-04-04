@@ -48,7 +48,7 @@ const SearchContainer = styled.div`
 
 function KakaoMap({ handleUserLocation }) {
   const [state, setState] = useState({
-    center: { lat: 37.49676871972202, lng: 127.02474726969814 },
+    center: { lat: 37.5662952, lng: 126.9779451 },
     isPanto: true
   });
   const [searchAddress, setSearchAddress] = useState("");
