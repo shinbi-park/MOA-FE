@@ -17,8 +17,10 @@ const Form = styled.form`
   }
   span {
     color: red;
-    font-size: 13px;
-    margin-left: 10px;
+    margin-left: 1px;
+  }
+  div{
+    margin-bottom: 10px;
   }
 `;
 
@@ -60,6 +62,7 @@ const SubmitButton = styled.button`
 
 const SignupForm = () => {
   const [username, setUsername] = useState("");
+  const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checkpassword, setCheckPassword] = useState("");
@@ -67,31 +70,42 @@ const SignupForm = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    if(password.length < 8) return;
     if (password !== checkpassword) {
       setError("비밀번호가 일치하지 않습니다");
       return;
     }
 
+    if(nickname.trim()=== '') { //닉네임이 빈칸이면 username으로
+      setNickname(username);
+    }
+
     const signUpData = {
-      username,
-      email,
-      password
+      email: email,
+      password: password,
+      name: username,
+      nickname: nickname,
     };
 
-    fetch("/api/signUp", {
+    fetch("/user/sign-up", {
       method: "POST",
       body: JSON.stringify(signUpData),
       headers: {
         "Content-Type": "application/json"
       }
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    .then((response) => {
+      if (response !== 201) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
   };
 
   return (
@@ -99,18 +113,7 @@ const SignupForm = () => {
       <Form onSubmit={handleFormSubmit}>
         <h3>회 원 가 입</h3>
         <div>
-          <Label htmlFor="username">사용자 이름</Label>
-          <Input
-            placeholder="username"
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <Label htmlFor="email">이메일</Label>
+          <Label htmlFor="email">이메일 <span>*</span></Label>
           <Input
             placeholder="example@gmail.com"
             type="email"
@@ -121,9 +124,30 @@ const SignupForm = () => {
           />
         </div>
         <div>
-          <Label htmlFor="password">비밀번호</Label>
+          <Label htmlFor="username">사용자 이름<span>*</span></Label>
           <Input
-            placeholder="비밀번호를 입력하세요!"
+            placeholder="이름을 입력하세요!"
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="nickname">닉네임</Label>
+          <Input
+            placeholder="닉네임을 입력해주세요!"
+            type="text"
+            id="nickname"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="password">비밀번호<span>*</span> </Label>
+          <Input
+            placeholder="비밀번호를 8자리 이상 입력하세요!"
             type="password"
             id="password"
             value={password}
@@ -133,7 +157,8 @@ const SignupForm = () => {
         </div>
         <div>
           <Label htmlFor="password">
-            비밀번호 확인 {error && <span>{error}</span>}{" "}
+            비밀번호 확인 <span>*</span>
+            {error && <span>{error}</span>}{" "}
           </Label>
           <Input
             placeholder="비밀번호를 다시 한번 입력하세요!"

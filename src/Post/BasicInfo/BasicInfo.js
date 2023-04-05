@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import Category from "./Category";
 import Postion from "./Position/Position";
 import styled from "styled-components";
@@ -10,23 +11,23 @@ const ProjectIntro = styled.h2`
 `;
 
 const Line = styled.hr`
-  width: 95%;
-  margin: 16px 15px;
-  border: 1px solid #ddd;
+  width: 750px;
+  margin: 10px 15px 30px;
+  border: 1px solid #5d5fef;
+  box-shadow: 2px 1px 2px #BDBDBD;
 `;
 
-const BasicInfo = () => {
+const BasicInfo = ({ handleCategoriesChange, handleFieldsChange, handleTagsChange }) => {
 
     return (
         <>
             <ProjectIntro>프로젝트 기본 정보</ProjectIntro>
             <Line />
 
-            <Category />
-            <Postion />
-            <TagBox />
+            <Category handleCategoriesChange={handleCategoriesChange}/>
+            <Postion handleFieldsChange={handleFieldsChange}/>
+            <TagBox handleTagsChange={handleTagsChange}/>
 
-            
         </>
     )
     
