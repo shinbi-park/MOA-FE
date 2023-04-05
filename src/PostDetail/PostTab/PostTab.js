@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Notice from "../Notice/Notice";
-import PostAdmin from "../PostAdmin/PostAdmin";
-import PostInfo from "../PostInfo/PostInfo";
 import Schedule from "../Schedule/Schedule";
+import PostInfo from "../PostInfo/PostInfo";
+import PostAdmin from "../PostAdmin/PostAdmin";
 
 const Tabwrap = styled.div`
   border-left: none;
@@ -43,6 +43,12 @@ const PostTabContent = styled.div`
 `;
 
 const PostTab = () => {
+  // const [postData, setPostData] = useState();
+  // useEffect(async() => {
+  //   const response = await axios.get(`recruitment/${recruitmentId}`);
+  // setPostData(response.data);
+  // },[])
+
   const [activeTabId, setActiveTabId] = useState(0);
   const tabArr = [
     {

@@ -26,6 +26,12 @@ const NoticeListDate = styled.span`
   font-family: "Inter";
   font-style: normal;
   font-size: 16px;
+  display: flex;
+`;
+
+const NoticeDropdownDiv = styled.div`
+  position: absolute;
+  left: 1080px;
 `;
 
 const NoticeListContent = styled.div`
@@ -57,7 +63,7 @@ const VotingNegative = styled.button`
   cursor: pointer;
 `;
 
-const NoticeList = ({
+const NoticeItem = ({
   newnotice,
   onNoticeDelete,
   onEditNotice,
@@ -67,6 +73,8 @@ const NoticeList = ({
   const [isEdit, setIsEdit] = useState(false);
   const [isVote, setIsVote] = useState(true);
   const [curContent, setCurContent] = useState(newnotice.content);
+
+  //const response = await axios.post(`/recruitment/${recruitmentId}/apply`,{"value" : "PENDING");
 
   const isEditSetting = (EditValue) => {
     setIsEdit(EditValue);
@@ -81,22 +89,24 @@ const NoticeList = ({
     onVoteFinish(id, votestate);
     setIsVote(!isVote);
   };
+
   return (
     <NoticeListWrap className={!isVote ? "vote_done" : ""}>
       <NoticeListHeader>
         <div>
           <NoticeListDate className={!isVote ? "vote_done" : ""}>
             {date}
+            {!isVote && <span>추천 지역: 서울역??</span>}
           </NoticeListDate>
         </div>
-        <div>
+        <NoticeDropdownDiv>
           <Dropdownbutton
             newnotice={newnotice}
             onNoticeDelete={onNoticeDelete}
             isEditSetting={isEditSetting}
             voteFinishHandler={voteFinishHandler}
           />
-        </div>
+        </NoticeDropdownDiv>
       </NoticeListHeader>
 
       {!isEdit ? (
@@ -120,8 +130,8 @@ const NoticeList = ({
 
       {newnotice.check && (
         <VotingBtnDiv>
-          <VotingPositive>V</VotingPositive>
-          <VotingNegative>X</VotingNegative>
+          <VotingPositive>참여 V</VotingPositive>
+          <VotingNegative>불참 X</VotingNegative>
         </VotingBtnDiv>
       )}
 
@@ -130,4 +140,4 @@ const NoticeList = ({
   );
 };
 
-export default NoticeList;
+export default NoticeItem;

@@ -1,12 +1,12 @@
 import React from "react";
 import ApplicantList from "./ApplicantList";
 import MemberList from "./MemberList";
-import PostStateSetting from "./PostStateSetting";
+import PageStateSetting from "./PageStateSetting";
 
 const PostAdmin = () => {
   return (
     <div>
-      <PostStateSetting />
+      <PageStateSetting />
       <ApplicantList />
       <MemberList />
     </div>

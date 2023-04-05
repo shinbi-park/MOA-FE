@@ -15,14 +15,12 @@ const HrLine = styled.hr`
   margin-top: 25px;
 `;
 
-const PostInfoAbout = () => {
+const PostInfoAbout = ({ postData }) => {
   return (
     <div>
       <h1>프로젝트 소개</h1>
       <div>
-        <IntroductionDiv>
-          {"프로젝트 소개글 \n어쩌구 저쩌구\n이것저것"}
-        </IntroductionDiv>
+        <IntroductionDiv>{postData[0].content}</IntroductionDiv>
       </div>
       <HrLine />
     </div>

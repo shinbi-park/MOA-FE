@@ -1,6 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
-import { titleContext } from "./PostDetail";
+import { recruitDummy } from "../common/DummyData";
+import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { titleState } from "../common/atoms";
 
 const PostTitlewrap = styled.div`
   margin-top: 34px; ;
@@ -29,38 +32,52 @@ const RecruitPart = styled.span`
 `;
 
 const RecruitState = styled.span`
-  color: #63b730;
+  margin-left: 15px;
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-size: 20px;
 
+  &.recruiting {
+    ::after {
+      content: "모집 중";
+    }
+    color: #63b730;
+  }
+
   &.recruitDone {
     color: red;
+    ::after {
+      content: "모집 완료";
+    }
   }
 
   &.projectDone {
     color: blue;
+    ::after {
+      content: "프로젝트 완료";
+    }
   }
 `;
 
 const PostTitle = () => {
-  const { titleState } = useContext(titleContext);
+  const titles = useRecoilValue(titleState);
+  const data = recruitDummy;
+  const [postData, setPostData] = useState(data);
   return (
     <div>
       <PostTitlewrap>
-        <PostTitleHeader>[서울][개발] 스터디 모집</PostTitleHeader>
+        <PostTitleHeader>{postData[0].title}</PostTitleHeader>
       </PostTitlewrap>
       <PostRecruitwrap>
-        <RecruitPart>Team Leader</RecruitPart>{" "}
+        <RecruitPart>{postData[0].postUser.userName}</RecruitPart>
         <RecruitState
           className={
-            (titleState === "모집 완료" && "recruitDone") ||
-            (titleState === "프로젝트 완료" && "projectDone")
+            (titles === "1" && "recruiting") ||
+            (titles === "2" && "recruitDone") ||
+            (titles === "3" && "projectDone")
           }
-        >
-          {titleState}
-        </RecruitState>
+        ></RecruitState>
         <p>#서울스터디 #개발스터디 </p>
       </PostRecruitwrap>
     </div>

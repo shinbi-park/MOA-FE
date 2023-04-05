@@ -34,7 +34,7 @@ const CommentContent = styled.li`
   margin: 10px 0;
 `;
 
-const PostCommnetItem = ({ item, onDeleteComment, onEditComment }) => {
+const PostCommentItem = ({ item, onDeleteComment, onEditComment }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [curContent, setCurContent] = useState(item.content);
 
@@ -83,4 +83,4 @@ const PostCommnetItem = ({ item, onDeleteComment, onEditComment }) => {
   );
 };
 
-export default PostCommnetItem;
+export default PostCommentItem;

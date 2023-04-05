@@ -1,6 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
-import { userContext } from "./Schedule";
+import { useRecoilValue } from "recoil";
+import {
+  ScheduleHover,
+  ScheduleSelect,
+  ScheduleUser,
+} from "../../common/atoms";
 
 const ScheduleInfoDiv = styled.div`
   margin-left: 200px;
@@ -31,8 +36,54 @@ const SchduleColorBar = styled.div`
   }
 `;
 
+const ScheduleSelected = styled.div`
+  margin-top: 30px;
+  text-align: center;
+  height: 30px;
+`;
+
+const SelectedTime = styled.div`
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+`;
+
+const AvailableTableDiv = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+`;
+
+const AvailableTableUl = styled.ul`
+  list-style: none;
+`;
+
+const AvailableTableTitle = styled.li`
+  text-decoration: underline;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+`;
+
 const ScheduleInfo = () => {
-  const { user, isHover, select } = useContext(userContext);
+  const user = useRecoilValue(ScheduleUser);
+  const isHover = useRecoilValue(ScheduleHover);
+  const select = useRecoilValue(ScheduleSelect);
+
+  const customDay = new Date(select.date).getDay();
+  const weekList = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const customToday = weekList[customDay];
+
   return (
     <ScheduleInfoDiv>
       <h3>Availability</h3>
@@ -42,21 +93,32 @@ const ScheduleInfo = () => {
         <SchduleColorBar className="third_range" />
         <SchduleColorBar className="last_range" />
       </SchduleColorBarDiv>
-      <div>
+      <ScheduleSelected>
         <div>
-          <ul>
-            <li>Available</li>
-            {isHover && select && <li>{user}</li>}
-          </ul>
+          {isHover ? (
+            <SelectedTime>
+              {customToday} {select.time}
+            </SelectedTime>
+          ) : (
+            <div></div>
+          )}
+        </div>
+      </ScheduleSelected>
+      <AvailableTableDiv>
+        <div>
+          <AvailableTableUl>
+            <AvailableTableTitle>Available</AvailableTableTitle>
+            {isHover && select.value && <li>{user}</li>}
+          </AvailableTableUl>
         </div>
 
         <div>
-          <ul>
-            <li>Unavailable</li>
-            {isHover && !select && <li>{user}</li>}
-          </ul>
+          <AvailableTableUl>
+            <AvailableTableTitle>Unavailable</AvailableTableTitle>
+            {isHover && !select.value && <li>{user}</li>}
+          </AvailableTableUl>
         </div>
-      </div>
+      </AvailableTableDiv>
     </ScheduleInfoDiv>
   );
 };

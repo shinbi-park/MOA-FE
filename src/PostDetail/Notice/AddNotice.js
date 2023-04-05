@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import NoticeList from "./NoticeList";
+import NoticeItem from "./NoticeItem";
 
 const NoticeWrap = styled.div`
   width: 1025px;
@@ -41,6 +41,14 @@ const NoticeAddBtn = styled.button`
 `;
 
 const AddNotice = () => {
+  //   const [notice, setNotice] = useState({
+  //     "title" : """,
+  //     "content" : "",
+  //     "meetingTime" : "",
+  //     "confirmedLocation" : "",
+  //     "checkVote" : false
+  // })
+
   const [notice, setNotice] = useState({
     noticeId: 0,
     content: "",
@@ -55,13 +63,16 @@ const AddNotice = () => {
     setNewNotice([notice, ...newNotice]);
     setNotice({ noticeId: notice.noticeId + 1, content: "", check: "" });
     setisChecked(false);
+    //const response = await axios.post(`/recruitment/${recruitmentId}/notice`,{data});
   };
 
   const onNoticeDelete = (id) => {
+    //const response = await axios.delete(`/recruitment/{recruitmentId}/notice`);
     setNewNotice(newNotice.filter((item) => item.noticeId !== id));
   };
 
   const onEditNotice = (id, newContent) => {
+    //const response = await axios.Patch(`/recruitment/{recruitmentId}/notice/{noticeId}`,{data});
     setNewNotice(
       newNotice.map((item) =>
         item.noticeId === id ? { ...item, content: newContent } : item
@@ -109,7 +120,7 @@ const AddNotice = () => {
       </div>
       {newNotice.map((newnotice) => (
         <div key={newnotice.noticeId}>
-          <NoticeList
+          <NoticeItem
             newnotice={newnotice}
             onNoticeDelete={onNoticeDelete}
             onEditNotice={onEditNotice}

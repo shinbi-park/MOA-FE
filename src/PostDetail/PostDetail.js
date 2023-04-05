@@ -1,6 +1,7 @@
-import React, { createContext, useState } from "react";
-import { Provider } from "react-redux";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { recruitDummy } from "../common/DummyData";
+import axios from "axios";
 import PostTab from "./PostTab/PostTab";
 import PostTitle from "./PostTitle";
 
@@ -8,18 +9,20 @@ const PostDetailDiv = styled.div`
   padding-bottom: 5%;
 `;
 
-export const titleContext = createContext();
-
 const PostDetail = () => {
-  const [titleState, setTitleState] = useState("모집 중");
+  const data = recruitDummy;
+  const [postData, setPostData] = useState(data);
+
+  // useEffect(() => {
+  //  const response = axios.get(`recruitment/${recruitmentId}`);
+  // setPostData(response.data);
+  // },[])
 
   return (
-    <titleContext.Provider value={{ titleState, setTitleState }}>
-      <PostDetailDiv>
-        <PostTitle />
-        <PostTab />
-      </PostDetailDiv>
-    </titleContext.Provider>
+    <PostDetailDiv>
+      <PostTitle />
+      <PostTab />
+    </PostDetailDiv>
   );
 };
 

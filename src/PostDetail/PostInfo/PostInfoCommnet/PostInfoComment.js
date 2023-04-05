@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import PostCommentInput from "./PostCommentInput";
-import PostCommnetItem from "./PostCommnetItem";
+import PageCommentInput from "./PostCommentInput";
 import PostInfoReply from "./PostInfoReply";
+import PostCommentItem from "./PostCommentItem";
 
 const HrCommentLine = styled.hr`
   background: #d9d9d9;
@@ -66,7 +66,7 @@ const PostInfoComment = () => {
     <div>
       <h1>{comment_count}개의 댓글</h1>
 
-      <PostCommentInput
+      <PageCommentInput
         onCommentSubmit={onCommentSubmit}
         comment={comment}
         onCommentChange={onCommentChange}
@@ -74,7 +74,7 @@ const PostInfoComment = () => {
 
       {newComment.map((item) => (
         <CommentUl key={item.commentId}>
-          <PostCommnetItem
+          <PostCommentItem
             item={item}
             onDeleteComment={onDeleteComment}
             onEditComment={onEditComment}

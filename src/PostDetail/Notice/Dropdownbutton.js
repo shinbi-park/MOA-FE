@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 const DropdownDiv = styled.div`
-  position: absolute;
-  width: 100px;
+  position: relative;
+  width: 120px;
   height: 130px;
   background-color: #efefef;
   border: 1px solid #d9d9d9;
@@ -24,6 +24,16 @@ const DropDownList = styled.div`
   }
 `;
 
+const EditParticipantDiv = styled.div`
+  position: absolute;
+  border: 1px solid black;
+  background-color: #efefef;
+  left: 120px;
+  width: 120px;
+  top: 60px;
+  height: 130px;
+`;
+
 const Dropdownbutton = ({
   newnotice,
   onNoticeDelete,
@@ -31,6 +41,7 @@ const Dropdownbutton = ({
   voteFinishHandler,
 }) => {
   const [dropOpen, setDropOpen] = useState(false);
+  const [editHover, setEditHover] = useState(false);
   const dropRef = useRef();
 
   useEffect(() => {
@@ -60,16 +71,34 @@ const Dropdownbutton = ({
       <button onClick={() => setDropOpen(!dropOpen)}>=</button>
       {dropOpen &&
         (newnotice.check ? (
-          <DropdownDiv>
-            <DropDownList onClick={isEditDeliver}>수정</DropDownList>
-            <DropDownList>참여도 수정</DropDownList>
-            <DropDownList onClick={() => VotingToggle(newnotice.noticeId)}>
-              투표마감
-            </DropDownList>
-            <DropDownList onClick={() => onNoticeDelete(newnotice.noticeId)}>
-              삭제
-            </DropDownList>
-          </DropdownDiv>
+          <>
+            <DropdownDiv>
+              <DropDownList onClick={isEditDeliver}>수정</DropDownList>
+              <DropDownList
+                onMouseOver={() => setEditHover(true)}
+                onMouseLeave={() => setEditHover(false)}
+              >
+                참여도 수정▶
+              </DropDownList>
+
+              <DropDownList onClick={() => VotingToggle(newnotice.noticeId)}>
+                투표마감
+              </DropDownList>
+              <DropDownList onClick={() => onNoticeDelete(newnotice.noticeId)}>
+                삭제
+              </DropDownList>
+            </DropdownDiv>
+            {editHover ? (
+              <EditParticipantDiv
+                onMouseOver={() => setEditHover(true)}
+                onMouseLeave={() => setEditHover(false)}
+              >
+                참여자
+              </EditParticipantDiv>
+            ) : (
+              ""
+            )}
+          </>
         ) : (
           <DropdownDiv className="simple_active">
             <DropDownList onClick={isEditDeliver}>수정</DropDownList>

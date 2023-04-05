@@ -50,6 +50,11 @@ const ApplycantItemDiv = styled.div`
 
 const ApplicantList = () => {
   const [toggle, setToggle] = useState(false);
+
+  // useEffect(async() => {
+  //   const response = await axios.get(`/recruitment/{recruitmentId}/apply/members?statusCode=1`);
+  // conosle.log(response.data);
+  // },[])
   return (
     <ApplicantListDiv>
       <h1>
