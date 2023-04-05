@@ -75,6 +75,7 @@ const PositionListItem = ({ position, onPositionChange}) => {
           placeholder="예시) 프론트엔드"
           value={positionName}
           onChange={onChange}
+          required
         />
         <Button onClick={removePeople}> - </Button> {num}
         <Button onClick={addPeople}> + </Button>

@@ -49,7 +49,7 @@ const Editor = ( {handleTitleChange, handleContentChange} ) => {
     <EditorWrapper>
       <h2>프로젝트 소개</h2>
       <Line />
-      <TitleInput onChange={handleTitleChange} placeholder="제목을 입력해주세요" />
+      <TitleInput onChange={handleTitleChange} placeholder="제목을 입력해주세요" required/>
       <ReactQuill
         style={{ height: "300px", width:"710px", marginLeft: "30px" }}
         onChange={handleContentChange}
