@@ -18,6 +18,8 @@ const StyledMap = styled(Map)`
   margin-top: 10px;
 `;
 const SearchContainer = styled.div`
+display: flex;
+flex-direction: row;
   input {
     align-items: center;
     box-shadow: 2px 1px 5px #bdbdbd;

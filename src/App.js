@@ -11,6 +11,7 @@ import MyActivity from './MyPage/MyActivity';
 import InfoDeatil from './PostDetail/InfoDetail';
 import MyPostList from './MyPage/MyPostList';
 import Likedlist from './MyPage/Likedlist';
+import SignupPage from './LogIn/SignUpPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
     <Header />
     <Routes> 
       <Route path="/post" element={<Post />} />
+      <Route path="/signup" element={<SignupPage />} />
       <Route path="/mypage/" element={<Profile />} />
       <Route path="/mypage/profile" element={<Profile />} />
       <Route path="/mypage/activity" element={<MyActivity />} />

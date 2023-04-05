@@ -72,17 +72,10 @@ const Header = () => {
           <NavItem><Link to="/mypage">마이페이지</Link></NavItem>
           <NavItem><Link to="/signout">로그아웃</Link></NavItem>
           <NavItem onClick={() => setSignInModal(true)}>로그인</NavItem>
-          <NavItem onClick={() => setSignUpModal(true)}>회원가입</NavItem>
+          <NavItem><Link to="/signup">회원가입</Link></NavItem>
           
         </NavList>
       </Nav>
-
-      {signUpModal && (
-        <Modal onClose={() => setSignUpModal(false)}>
-          <SignupForm />
-        </Modal>
-      )}
-
       {signInModal && (
         <Modal onClose={() => setSignInModal(false)}>
           <SignInForm />
