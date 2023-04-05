@@ -1,3 +1,4 @@
+
 import './App.css';
 import Post from './Post/Post';
 import SignupForm from './LogIn/SignupForm';
@@ -11,11 +12,12 @@ import MyActivity from './MyPage/MyActivity';
 import InfoDeatil from './PostDetail/InfoDetail';
 import MyPostList from './MyPage/MyPostList';
 import Likedlist from './MyPage/Likedlist';
+import PostDetail from "./PostDetail/PostDetail";
 
 function App() {
   return (
     <>
-    <Header />
+      
     <Routes> 
       <Route path="/post" element={<Post />} />
       <Route path="/mypage/" element={<Profile />} />
@@ -27,6 +29,8 @@ function App() {
       <Route path="/applicantDetail" element={<InfoDeatil />} />
       <Route path="/mypage/mylist" element={<MyPostList />} />
       <Route path="/mypage/likedlist" element={<Likedlist />} />
+      <Route path="/detail" element={<PostDetail />} />
+      
       
     </Routes>
     </>
