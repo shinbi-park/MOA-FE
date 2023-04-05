@@ -19,14 +19,14 @@ const Button = styled.button`
   justify-content: center;
   align-items: center;
   margin-top: 13px;
-  margin-left: 280px;
-  background: none;
+  margin-left: 325px;
+  background-color: ${(props) => props.backgroundColor };
   font-weight: bold;
-  border: 1px solid;
+  border: ${(props) => props.border };
   border-radius: 4px;
   height: 1.5rem;
   width: 3rem;
-
+  box-shadow: 2px 1px 5px #BDBDBD;
   & + & {
     margin-left: 10px;
   }
@@ -36,8 +36,8 @@ const PostionList = ({ positions, onInsert, onRemove,  onPositionChange}) => {
   const lastPosition = positions[positions.length - 1];
   const lastId = lastPosition ? lastPosition.id : 0;
 
-  const handlePositionChange = (id, num, value) => {
-    onPositionChange(id, num, value);
+  const handlePositionChange = (id, total, field) => {
+    onPositionChange(id, total, field);
   };
 
   return (
@@ -52,8 +52,8 @@ const PostionList = ({ positions, onInsert, onRemove,  onPositionChange}) => {
         />
       ))}
       <div>
-        <Button onClick={() => onInsert()}> 추가 </Button>
-        <Button onClick={() => onRemove(lastId)}> 삭제 </Button>
+        <Button backgroundColor= {'white'} border = {'1px solid black'}onClick={() => onInsert()}> 추가 </Button>
+        <Button backgroundColor= {'#D9D9D9'} border={'none'}onClick={() => onRemove(lastId)}> 삭제 </Button>
       </div>
     </PositionBlock>
   );
