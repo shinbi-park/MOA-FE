@@ -87,7 +87,7 @@ const SignupForm = () => {
       nickname: nickname,
     };
 
-    fetch("/user/sign-up", {
+    fetch("http://192.168.0.26:8080/user/sign-up", {
       method: "POST",
       body: JSON.stringify(signUpData),
       headers: {

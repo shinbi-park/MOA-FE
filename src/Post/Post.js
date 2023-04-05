@@ -18,6 +18,7 @@ const Post = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
+    console.log(content);
     const [postData, setPostData] = useState({});
 
     const handleCategoriesChange = (event) => {

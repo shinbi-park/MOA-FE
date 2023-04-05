@@ -19,6 +19,7 @@ const Container = styled.div`
   flex: 2;
   margin-top: 23px;
   font-size: 17px;
+  
   text-decoration: none;
   h3{
     display: inline-block;
