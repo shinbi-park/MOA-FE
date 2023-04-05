@@ -35,7 +35,7 @@ const NavList = styled.ul`
   justify-content: flex-end;
   list-style: none;
   margin: 0;
-  margin-right: 10px;
+  margin-right: 50px;
   font-weight: 600;
   font-size: 17px;
 `;
@@ -58,22 +58,23 @@ const NavItem = styled.li`
 `;
 
 const Header = () => {
-  const [signUpModal, setSignUpModal] = useState(false);
   const [signInModal, setSignInModal] = useState(false);
-  const [userLogIn, setUserLogIn] = useState('');
+  const [userLogIn, setUserLogIn] = useState(false);
 
   return (
     <>
       <Nav>
         <Logo><Link to="/">MO:A</Link></Logo>
-        <NavList>
+        {userLogIn ? <NavList>
           <NavItem><Link to="/post">새 글쓰기</Link></NavItem>
           <NavItem><Link to="/mypage">마이페이지</Link></NavItem>
-          <NavItem><Link to="/signout">로그아웃</Link></NavItem>
+          <NavItem><Link to="/signout">로그아웃</Link></NavItem>          
+        </NavList> 
+        : 
+        <NavList>
           <NavItem onClick={() => setSignInModal(true)}>로그인</NavItem>
           <NavItem><Link to="/signup">회원가입</Link></NavItem>
-          
-        </NavList>
+        </NavList>}
       </Nav>
       {signInModal && (
         <Modal onClose={() => setSignInModal(false)}>
