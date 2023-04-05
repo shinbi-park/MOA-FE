@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Sidebar from "./Sidebar/Sidebar";
 import ProfileLink from "./Component/ProfileLink"
 import ProfileTag from "./Component/ProfileTag"
+
+import KakaoMap from "./Component/KakaoMap";
 
 const Wrapper = styled.div`
   height: 92vh;
@@ -15,20 +17,6 @@ const Wrapper = styled.div`
 
 const SidebarContainer = styled.div`
   flex: 1;
-`;
-
-const EditorWrapper = styled.div`
-  border-radius: 4px;
-  padding: 8px;
-  border: 1px solid #707070;
-  width: 570px;
-  padding-top: 0;
-  min-height: 300px;
-  font-size: 30px;
-  box-shadow: 2px 1px 5px #BDBDBD;
-  .ql-container {
-    border: none !important;
-  }
 `;
 
 const Container = styled.div`
@@ -43,16 +31,18 @@ const Container = styled.div`
   }  
 `;
 
-const Input = styled.input`
-  align-items: center;
-  box-shadow: 2px 1px 5px #BDBDBD;
-  margin-bottom: 20px;
-  padding: 8px;
+const EditorWrapper = styled.div`
   border-radius: 4px;
+  padding: 8px;
   border: 1px solid #707070;
-  font-size: 16px;
-  width: 500px;
-  min-height: 25px;
+  width: 570px;
+  padding-top: 0;
+  min-height: 300px;
+  font-size: 30px;
+  box-shadow: 2px 1px 5px #BDBDBD;
+  .ql-container {
+    border: none !important;
+  }
 `;
 
 const SaveButton = styled.button`
@@ -77,15 +67,27 @@ const SaveButtonContainer = styled.div`
   margin-top: 30px;
 `;
 
+const MapWrapper = styled.div`
+display: flex;
+margin-bottom: 20px;
+`;
 
 const Profile = () => {
     const [introduce, setIntroduce] = useState("");
+    const [location, setLocation] = useState(null);
+
+    const handleUserLocation = (address) => {
+      setLocation(address);
+      console.log(address);// ex. {lat: 37.4, lng: 126.6783068702164}
+    }
+
     const handleContentChange = (value) => {
       setIntroduce(value);
     };
     const modules = {
       toolbar: false,
     };
+
     return (
         <Wrapper>
           <SidebarContainer>
@@ -94,7 +96,9 @@ const Profile = () => {
 
           <Container>
             <h3>선호 지역</h3>
-            <Input placeholder="지하철역을 입력해주세요!" />
+            <MapWrapper>
+            <KakaoMap handleUserLocation={handleUserLocation}/>
+          </MapWrapper>
 
             <h3>링크</h3>
             <ProfileLink />
