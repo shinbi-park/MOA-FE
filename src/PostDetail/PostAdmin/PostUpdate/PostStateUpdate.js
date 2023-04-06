@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { titleState } from "../../common/atoms";
+import { titleState } from "../../../common/atoms";
 
 const SelectDiv = styled.div`
   margin-bottom: 70px;
@@ -25,19 +25,13 @@ const SelectBtn = styled.button`
   background-color: #d9d9d9;
 `;
 
-const PageStateSetting = () => {
-  // useEffect(async() => {
-  //   const response = await axios.post(`/recruitment/${recruitmentId}?statusCode=${code}`,{code:2});
-  // setPostData(response.data);
-  // },[])
-
+const PostStateUpdate = () => {
   const [titles, setTitles] = useRecoilState(titleState);
   const [setting, setSetting] = useState();
 
   const onChangeSetting = () => {
     setTitles(setting);
     setSetting(setting);
-    //const response = await axios.post(`/recruitment/${recruitmentId}?statusCode=${setting}`,{data});
   };
   return (
     <SelectDiv>
@@ -55,4 +49,4 @@ const PageStateSetting = () => {
   );
 };
 
-export default PageStateSetting;
+export default PostStateUpdate;

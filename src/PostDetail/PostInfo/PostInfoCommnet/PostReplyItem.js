@@ -36,7 +36,7 @@ const ReplyEditBtn = styled.button`
   font-size: 12px;
 `;
 
-const PageReplyItem = ({ item, onDeleteReply, onEditReply }) => {
+const PostReplyItem = ({ item, onDeleteReply, onEditReply }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [curContent, setCurContent] = useState(item.content);
 
@@ -80,4 +80,4 @@ const PageReplyItem = ({ item, onDeleteReply, onEditReply }) => {
   );
 };
 
-export default PageReplyItem;
+export default PostReplyItem;

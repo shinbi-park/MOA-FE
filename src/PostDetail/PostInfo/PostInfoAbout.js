@@ -1,5 +1,7 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { postData } from "../../common/atoms";
 
 const IntroductionDiv = styled.div`
   white-space: pre-wrap;
@@ -15,12 +17,14 @@ const HrLine = styled.hr`
   margin-top: 25px;
 `;
 
-const PostInfoAbout = ({ postData }) => {
+const PostInfoAbout = () => {
+  const data = useRecoilValue(postData);
+
   return (
     <div>
       <h1>프로젝트 소개</h1>
       <div>
-        <IntroductionDiv>{postData[0].content}</IntroductionDiv>
+        <IntroductionDiv>{data[0].content}</IntroductionDiv>
       </div>
       <HrLine />
     </div>

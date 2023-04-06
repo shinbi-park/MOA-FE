@@ -17,7 +17,7 @@ const Line = styled.hr`
   width: 750px;
   margin: 10px 15px 30px;
   border: 1px solid #5d5fef;
-  box-shadow: 2px 1px 2px #BDBDBD;
+  box-shadow: 2px 1px 2px #bdbdbd;
 `;
 
 const TitleInput = styled.input`
@@ -33,8 +33,7 @@ const TitleInput = styled.input`
   display: flex;
 `;
 
-const Editor = ( {handleTitleChange, handleContentChange} ) => {
-
+const Editor = ({ handleTitleChange, handleContentChange, isEdit, data }) => {
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }],
@@ -48,13 +47,35 @@ const Editor = ( {handleTitleChange, handleContentChange} ) => {
     <EditorWrapper>
       <h2>프로젝트 소개</h2>
       <Line />
-      <TitleInput onChange={handleTitleChange} placeholder="제목을 입력해주세요" />
-      <ReactQuill
-        style={{ height: "300px", width:"710px", marginLeft: "30px" }}
-        onChange={handleContentChange}
-        modules={modules}
-        placeholder="내용을 입력해주세요"
-      ></ReactQuill>
+      {!isEdit ? (
+        <>
+          <TitleInput
+            onChange={handleTitleChange}
+            placeholder="제목을 입력해주세요"
+          />
+          <ReactQuill
+            style={{ height: "300px", width: "710px", marginLeft: "30px" }}
+            onChange={handleContentChange}
+            modules={modules}
+            placeholder="내용을 입력해주세요"
+          ></ReactQuill>
+        </>
+      ) : (
+        <>
+          <TitleInput
+            onChange={handleTitleChange}
+            placeholder="제목을 입력해주세요"
+            value={data[0].title}
+          />
+          <ReactQuill
+            style={{ height: "300px", width: "710px", marginLeft: "30px" }}
+            onChange={handleContentChange}
+            modules={modules}
+            placeholder="내용을 입력해주세요"
+            value={data[0].content}
+          ></ReactQuill>
+        </>
+      )}
     </EditorWrapper>
   );
 };

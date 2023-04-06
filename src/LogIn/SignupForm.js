@@ -19,7 +19,7 @@ const Form = styled.form`
     color: red;
     margin-left: 1px;
   }
-  div{
+  div {
     margin-bottom: 10px;
   }
 `;
@@ -70,13 +70,14 @@ const SignupForm = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    if(password.length < 8) return;
+    if (password.length < 8) return;
     if (password !== checkpassword) {
       setError("비밀번호가 일치하지 않습니다");
       return;
     }
 
-    if(nickname.trim()=== '') { //닉네임이 빈칸이면 username으로
+    if (nickname.trim() === "") {
+      //닉네임이 빈칸이면 username으로
       setNickname(username);
     }
 
@@ -87,25 +88,25 @@ const SignupForm = () => {
       nickname: nickname,
     };
 
-    fetch("/user/sign-up", {
+    fetch("http://192.168.0.26:8080/user/sign-up", {
       method: "POST",
       body: JSON.stringify(signUpData),
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-    .then((response) => {
-      if (response !== 201) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      .then((response) => {
+        if (response !== 201) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -113,7 +114,9 @@ const SignupForm = () => {
       <Form onSubmit={handleFormSubmit}>
         <h3>회 원 가 입</h3>
         <div>
-          <Label htmlFor="email">이메일 <span>*</span></Label>
+          <Label htmlFor="email">
+            이메일 <span>*</span>
+          </Label>
           <Input
             placeholder="example@gmail.com"
             type="email"
@@ -124,7 +127,9 @@ const SignupForm = () => {
           />
         </div>
         <div>
-          <Label htmlFor="username">사용자 이름<span>*</span></Label>
+          <Label htmlFor="username">
+            사용자 이름<span>*</span>
+          </Label>
           <Input
             placeholder="이름을 입력하세요!"
             type="text"
@@ -145,7 +150,9 @@ const SignupForm = () => {
           />
         </div>
         <div>
-          <Label htmlFor="password">비밀번호<span>*</span> </Label>
+          <Label htmlFor="password">
+            비밀번호<span>*</span>{" "}
+          </Label>
           <Input
             placeholder="비밀번호를 8자리 이상 입력하세요!"
             type="password"

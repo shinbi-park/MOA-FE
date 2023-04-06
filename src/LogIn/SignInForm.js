@@ -64,20 +64,27 @@ const SignInForm = () => {
 
     const logInData = {
       email: email,
-      password: password
+      password: password,
     };
 
-    fetch("/user/login", {
+    fetch("http://192.168.0.26:8080/user/login", {
       method: "POST",
       body: JSON.stringify(logInData),
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
+      .then((response) => {
+        window.localStorage.setItem(
+          "Authorization",
+          response.headers.get("Authorization")
+        );
+        window.localStorage.setItem(
+          "AuthorizationRefresh",
+          response.headers.get("AuthorizationRefresh")
+        );
       })
+
       .catch((error) => {
         console.error("Error:", error);
       });

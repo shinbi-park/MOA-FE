@@ -29,23 +29,49 @@ export const Select = styled.select`
   border-radius: 4px;
   color: inherit;
   background-color: transparent;
-  box-shadow: 2px 1px 5px #BDBDBD;
+  box-shadow: 2px 1px 5px #bdbdbd;
 `;
 
-export default function Category({handleCategoriesChange}) {
-  
+export default function Category({ handleCategoriesChange, isEdit, data }) {
   return (
     <CategoryBlock>
-      <Label htmlFor="category"> 카테고리 </Label>
-      <Select name="select-category" id="category" 
-      defaultValue="programming" onChange = {handleCategoriesChange}>
-        <option value="programming">프로그래밍</option>
-        <option value="language"> 어학 </option>
-        <option value="job">취업</option>
-        <option value="public">고시/공무</option>
-        <option value="hobby">자율</option>
-        <option value="etc">기타</option>
-      </Select>
+      {!isEdit ? (
+        <>
+          {" "}
+          <Label htmlFor="category"> 카테고리 </Label>
+          <Select
+            name="select-category"
+            id="category"
+            defaultValue="programming"
+            onChange={handleCategoriesChange}
+          >
+            <option value="programming">프로그래밍</option>
+            <option value="language"> 어학 </option>
+            <option value="job">취업</option>
+            <option value="public">고시/공무</option>
+            <option value="hobby">자율</option>
+            <option value="etc">기타</option>
+          </Select>
+        </>
+      ) : (
+        <>
+          {" "}
+          <Label htmlFor="category"> 카테고리 </Label>
+          <Select
+            name="select-category"
+            id="category"
+            defaultValue={data[0].categories}
+            onChange={handleCategoriesChange}
+          >
+            <option value="programming">프로그래밍</option>
+            <option value="language"> 어학 </option>
+            <option value="job">취업</option>
+            <option value="public">고시/공무</option>
+            <option value="hobby">자율</option>
+            <option value="etc">기타</option>
+          </Select>
+        </>
+      )}
     </CategoryBlock>
   );
 }

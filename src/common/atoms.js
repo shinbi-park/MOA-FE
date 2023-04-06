@@ -1,4 +1,10 @@
 import { atom } from "recoil";
+import { recruitDummy } from "./DummyData";
+
+export const postData = atom({
+  key: "postData",
+  default: recruitDummy,
+});
 
 export const titleState = atom({
   key: "titleState",
