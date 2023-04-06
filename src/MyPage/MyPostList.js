@@ -52,17 +52,7 @@ const MyPostList = () => {
       id: 1,
       title: "첫 번째 글",
       date: "2022-03-29",
-    },
-    {
-      id: 2,
-      title: "두 번째 글",
-      date: "2022-03-30",
-    },
-    {
-      id: 3,
-      title: "세 번째 글",
-      date: "2022-03-31",
-    },
+    }
   ];
 
   return (
@@ -70,7 +60,7 @@ const MyPostList = () => {
       <Sidebar />
       <Content>
         <h3>내 작성글</h3>
-        {posts.length < 1 ? <EmptyPost>관심글을 등록해보세요!</EmptyPost> 
+        {posts.length < 1 ? <EmptyPost>글을 작성해보세요!</EmptyPost> 
           : <ComponentWrapper>
               <PostComponent type={"MyPost"}/>
               <PostComponent type={"MyPost"}/>

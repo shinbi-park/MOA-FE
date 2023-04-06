@@ -190,10 +190,13 @@ const PostComponent = ({ type }) => {
   const [isMyLiked, setIsMyLiked] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
+  let recruitmentId = 1; //수정하기
+
   useEffect(() => {
     if (type === "MyPost") setIsMypost(true);
     else if (type === "MyLike") setIsMyLiked(true);
   }, []);
+
   const handleLikeClick = () => {
     setIsMyLiked(!isMyLiked);
   };
@@ -204,11 +207,29 @@ const PostComponent = ({ type }) => {
 
   const handleEditClick = () => {
     console.log("Edit clicked");
+    fetch(`/recruitment/${recruitmentId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then((response) => {});
+
   };
 
   const handleDeleteClick = () => {
     console.log("Delete clicked");
-  };
+    const result = window.confirm("글을 정말 삭제할까요?");
+    if (result) {
+      fetch(`/recruitment/${recruitmentId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then((response) => response === 200 ? alert("글이 삭제되었습니다!") : alert("글 삭제에 실패하였습니다"))
+    };
+    }
 
   return (
     <Wrapper>
