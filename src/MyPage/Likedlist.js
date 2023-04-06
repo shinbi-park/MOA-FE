@@ -36,10 +36,21 @@ const EmptyPost = styled.div`
 
 const ComponentWrapper = styled.div`
   margin-left: 50px;
+  display: flex;
+  flex-wrap: wrap;
+
+  & > * {
+    width: calc((100 - 2 * 10px) / 3); 
+    margin: 10px; 
+  }
 `;
 
 const Likedlist = () => {
-  const posts = [];
+  const posts = [{
+    id: 3,
+    title: "세 번째 글",
+    date: "2022-03-31",
+  },];
   return (
     <Wrapper>
       <Sidebar />
@@ -47,7 +58,9 @@ const Likedlist = () => {
         <h3>내 관심글</h3>
         {posts.length < 1 ? <EmptyPost>관심글을 등록해보세요!</EmptyPost> :
             <ComponentWrapper>
-              <PostComponent/>
+             <PostComponent type={"MyLike"}/>
+             <PostComponent type={"MyLike"}/>
+             <PostComponent type={"MyLike"}/>
             </ComponentWrapper>
         }
         
