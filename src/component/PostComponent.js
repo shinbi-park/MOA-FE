@@ -55,20 +55,9 @@ const LikeIcon = styled(AiFillHeart)`
   width: 20px;
   margin-left: 20px;
   color: #d2d2d2;
-  &:hover {
-    color: red;
+  &.liked {
+    fill: red;
   }
-`;
-
-const LikedIcon = styled(AiFillHeart)`
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  height: 20px;
-  width: 20px;
-  margin-left: 20px;
-  color: #d2d2d2;
-  fill: red;
 `;
 
 const Date = styled.div`
@@ -205,6 +194,9 @@ const PostComponent = ({ type }) => {
     if (type === "MyPost") setIsMypost(true);
     else if (type === "MyLike") setIsMyLiked(true);
   }, []);
+  const handleLikeClick = () => {
+    setIsMyLiked(!isMyLiked);
+  };
 
   const handleMenuClick = () => {
     setShowMenu(!showMenu);
@@ -238,7 +230,10 @@ const PostComponent = ({ type }) => {
             <CiMenuKebab onClick={handleMenuClick} />{" "}
           </>
         ) : (
-            isMyLiked ? <LikedIcon /> : <LikeIcon />
+          <LikeIcon
+            onClick={handleLikeClick}
+            className={isMyLiked ? "liked" : ""}
+          />
         )}
         <Date>게시일 | {posts.date}</Date>
       </Top>
