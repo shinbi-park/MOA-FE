@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import profile from "../../component/profileImg.png";
+import UserPopularity from "../../component/UserPopularity";
 
 const Side = styled.div`
   display: flex;
@@ -19,6 +20,7 @@ const Side = styled.div`
   h3 {
     display: flex;
     margin: 0px;
+    font-size: 20px;
   }
 `;
 const Profile = styled.img`
@@ -42,6 +44,12 @@ const Menu = styled.div`
   }
 `;
 
+const PopularityContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const activeStyle = {
   color: "#5d5fef",
   textDecoration: "underline"
@@ -63,7 +71,9 @@ function Sidebar() {
   return (
     <Side>
       <Profile src={profile} alt="프로필 사진"></Profile>
-      <h3>username</h3>
+      <PopularityContainer>
+        <UserPopularity />
+      </PopularityContainer>
       <Menu>
         {menus.map((menu, index) => {
           return (
