@@ -11,12 +11,14 @@ import InfoDeatil from './PostDetail/InfoDetail';
 import MyPostList from './MyPage/MyPostList';
 import Likedlist from './MyPage/Likedlist';
 import SignupPage from './LogIn/SignUpPage';
+import Home from './Home/Home';
 
 function App() {
   return (
     <>
     <Header />
     <Routes> 
+      <Route path="/" element={<Home />} />
       <Route path="/post" element={<Post />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/mypage/" element={<Profile />} />
