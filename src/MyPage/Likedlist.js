@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import PostComponent from "../component/PostComponent";
 import Sidebar from "./Sidebar/Sidebar";
@@ -46,21 +46,53 @@ const ComponentWrapper = styled.div`
 `;
 
 const Likedlist = () => {
-  const posts = [{
-    id: 3,
-    title: "세 번째 글",
-    date: "2022-03-31",
-  },];
+  const [likedPost, setLikedPost] = useState([{
+    id : "1",
+    title : "title1",
+    author : "username1",
+    createDate : "2023-04-01",
+    recruitStatus : "모집중",
+    category : "프로그래밍",
+    tags : [
+        "tag1",
+        "tag2"
+    ],
+    totalCount : 10,
+    approvedCount : 5,
+    profileImage : "image", 
+    replyCount : 5
+},
+{
+    "id" : "2",
+    "title" : "title2",
+    "author" : "username1",
+    "createDate" : "2023-04-04",
+    "recruitStatus" : "모집중",
+    "category" : "프로그래밍",
+    "tags" : [
+        "tag1",
+        "tag2"
+    ],
+    "totalCount" : 10,
+    "approvedCount" : 5,
+    "profileImage" : "image", 
+    "replyCount" : 5
+  }]);
+
   return (
     <Wrapper>
       <Sidebar />
       <Content>
         <h3>내 관심글</h3>
-        {posts.length < 1 ? <EmptyPost>관심글을 등록해보세요!</EmptyPost> :
+        {likedPost.length < 1 ? <EmptyPost>관심글을 등록해보세요!</EmptyPost> :
             <ComponentWrapper>
-             <PostComponent type={"MyLike"}/>
-             <PostComponent type={"MyLike"}/>
-             <PostComponent type={"MyLike"}/>
+              {likedPost.map((post, index)=> (
+              <PostComponent key={index} 
+              type="MyLike"
+              title={post.title}
+              author={post.author} category={post.category} tags={post.tags} recruitStatus={post.recruitStatus} date={post.createDate}replyCount={post.replyCount}
+              />
+            ))}
             </ComponentWrapper>
         }
         
