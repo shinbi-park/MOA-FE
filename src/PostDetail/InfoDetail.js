@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import UserPopularity from "../component/UserPopularity";
 
@@ -126,7 +126,33 @@ const LinkItem = React.memo(({ link }) => (
   ));
 
 const InfoDetail = () => {
-
+/*
+  useEffect( () => {
+    fetch(`/user/info/profile`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then((response) => {
+      console.log(response);
+    });
+  }, [])
+*/
+  const [userInfo, setUserInfo] = useState({
+    "email" : "userId@email.com",
+    "name" : "username",
+    "nickname" : "nickname",
+    "locationLatitude" : 34.545,
+    "locationLongitude" : 34.545234,
+    "popularity" : 2.4,
+    "details" : "details",
+    "interests" : [
+        "백엔드",
+        "자바"
+    ]
+});
+  
     const [applicant, setApplicant] = useState('user1');
     const [popularityCnt, setPopularityCnt] = useState(5); //평가 받은 프로젝트 수
     const [applyPosition, setApplyPosition] = useState('프론트엔드');
@@ -140,7 +166,7 @@ const InfoDetail = () => {
                 <tbody>
                     <tr>
                     <td>지원자</td>
-                    <td>{applicant}</td>
+                    <td>{userInfo.nickname}</td>
                     <td>지원 포지션</td>
                     <td>{applyPosition}</td>
                     </tr>

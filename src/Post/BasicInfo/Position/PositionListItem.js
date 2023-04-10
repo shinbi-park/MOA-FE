@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 
 const Block = styled.div`
@@ -36,6 +36,7 @@ const PositionListItem = ({ position, onPositionChange}) => {
   const [num, setNum] = useState(1);
   const [positionName, setPositionName] = useState("");
 
+  
   const onChange = useCallback((e) => {
     setPositionName(e.target.value);
     onPositionChange(position.id, num, e.target.value);
