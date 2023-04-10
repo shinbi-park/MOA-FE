@@ -10,55 +10,79 @@ const PostContainerWrapper = styled.div`
   align-items:center;
 
   & > * {
-    width: calc((100 - 2 * 10px) / 4); 
+    width: calc((100 - 2 * 10px) / 3); 
     margin: 10px; 
   }
 `;
 
 const NewPost = () => {
-    const [topPost, setTopPost] = useState([
+    const [newPost, setNewPost] = useState([
         {
-            "title" : "title1",
+            "title" : "50ìê°€ ë„˜ëŠ” ì œëª© í…ŒìŠ¤íŠ¸ [ì‚¬ì´ë“œ ëª¨ì§‘] ê¸°íšì í”„ë¡ íŠ¸ì—”ë“œ ê°œë°œì ë°±ì—”ë“œ ë¶„ë“¤ í”„ë¡œì íŠ¸ ê°™ì´",
             "author" : "username1",
-            "category" : "ÇÁ·Î±×·¡¹Ö",
-            "recruitStatus" : "¸ğÁıÁß",
+            "category" : "í”„ë¡œê·¸ë˜ë°",
+            "tags" : [
+                "tag1",
+                "tag2",
+                "tag3",
+                "tag4",
+                "tag5",
+                "tag6"
+            ],
+            "recruitStatus" : "ëª¨ì§‘ì¤‘",
             "createAt" : "2023-04-01",
-            "profileImage" : "image", // ÃßÈÄ ÀÌ¹ÌÁö ±â´É Ãß°¡ ÈÄ º¯°æ ¿¹Á¤
+            "profileImage" : "image", // ì¶”í›„ ì´ë¯¸ì§€ ê¸°ëŠ¥ ì¶”ê°€ í›„ ë³€ê²½ ì˜ˆì •
             "replyCount" : 5,
         },
         {
             "title" : "title2",
             "author" : "username2",
-            "category" : "¾îÇĞ",
-            "recruitStatus" : "¸ğÁı¿Ï·á",
+            "category" : "ì–´í•™",
+            "tags" : [
+                "tag1",
+                "tag2"
+            ],
+            "recruitStatus" : "ëª¨ì§‘ì™„ë£Œ",
             "createAt" : "2023-04-03",
-            "profileImage" : "image", // ÃßÈÄ ÀÌ¹ÌÁö ±â´É Ãß°¡ ÈÄ º¯°æ ¿¹Á¤
+            "profileImage" : "image", // ì¶”í›„ ì´ë¯¸ì§€ ê¸°ëŠ¥ ì¶”ê°€ í›„ ë³€ê²½ ì˜ˆì •
             "replyCount" : 4,
         },{
             "title" : "title1",
             "author" : "username1",
-            "category" : "ÇÁ·Î±×·¡¹Ö",
-            "recruitStatus" : "¸ğÁıÁß",
+            "category" : "í”„ë¡œê·¸ë˜ë°",
+            "tags" : [
+                "tag1",
+                "tag2"
+            ],
+            "recruitStatus" : "ëª¨ì§‘ì¤‘",
             "createAt" : "2023-04-01",
-            "profileImage" : "image", // ÃßÈÄ ÀÌ¹ÌÁö ±â´É Ãß°¡ ÈÄ º¯°æ ¿¹Á¤
+            "profileImage" : "image", // ì¶”í›„ ì´ë¯¸ì§€ ê¸°ëŠ¥ ì¶”ê°€ í›„ ë³€ê²½ ì˜ˆì •
             "replyCount" : 5,
         },
         {
             "title" : "title2",
             "author" : "username2",
-            "category" : "¾îÇĞ",
-            "recruitStatus" : "¸ğÁı¿Ï·á",
+            "category" : "ì–´í•™",
+            "tags" : [
+                "tag1",
+                "tag2"
+            ],
+            "recruitStatus" : "ëª¨ì§‘ì™„ë£Œ",
             "createAt" : "2023-04-03",
-            "profileImage" : "image", // ÃßÈÄ ÀÌ¹ÌÁö ±â´É Ãß°¡ ÈÄ º¯°æ ¿¹Á¤
+            "profileImage" : "image", // ì¶”í›„ ì´ë¯¸ì§€ ê¸°ëŠ¥ ì¶”ê°€ í›„ ë³€ê²½ ì˜ˆì •
             "replyCount" : 4,
         }
     ])
 return(
 
     <PostContainerWrapper>
-        <PostComponent type={"main"}/>
-        <PostComponent type={"main"}/>
-        <PostComponent type={"main"}/>
+       {newPost.map((post, index)=> (
+              <PostComponent key={index} 
+              type="main"
+              title={post.title}
+              author={post.author} category={post.category} tags={post.tags} recruitStatus={post.recruitStatus} date={post.createAt}replyCount={post.replyCount}
+              />
+            ))}
   
     </PostContainerWrapper>
 )

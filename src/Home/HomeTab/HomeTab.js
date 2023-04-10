@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import React, {useState, useEffect, lazy, Suspense } from "react";
-import TopPost from "./TopPost";
-import NewPost from "./NewPost";
-import RecruitingPost from "./RecruitingPost";
-import RecommendPost from "./RecommendPost";
+
+const TopPost = lazy(() => import('./TopPost'));
+const NewPost = lazy(() => import('./NewPost'));
+const RecruitingPost = lazy(() => import('./RecruitingPost'));
+const RecommendPost = lazy(() => import('./RecommendPost'));
 
 const Wrapper = styled.div`
   display: flex;
@@ -51,8 +52,6 @@ const TabList = styled.div`
   display: flex;
   align-content: center;
   justify-content: left;
-  min-width: 1100px;
-  max-width: 1500px;
   `;
 
 const HomeTab = () => {
@@ -64,25 +63,33 @@ const HomeTab = () => {
         {
           Title: <div onClick={() => onClickTab(0)}>새로운 글</div>,
           Content: (
-                <NewPost/>
+            <Suspense>
+              <NewPost/>
+            </Suspense>
           )
         },
         {
           Title: <div onClick={() => onClickTab(1)}>모집 중인 글</div>,
           Content: (
-            <RecruitingPost />
+            <Suspense>
+              <RecruitingPost />
+            </Suspense>
           )
         },
         {
           Title: <div onClick={() => onClickTab(2)}>추천 글</div>,
           Content: (
-            <RecommendPost/>        
+            <Suspense>
+              <RecommendPost/>        
+            </Suspense>
           )
         },
         {
           Title: <div onClick={() => onClickTab(3)}>인기글</div>,
           Content: (
-            <TopPost />      
+            <Suspense>
+              <TopPost />      
+            </Suspense>
           )
         }
       ];

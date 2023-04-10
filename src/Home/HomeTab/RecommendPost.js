@@ -15,47 +15,31 @@ const PostContainerWrapper = styled.div`
 `;
 
 const RecommendPost = () => {
-    const [topPost, setTopPost] = useState([
+    const [recommendPost, setRecommendPost] = useState([
         {
-            "title" : "title1",
-            "author" : "username1",
-            "category" : "ÇÁ·Î±×·¡¹Ö",
-            "recruitStatus" : "¸ğÁıÁß",
-            "createAt" : "2023-04-01",
-            "profileImage" : "image", // ÃßÈÄ ÀÌ¹ÌÁö ±â´É Ãß°¡ ÈÄ º¯°æ ¿¹Á¤
-            "replyCount" : 5,
-        },
-        {
-            "title" : "title2",
-            "author" : "username2",
-            "category" : "¾îÇĞ",
-            "recruitStatus" : "¸ğÁı¿Ï·á",
-            "createAt" : "2023-04-03",
-            "profileImage" : "image", // ÃßÈÄ ÀÌ¹ÌÁö ±â´É Ãß°¡ ÈÄ º¯°æ ¿¹Á¤
-            "replyCount" : 4,
-        },{
-            "title" : "title1",
-            "author" : "username1",
-            "category" : "ÇÁ·Î±×·¡¹Ö",
-            "recruitStatus" : "¸ğÁıÁß",
-            "createAt" : "2023-04-01",
-            "profileImage" : "image", // ÃßÈÄ ÀÌ¹ÌÁö ±â´É Ãß°¡ ÈÄ º¯°æ ¿¹Á¤
-            "replyCount" : 5,
-        },
-        {
-            "title" : "title2",
-            "author" : "username2",
-            "category" : "¾îÇĞ",
-            "recruitStatus" : "¸ğÁı¿Ï·á",
-            "createAt" : "2023-04-03",
-            "profileImage" : "image", // ÃßÈÄ ÀÌ¹ÌÁö ±â´É Ãß°¡ ÈÄ º¯°æ ¿¹Á¤
-            "replyCount" : 4,
+            title : "title1",
+            author : "username1",
+            category : "í”„ë¡œê·¸ë˜ë°",
+            tags : [
+                "tag1",
+                "tag2"
+            ],
+            recruitStatus : "ëª¨ì§‘ì¤‘",
+            createAt : "2023-04-01",
+            profileImage : "image", // ì¶”í›„ ì´ë¯¸ì§€ ê¸°ëŠ¥ ì¶”ê°€ í›„ ë³€ê²½ ì˜ˆì •
+            replyCount : 5,
         }
     ])
 return(
 
     <PostContainerWrapper>
-        <PostComponent type={"main"}/>
+        {recommendPost.map((post, index)=> (
+              <PostComponent key={index} 
+              type="main"
+              title={post.title}
+              author={post.author} category={post.category} tags={post.tags} recruitStatus={post.recruitStatus} date={post.createDate}replyCount={post.replyCount}
+              />
+            ))}
   
     </PostContainerWrapper>
 )
