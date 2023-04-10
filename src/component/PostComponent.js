@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import profileImg from "./profileImg.png";
+import profile from "./profileImg.png";
 import { AiOutlineComment, AiFillHeart } from "react-icons/ai";
 import { CiMenuKebab } from "react-icons/ci";
 
@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   border: 2px solid #5d5fef;
   border-radius: 20px;
+  justify-content: left;
   position: relative;
   h3 {
     font-size: 19px;
@@ -88,7 +89,7 @@ const Line = styled.hr`
 const Profile = styled.div`
   display: flex;
   color: gray;
-  margin-left: 5px;
+  margin-left: 10px;
   p {
     margin: 8px;
   }
@@ -112,9 +113,10 @@ const CommentIcon = styled(AiOutlineComment)`
 
 const CommentBox = styled.div`
   display: inline-flex;
-
+  position: absolute;
+  top: 5px;
+  left: 200px;
   align-items: center;
-  margin-left: 110px;
   color: gray;
   p {
     margin: 8px;
@@ -173,23 +175,18 @@ const MenuItem = styled.li`
   }
 `;
 
-const PostComponent = ({ type }) => {
-  //Title 최대 50자까지
-  //Tag 최대 5개
-  const posts = {
-    id: "user1",
-    category: "프로그래밍",
-    title:
-      "IT직군 포폴 + 블로그 서비스를 함께 만들어갈 크루원들을 모집 합니다! 글자 수는 최대 50까지",
-    date: "2022-03-29",
-    tags: ["프론트엔드", "리액트", "앱개발", "웹개발", "디자이너", "백엔드"],
-    comments: 2,
-    status: "모집 중"
-  };
+const PostComponent = ({ type, title, author, category, tags, recruitStatus, date, profileImg, replyCount }) => {
   const [isMypost, setIsMypost] = useState(false);
   const [isMyLiked, setIsMyLiked] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
+  if(tags.length > 5) {
+    tags = tags.slice(0, 5); 
+  }
+  if(title.length > 50) {
+    title = title.slice(0,47) + "...";
+  }
+  
   let recruitmentId = 1; //수정하기
 
   useEffect(() => {
@@ -242,9 +239,9 @@ const PostComponent = ({ type }) => {
       <Top>
         <CatergoryBlock>
           <Tag backgroundColor="#EAEAEA" color="#5D5FEF">
-            {posts.category}
+            {category}
           </Tag>
-          <Tag color="black">{posts.status}</Tag>
+          <Tag color="black">{recruitStatus}</Tag>
         </CatergoryBlock>
         {isMypost ? (
           <>
@@ -256,12 +253,12 @@ const PostComponent = ({ type }) => {
             className={isMyLiked ? "liked" : ""}
           />
         )}
-        <Date>게시일 | {posts.date}</Date>
+        <Date>게시일 | {date}</Date>
       </Top>
 
-      <h3>{posts.title}</h3>
+      <h3>{title}</h3>
       <TagListBlock>
-        {posts.tags.map((tag) => (
+        {tags.map((tag) => (
           <Tag key={tag}>#{tag}</Tag>
         ))}
       </TagListBlock>
@@ -269,12 +266,12 @@ const PostComponent = ({ type }) => {
       <Line />
       <Bottom>
         <Profile>
-          <UserImg src={profileImg} alt="프로필 사진" />
-          <p>{posts.id}</p>
+          <UserImg src={profile} alt="프로필 사진" />
+          <p>{author}</p>
         </Profile>
         <CommentBox>
           <CommentIcon />
-          {posts.comments}
+          {replyCount}
         </CommentBox>
       </Bottom>
     </Wrapper>
