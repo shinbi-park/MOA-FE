@@ -115,25 +115,27 @@ const SignupPage = () => {
 
     console.log(signUpData);
 
-    fetch("/user/sign-up", {
+    fetch("http://13.125.111.131:8080/user/sign-up", {
       method: "POST",
       body: JSON.stringify(signUpData),
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-    .then((response) => {
-      if (response !== 201) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      .then((response) => {
+        if (response !== 201) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        window.location.href = '/';
+        alert("회원가입에 성공하였습니다!");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
     return ( 

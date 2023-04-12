@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import Modal from "../LogIn/Modal";
@@ -60,6 +60,15 @@ const NavItem = styled.li`
 const Header = () => {
   const [signInModal, setSignInModal] = useState(false);
   const [userLogIn, setUserLogIn] = useState(false);
+
+  useEffect(() => { //로그인 확인
+    const authorization = window.localStorage.getItem("Authorization");
+    const authorizationRefresh = window.localStorage.getItem("AuthorizationRefresh");
+    
+    if (authorization && authorizationRefresh) {
+      userLogIn(true);
+    }
+  }, []);
 
   return (
     <>
