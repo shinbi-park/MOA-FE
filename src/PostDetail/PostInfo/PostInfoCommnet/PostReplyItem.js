@@ -36,7 +36,18 @@ const ReplyEditBtn = styled.button`
   font-size: 12px;
 `;
 
-const PageReplyItem = ({ item, onDeleteReply, onEditReply }) => {
+const ReplyEditInput = styled.textarea`
+  resize: none;
+  width: 896px;
+  border-radius: 10px;
+  height: 62px;
+  padding: 10px;
+  :focus {
+    outline: none;
+  }
+`;
+
+const PostReplyItem = ({ item, onDeleteReply, onEditReply }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [curContent, setCurContent] = useState(item.content);
 
@@ -70,7 +81,7 @@ const PageReplyItem = ({ item, onDeleteReply, onEditReply }) => {
         <ReplyContent> {item.content} </ReplyContent>
       ) : (
         <ReplyContent>
-          <textarea
+          <ReplyEditInput
             value={curContent}
             onChange={(e) => setCurContent(e.target.value)}
           />
@@ -80,4 +91,4 @@ const PageReplyItem = ({ item, onDeleteReply, onEditReply }) => {
   );
 };
 
-export default PageReplyItem;
+export default PostReplyItem;

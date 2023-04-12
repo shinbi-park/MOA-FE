@@ -1,13 +1,24 @@
 import { atom } from "recoil";
+import { recruitDummy } from "./DummyData";
+
+export const postData = atom({
+  key: "postData",
+  default: recruitDummy,
+});
 
 export const titleState = atom({
   key: "titleState",
-  default: "1",
+  default: 1,
 });
 
 export const ScheduleUser = atom({
   key: "ScheduleUser",
-  default: "user1",
+  default: [],
+});
+
+export const ScheduleLeftUser = atom({
+  key: "ScheduleLeftUser",
+  default: [],
 });
 
 export const ScheduleHover = atom({
@@ -18,4 +29,14 @@ export const ScheduleHover = atom({
 export const ScheduleSelect = atom({
   key: "ScheduleSelect",
   default: { date: "", time: "", value: false },
+});
+
+// export const scheduleTime = atom({
+//   key: "scheduleData",
+//   default: {},
+// });
+
+export const myPostData = atom({
+  key: "myPostData",
+  default: "",
 });

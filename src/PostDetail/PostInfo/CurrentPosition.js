@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
@@ -60,6 +61,26 @@ const PartApply = styled.button`
 
 const CurrentPosition = ({ item, index }) => {
   const [applyToggle, setApplyToggle] = useState(false);
+
+  // const fetchApply = async() => {
+  //   if(!applyToggle){
+  //   await axios.post(`http://192.168.0.26:8080//recruitment/${recruitmentId}/apply`, {
+  //           headers: {
+  //             Authorization: tokenA,
+  //             AuthorizationRefresh: tokenB,
+  //           },
+  //         })
+  //       }else{
+  //         await axios.post(`http://192.168.0.26:8080//recruitment/${recruitmentId}/cancel`, {
+  //           headers: {
+  //             Authorization: tokenA,
+  //             AuthorizationRefresh: tokenB,
+  //           },
+  //         })
+
+  //       }
+  // }
+
   return (
     <CurrentPartWrap key={index}>
       <PartSection>{item.recruitField}</PartSection>
@@ -67,7 +88,9 @@ const CurrentPosition = ({ item, index }) => {
         {item.currentCount}/{item.totalCount}
       </PartSectionCount>
       <PartApply
-        onClick={() => setApplyToggle(!applyToggle)}
+        onClick={() => {
+          setApplyToggle(!applyToggle); /*fetchApply();*/
+        }}
         className={
           applyToggle
             ? "applying"

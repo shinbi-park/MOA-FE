@@ -1,5 +1,12 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { myPostData, postData } from "../../common/atoms";
+import { useEffect } from "react";
+import { useState } from "react";
+import { getPostData, mySelector } from "../../common/selector";
+import { useMemo } from "react";
+import ReactQuill from "react-quill";
 
 const IntroductionDiv = styled.div`
   white-space: pre-wrap;
@@ -15,12 +22,14 @@ const HrLine = styled.hr`
   margin-top: 25px;
 `;
 
-const PostInfoAbout = ({ postData }) => {
+const PostInfoAbout = ({ curPost }) => {
+  const data = useRecoilValue(postData);
+
   return (
     <div>
       <h1>프로젝트 소개</h1>
       <div>
-        <IntroductionDiv>{postData[0].content}</IntroductionDiv>
+        <IntroductionDiv>{curPost.bs}</IntroductionDiv>
       </div>
       <HrLine />
     </div>
