@@ -66,7 +66,7 @@ const Header = () => {
     const authorizationRefresh = window.localStorage.getItem("AuthorizationRefresh");
     
     if (authorization && authorizationRefresh) {
-      userLogIn(true);
+      setUserLogIn(true);
     }
   }, []);
 
