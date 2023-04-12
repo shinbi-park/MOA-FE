@@ -17,6 +17,10 @@ const Side = styled.div`
   padding: 16px;
   font-weight: 650;
   font-size: 19px;
+  a, a:visited {
+    text-decoration: none;
+    color: #292929;
+  }
   h3 {
     display: flex;
     margin: 0px;
@@ -34,13 +38,15 @@ const Menu = styled.div`
   margin-top: 15px;
   width: 200px;
   flex-direction: column;
+  color: #292929;
   .active {
-    color: black;
+    color: #5d5fef !important;
     text-decoration: underline;
   }
   p{
     margin-bottom: 18px;
     margin-top: 18px;
+    cursor: pointer;
   }
 `;
 
@@ -50,15 +56,6 @@ const PopularityContainer = styled.div`
   align-items: center;
 `;
 
-const activeStyle = {
-  color: "#5d5fef",
-  textDecoration: "underline"
-};
-const deactiveStyle = {
-  color: "#292929",
-  textDecoration: "none"
-};
-
 function Sidebar() {
   const menus = [
     { name: "프로필", path: "/mypage/profile" },
@@ -66,8 +63,27 @@ function Sidebar() {
     { name: "작성한 글", path: "/mypage/mylist" },
     { name: "관심글", path: "/mypage/likedlist" },
     { name: "정보설정", path: "/mypage/setting" },
-    { name: "회원탈퇴", path: "/withdraw" }
   ];
+
+  const onClickWithdraw = () => {
+    const result = window.confirm("정말 탈퇴하시겠습니까?");
+    if (result) {
+      fetch(`http://13.125.111.131:8080/user/withdraw`, {
+        method: "DELETE",
+        headers: {
+          Authorization:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo4LCJleHAiOjE2ODEyNzcwOTF9.qNFbSaIv_fUcJ4BV-gPIRY_t5u84zbEFahx4FdgSukw7qnvV-OdnVifFdxBg0Zk5cs1I0VfO1YBTjaJJUwSmbA",
+          AuthorizationRefresh:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyNzcxOTF9.fhkN47qnZY-Xqgik3RRWH_BXYjy1y95nYBzFwp77Wz1m81ZA_9PbJmb6sTWMciNXkOTenWEg100694CEDApEww",
+        },
+      })
+        .then((response) =>
+          response === 200
+            ? alert("회원 탈퇴가 되었습니다!")
+            : alert("회원 탈퇴에 실패하였습니다")
+        );
+    }
+  };
   return (
     <Side>
       <Profile src={profile} alt="프로필 사진"></Profile>
@@ -78,8 +94,8 @@ function Sidebar() {
         {menus.map((menu, index) => {
           return (
             <NavLink
-              style={({ isActive }) => {
-                return isActive ? activeStyle : deactiveStyle;
+              className={({ isActive }) => {
+                return isActive ? "active" : "";
               }}
               to={menu.path}
               key={index}
@@ -88,6 +104,9 @@ function Sidebar() {
             </NavLink>
           );
         })}
+        <div onClick={onClickWithdraw}>
+          <p>회원탈퇴</p>
+        </div>
       </Menu>
     </Side>
   );
