@@ -1,5 +1,6 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
+import UserPopularity from "../component/UserPopularity";
 
 const Wrapper = styled.div`
   display: flex;
@@ -14,7 +15,7 @@ const Table = styled.table`
   width: 600px;
   height: 40px;
   font-weight: 550;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   box-shadow: 2px 1px 5px #BDBDBD;
   
   td {
@@ -72,6 +73,23 @@ const Container = styled.div`
     }
 `;
 
+const StarContaienr = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    align-items: center;
+    h3{
+      margin-right: 10px;
+      width: 120px;
+    }
+    span{
+      width: 140px;
+      margin-right: 5px;
+      font-size: 17px;
+      font-weight: 500;
+    }
+`;
+
 const ButtonContaienr = styled.div`
     display: flex;
     flex-direction: row;
@@ -108,8 +126,35 @@ const LinkItem = React.memo(({ link }) => (
   ));
 
 const InfoDetail = () => {
-
+/*
+  useEffect( () => {
+    fetch(`/user/info/profile`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then((response) => {
+      console.log(response);
+    });
+  }, [])
+*/
+  const [userInfo, setUserInfo] = useState({
+    "email" : "userId@email.com",
+    "name" : "username",
+    "nickname" : "nickname",
+    "locationLatitude" : 34.545,
+    "locationLongitude" : 34.545234,
+    "popularity" : 2.4,
+    "details" : "details",
+    "interests" : [
+        "백엔드",
+        "자바"
+    ]
+});
+  
     const [applicant, setApplicant] = useState('user1');
+    const [popularityCnt, setPopularityCnt] = useState(5); //평가 받은 프로젝트 수
     const [applyPosition, setApplyPosition] = useState('프론트엔드');
     const [introDetail, setIntroDetail] = useState('지원자 상세 소개');
     const [links, setLinks] = useState(["naver.com", "github.com"]);
@@ -121,12 +166,16 @@ const InfoDetail = () => {
                 <tbody>
                     <tr>
                     <td>지원자</td>
-                    <td>{applicant}</td>
+                    <td>{userInfo.nickname}</td>
                     <td>지원 포지션</td>
                     <td>{applyPosition}</td>
                     </tr>
                 </tbody>
             </Table>
+            <StarContaienr>
+            <h3>지원자 별점</h3> <span>총 {popularityCnt}개의 평가 중</span> <UserPopularity />
+            </StarContaienr>
+
             <h3>지원자 상세 소개</h3>
             <IntroContainer>{introDetail}</IntroContainer>
             <h3>링크</h3>

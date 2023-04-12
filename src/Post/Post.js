@@ -45,6 +45,16 @@ const Post = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        if(content.trim() === ''){
+          alert('프로젝트 소개를 입력해주세요!');
+          return;
+        }
+
+        if(tags.length === 0) {
+          alert('태그를 적어도 하나 추가해주세요!');
+          return;
+        } 
+
         setPostData({
           title: title,
           content: content,
@@ -53,7 +63,7 @@ const Post = () => {
           tags: tags,
         })
 
-        //������ ����
+        //데이터 전송
         fetch("/recruitment", {
             method: "POST",
             body: JSON.stringify(postData),

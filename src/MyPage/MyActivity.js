@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import styled from "styled-components";
 import Sidebar from "./Sidebar/Sidebar";
+import {Link} from "react-router-dom";
 
 const Wrapper = styled.div`
   height: 92vh;
@@ -69,6 +70,7 @@ const Button = styled.button`
   margin-left: 10px;
   border-radius: 10px;
   font-weight: 700;
+  cursor: pointer;
 `;
 
 const EmptyProject = styled.div`
@@ -86,23 +88,45 @@ const EmptyProject = styled.div`
 `;
 
 
-const ProjectItem = React.memo(({ title, link , color, className }) => (
-  <Project color= {color}> {title} 
-  <Button 
-    style={{color: className==='past' ? color : 'black',
-    borderColor: className === 'past' ? color : 'black'}}> 상세보기 </Button> 
+const ProjectItem = React.memo(({ title, link, color, className }) => (
+  <Project color={color}>
+    {title}
+    <Button
+      style={{
+        color: className === 'past' ? color : 'black',
+        borderColor: className === 'past' ? color : 'black'
+      }}
+      onClick={() => { window.location.href = link; }}
+    >
+      상세보기
+    </Button>
   </Project>
 ));
+
 
 const ProjectList = React.memo(({ projects, color, className }) => (
   <ProjectListBlock>
     {projects.map((project, index) => (
-      <ProjectItem key={index} title={project.title} link={project.link} color = {color} className={className} />
+      <ProjectItem key={index} title={project.title} link={project.detailsUri} color={color} className={className} />
     ))}
   </ProjectListBlock>
 ));
 
-const ApplyItem = React.memo(({ title, position, status }) => (
+const CancelApply = (e) => {
+e.preventDefault();
+const result = window.confirm("지원을 취소한 이후에는 다시 지원할 수 없습니다. 지원을 취소하겠습니까?");
+if(result){
+  fetch(`/`, {
+    method: "",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .then((response) => response === 200 ? alert("지원이 취소되었습니다!") : alert("지원 취소에 실패하였습니다"))
+}
+}
+
+const ApplyItem = React.memo(({ title, position, status,cancelUri, detailsUri }) => (
   <Project className="Apply"> 
     <span className="title">{title}</span> <span>{position}</span> 
     <span style={{ color: 
@@ -111,7 +135,7 @@ const ApplyItem = React.memo(({ title, position, status }) => (
     'black'}}>{status}
   </span>
   <ButtonContainer>
-    <Button style={{visibility: status==='승인 대기중' ? "visible" : "hidden"}}> 지원취소 </Button> <Button> 상세보기 </Button>
+    <Button style={{visibility: status==='대기중' ? "visible" : "hidden"}}> 지원취소 </Button> <Button onClick={() => { window.location.href = detailsUri; }}> 상세보기 </Button>
     </ButtonContainer> 
   </Project>
 ));
@@ -121,8 +145,10 @@ const ApplyList = React.memo(({ projects }) => (
     {projects.map((project) => (
       <ApplyItem key={project.title} 
       title = {project.title}
-      position = {project.position}
+      position = {project.field}
       status = {project.status}
+      cancelUri={project.cancelUri}
+      detailsUri={project.detailsUri}
       />
     ))}
   </ProjectListBlock>
@@ -131,45 +157,33 @@ const ApplyList = React.memo(({ projects }) => (
 
 
 const MyActivity = () => {
-  
-  const currentProject = [{
-    title: "현재 참여중인 프로젝트 1",
-    link: "www.link1.com"
-  },
-  {
-    title: "현재 참여중인 프로젝트 2",
-    link: "www.link2.com"
-  },
+  const [userActivity, setUserActivity] = useState({
+    approvedProjects : {
+        CONCURRENT : [
+            {
+                title : "title1",
+                detailsUri : "/recruitment/1"
+            }
+        ],
+        FINISH : []
+    },
+    etcProjects : [
+        {
+            title : "title2",
+            field : "백엔드",
+            cancelUri : "/recruitment/2/cancel",
+            detailsUri : "/recruitment/2",
+            status : "대기중"
+        }
+    ]
+});
+const [currentProject, setCurrentProject] = useState(userActivity.approvedProjects.CONCURRENT);
+const [applyProject, setApplyProject] = useState(userActivity.etcProjects);
+const [pastProject, setPastProject] = useState(userActivity.approvedProjects.FINISH);
+console.log(currentProject);
+console.log(applyProject);
+console.log(currentProject);
 
-  ]
-    
-  const applyProject = [
-    {
-      title: "지원한 프로젝트 1",
-      position: "프론트엔드",
-      status: "승인 대기중"
-    },
-    {
-      title: "지원한 프로젝트 2",
-      position: "백엔드",
-      status: "거절"
-    },
-    {
-      title: "지원한 프로젝트 3",
-      position: "디자이너",
-      status: "수락"
-    }]
-    const pastProject = [{}];
-    /*
-    const pastProject = [{
-      title: "완료한 프로젝트 1",
-      link: "www.link1.com"
-    },
-    {
-      title: "완료한 프로젝트 2",
-      link: "www.link2.com"
-    },]
-*/
     return (
         <Wrapper>
           <SidebarContainer>
@@ -178,7 +192,7 @@ const MyActivity = () => {
             <Container>
               <h3>현재 참여중인 프로젝트</h3>
               {
-                currentProject.length > 1 ?
+                currentProject.length > 0 ?
                 <ProjectList color = '#5d5fef' projects={currentProject} className="current"/>:
                 <EmptyProject> 현재 참여중인 프로젝트가 없습니다 </EmptyProject>
               }
@@ -186,7 +200,7 @@ const MyActivity = () => {
 
               <h3>지원한 프로젝트</h3>
               {
-                applyProject.length > 1 ? 
+                applyProject.length > 0 ? 
                 <ApplyList projects = {applyProject}/> : 
                 <EmptyProject> 지원한 프로젝트가 없습니다 </EmptyProject>
               }
@@ -194,7 +208,7 @@ const MyActivity = () => {
 
               <h3>완료한 프로젝트</h3>
               {
-                pastProject.length > 1 ? 
+                pastProject.length > 0 ? 
                 <ProjectList color = '#707070' projects={pastProject} className="past"/> :
                  <EmptyProject> 완료한 프로젝트가 없습니다 </EmptyProject>
               }
