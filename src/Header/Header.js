@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Modal from "../LogIn/Modal";
 import SignInForm from "../LogIn/SignInForm";
@@ -22,7 +22,8 @@ const Logo = styled.h1`
   a {
     text-decoration: none;
     border-bottom: none;
-    &.visited, &:visited {
+    &.visited,
+    &:visited {
       text-decoration: none;
       border-bottom: none;
       color: #5d5fef;
@@ -52,7 +53,7 @@ const NavItem = styled.li`
     text-decoration: none;
   }
 
-  &:hover{
+  &:hover {
     border-bottom: 2px solid #5d5fef;
   }
 `;
@@ -61,29 +62,49 @@ const Header = () => {
   const [signInModal, setSignInModal] = useState(false);
   const [userLogIn, setUserLogIn] = useState(false);
 
-  useEffect(() => { //로그인 확인
+  useEffect(() => {
+    //로그인 확인
     const authorization = window.localStorage.getItem("Authorization");
-    const authorizationRefresh = window.localStorage.getItem("AuthorizationRefresh");
-    
+    const authorizationRefresh = window.localStorage.getItem(
+      "AuthorizationRefresh"
+    );
+
     if (authorization && authorizationRefresh) {
       setUserLogIn(true);
     }
   }, []);
 
+  const onClickSignout = () => {
+    window.localStorage.removeItem("Authorization");
+    window.localStorage.removeItem("AuthorizationRefresh");
+    setUserLogIn(false);
+    window.location.href = "/";
+  };
+
   return (
     <>
       <Nav>
-        <Logo><Link to="/">MO:A</Link></Logo>
-        {userLogIn ? <NavList>
-          <NavItem><Link to="/post">새 글쓰기</Link></NavItem>
-          <NavItem><Link to="/mypage">마이페이지</Link></NavItem>
-          <NavItem><Link to="/signout">로그아웃</Link></NavItem>          
-        </NavList> 
-        : 
-        <NavList>
-          <NavItem onClick={() => setSignInModal(true)}>로그인</NavItem>
-          <NavItem><Link to="/signup">회원가입</Link></NavItem>
-        </NavList>}
+        <Logo>
+          <Link to="/">MO:A</Link>
+        </Logo>
+        {userLogIn ? (
+          <NavList>
+            <NavItem>
+              <Link to="/post">새 글쓰기</Link>
+            </NavItem>
+            <NavItem>
+              <Link to="/mypage">마이페이지</Link>
+            </NavItem>
+            <NavItem onClick={onClickSignout}>로그아웃</NavItem>
+          </NavList>
+        ) : (
+          <NavList>
+            <NavItem onClick={() => setSignInModal(true)}>로그인</NavItem>
+            <NavItem>
+              <Link to="/signup">회원가입</Link>
+            </NavItem>
+          </NavList>
+        )}
       </Nav>
       {signInModal && (
         <Modal onClose={() => setSignInModal(false)}>
