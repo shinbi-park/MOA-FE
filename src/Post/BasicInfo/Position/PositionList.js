@@ -1,3 +1,4 @@
+import React from "react";
 import PositionListItem from "./PositionListItem";
 import styled from "styled-components";
 

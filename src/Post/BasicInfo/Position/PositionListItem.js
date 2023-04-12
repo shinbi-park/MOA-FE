@@ -20,7 +20,7 @@ const InputText = styled.input`
   display: inline-flex;
   align-items: center;
   background-color: transparent;
-  box-shadow: 2px 1px 5px #BDBDBD;
+  box-shadow: 2px 1px 5px #bdbdbd;
 `;
 const Button = styled.button`
   margin: 10px;
@@ -32,26 +32,27 @@ const Button = styled.button`
   }
 `;
 
-const PositionListItem = ({ position, onPositionChange}) => {
+const PositionListItem = ({ position, onPositionChange }) => {
   const [num, setNum] = useState(1);
   const [positionName, setPositionName] = useState("");
 
-  
-  const onChange = useCallback((e) => {
-    setPositionName(e.target.value);
-    onPositionChange(position.id, num, e.target.value);
-  }, [position.id, num, onPositionChange]);
-  
+  const onChange = useCallback(
+    (e) => {
+      setPositionName(e.target.value);
+      onPositionChange(position.id, num, e.target.value);
+    },
+    [position.id, num, onPositionChange]
+  );
 
   const addPeople = (event) => {
     event.preventDefault();
     setNum((prevNum) => {
-      if(prevNum < 8){ // 최대 8명까지
+      if (prevNum < 8) {
+        // 최대 8명까지
         const newNum = prevNum + 1;
         onPositionChange(position.id, newNum, positionName);
         return newNum;
-      }
-      else return 8;
+      } else return 8;
     });
   };
 
@@ -59,14 +60,13 @@ const PositionListItem = ({ position, onPositionChange}) => {
     event.preventDefault();
 
     setNum((prevNum) => {
-      if(prevNum > 1){ //최소 1명
+      if (prevNum > 1) {
+        //최소 1명
         const newNum = prevNum - 1;
         onPositionChange(position.id, newNum, positionName);
         return newNum;
-      }
-      else return 1;
+      } else return 1;
     });
-    
   };
 
   return (

@@ -34,6 +34,17 @@ const CommentContent = styled.li`
   margin: 10px 0;
 `;
 
+const CommentEditInput = styled.textarea`
+  resize: none;
+  width: 896px;
+  border-radius: 10px;
+  height: 62px;
+  padding: 10px;
+  :focus {
+    outline: none;
+  }
+`;
+
 const PostCommentItem = ({ item, onDeleteComment, onEditComment }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [curContent, setCurContent] = useState(item.content);
@@ -73,7 +84,7 @@ const PostCommentItem = ({ item, onDeleteComment, onEditComment }) => {
         <CommentContent> {item.content} </CommentContent>
       ) : (
         <CommentContent>
-          <textarea
+          <CommentEditInput
             value={curContent}
             onChange={(e) => setCurContent(e.target.value)}
           />

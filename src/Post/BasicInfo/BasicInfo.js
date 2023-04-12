@@ -14,24 +14,34 @@ const Line = styled.hr`
   width: 750px;
   margin: 10px 15px 30px;
   border: 1px solid #5d5fef;
-  box-shadow: 2px 1px 2px #BDBDBD;
+  box-shadow: 2px 1px 2px #bdbdbd;
 `;
 
-const BasicInfo = ({ handleCategoriesChange, handleFieldsChange, handleTagsChange }) => {
+const BasicInfo = ({
+  handleCategoriesChange,
+  handleFieldsChange,
+  handleTagsChange,
+  isEdit,
+  data,
+}) => {
+  return (
+    <>
+      <ProjectIntro>프로젝트 기본 정보</ProjectIntro>
+      <Line />
 
-    return (
-        <>
-            <ProjectIntro>프로젝트 기본 정보</ProjectIntro>
-            <Line />
-
-            <Category handleCategoriesChange={handleCategoriesChange}/>
-            <Postion handleFieldsChange={handleFieldsChange}/>
-            <TagBox handleTagsChange={handleTagsChange}/>
-
-        </>
-    )
-    
-
-}
+      <Category
+        handleCategoriesChange={handleCategoriesChange}
+        isEdit={isEdit}
+        data={data}
+      />
+      <Postion
+        handleFieldsChange={handleFieldsChange}
+        isEdit={isEdit}
+        data={data}
+      />
+      <TagBox handleTagsChange={handleTagsChange} isEdit={isEdit} data={data} />
+    </>
+  );
+};
 
 export default BasicInfo;

@@ -28,7 +28,7 @@ const EditParticipantDiv = styled.div`
   position: absolute;
   border: 1px solid black;
   background-color: #efefef;
-  left: 120px;
+  left: 121px;
   width: 120px;
   top: 60px;
   height: 130px;

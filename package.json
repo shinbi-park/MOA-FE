@@ -11,11 +11,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
-<<<<<<< HEAD
-=======
     "react-kakao-maps": "^0.0.13",
     "react-kakao-maps-sdk": "^1.1.8",
->>>>>>> 3d3f19d9d20781425136f6c55fdc3ede486ffced
     "react-quill": "^2.0.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.9.0",

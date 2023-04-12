@@ -2,6 +2,7 @@ import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import styled from "styled-components";
 import React, { useState } from "react";
+import { useEffect } from "react";
 
 const EditorWrapper = styled.div`
   margin-top: 40px;
@@ -17,7 +18,7 @@ const Line = styled.hr`
   width: 750px;
   margin: 10px 15px 30px;
   border: 1px solid #5d5fef;
-  box-shadow: 2px 1px 2px #BDBDBD;
+  box-shadow: 2px 1px 2px #bdbdbd;
 `;
 
 const TitleInput = styled.input`
@@ -33,7 +34,25 @@ const TitleInput = styled.input`
   display: flex;
 `;
 
-const Editor = ( {handleTitleChange, handleContentChange} ) => {
+const Editor = ({ handleTitleChange, handleContentChange, isEdit, data }) => {
+  const [curTitle, setCurTitle] = useState("");
+  const [curContent, setCurContent] = useState("");
+  useEffect(() => {
+    if (isEdit) {
+      setCurTitle(data[0].title);
+      setCurContent(data[0].content);
+    }
+  }, [isEdit]);
+
+  const curTitleHandle = (e) => {
+    setCurTitle(e.target.value);
+    handleTitleChange(curTitle);
+  };
+
+  const curContentHandle = (e) => {
+    setCurContent(e);
+    handleContentChange(curContent);
+  };
 
   const modules = {
     toolbar: [
@@ -48,13 +67,32 @@ const Editor = ( {handleTitleChange, handleContentChange} ) => {
     <EditorWrapper>
       <h2>프로젝트 소개</h2>
       <Line />
-      <TitleInput onChange={handleTitleChange} placeholder="제목을 입력해주세요" required/>
-      <ReactQuill
-        style={{ height: "300px", width:"710px", marginLeft: "30px" }}
-        onChange={handleContentChange}
-        modules={modules}
-        placeholder="내용을 입력해주세요"
-      ></ReactQuill>
+      {!isEdit ? (
+        <>
+          <TitleInput
+            onChange={handleTitleChange}
+            placeholder="제목을 입력해주세요"
+            required
+          />
+          <ReactQuill
+            style={{ height: "300px", width: "710px", marginLeft: "30px" }}
+            onChange={handleContentChange}
+            modules={modules}
+            placeholder="내용을 입력해주세요"
+          ></ReactQuill>
+        </>
+      ) : (
+        <>
+          <TitleInput value={curTitle} onChange={curTitleHandle} required />
+          <ReactQuill
+            style={{ height: "300px", width: "710px", marginLeft: "30px" }}
+            onChange={curContentHandle}
+            modules={modules}
+            value={curContent}
+            placeholder="내용을 입력해주세요"
+          ></ReactQuill>
+        </>
+      )}
     </EditorWrapper>
   );
 };
