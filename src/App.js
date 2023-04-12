@@ -1,3 +1,4 @@
+
 import './App.css';
 import Post from './Post/Post';
 import SignInForm from './LogIn/SignInForm';
@@ -12,11 +13,12 @@ import MyPostList from './MyPage/MyPostList';
 import Likedlist from './MyPage/Likedlist';
 import SignupPage from './LogIn/SignUpPage';
 import Home from './Home/Home';
+import PostDetail from "./PostDetail/PostDetail";
 
 function App() {
   return (
     <>
-    <Header />
+      
     <Routes> 
       <Route path="/" element={<Home />} />
       <Route path="/post" element={<Post />} />
@@ -28,6 +30,8 @@ function App() {
       <Route path="/applicantDetail" element={<InfoDeatil />} />
       <Route path="/mypage/mylist" element={<MyPostList />} />
       <Route path="/mypage/likedlist" element={<Likedlist />} />
+      <Route path="/detail" element={<PostDetail />} />
+      
       
     </Routes>
     </>

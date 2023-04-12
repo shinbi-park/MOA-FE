@@ -6,13 +6,12 @@ import React, { useState } from "react";
 const EditorWrapper = styled.div`
   margin-top: 40px;
 
-  h2{
+  h2 {
     text-align: left;
     margin-left: 15px;
     margin-bottom: 5px;
   }
 `;
-
 
 const Line = styled.hr`
   width: 750px;
@@ -41,8 +40,8 @@ const Editor = ( {handleTitleChange, handleContentChange} ) => {
       [{ header: "1" }, { header: "2" }],
       ["bold", "italic", "underline", "strike"],
       [{ list: "ordered" }, { list: "bullet" }],
-      ["blockquote", "code-block", "link", "image"]
-    ]
+      ["blockquote", "code-block", "link", "image"],
+    ],
   };
 
   return (
