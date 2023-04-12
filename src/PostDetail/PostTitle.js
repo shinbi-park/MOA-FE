@@ -72,9 +72,9 @@ const PostTitle = () => {
         <RecruitPart>{data[0].postUser.userName}</RecruitPart>
         <RecruitState
           className={
-            (titles === "1" && "recruiting") ||
-            (titles === "2" && "recruitDone") ||
-            (titles === "3" && "projectDone")
+            (titles === 1 && "recruiting") ||
+            (titles === 2 && "recruitDone") ||
+            (titles === 3 && "projectDone")
           }
         ></RecruitState>
       </PostRecruitwrap>

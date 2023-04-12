@@ -1,10 +1,11 @@
-// import axios from "axios";
-// import { selector } from "recoil";
+import axios from "axios";
+import { selector } from "recoil";
+import { myPostData } from "./atoms";
 
-// export const getPostData = selector({
-//   key: "getPostData",
-//   get: async () =>
-//     await axios
-//       .get("")
-//       .then((response) => response.data),
-// });
+export const getPostData = selector({
+  key: "getPostData",
+  get: ({ get }) => {
+    const data = get(myPostData);
+    return data;
+  },
+});

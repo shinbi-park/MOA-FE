@@ -6,15 +6,26 @@ import PostInfoCurrent from "./PostInfoCurrent";
 import { useEffect } from "react";
 import { useState } from "react";
 import { recruitDummy } from "../../common/DummyData";
-import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { getPostData } from "../../common/selector";
 
 const PostInfo = () => {
-  const [error, setError] = useState();
+  const [curPost, setCurPost] = useState("");
+  const myPost = useRecoilValue(getPostData);
+
+  useEffect(() => {
+    if (myPost.length >= 1) {
+      const targetPost = myPost.find((item) => item.id === 1);
+      if (targetPost) {
+        setCurPost(targetPost.company);
+      }
+    }
+  }, [myPost]);
 
   return (
     <div>
       <PostInfoCurrent />
-      <PostInfoAbout />
+      <PostInfoAbout curPost={curPost} />
       <PostInfoComment />
     </div>
   );

@@ -34,8 +34,9 @@ const NoticeAddBtnDiv = styled.div`
 const NoticeAddBtn = styled.button`
   margin-top: 14px;
   border-radius: 10px;
-  border: 2px solid #000;
-  background-color: #fff;
+  background-color: black;
+  color: #fff;
+  font-weight: 600;
   width: 87px;
   height: 28px;
 `;

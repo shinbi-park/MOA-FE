@@ -54,7 +54,7 @@ const Post = ({ isEdit, data }) => {
     });
 
     //������ ����
-    fetch("http://192.168.0.26:8080/recruitment", {
+    fetch("http://13.125.111.131:8080/recruitment", {
       method: "POST",
       body: JSON.stringify(postData),
       headers: {

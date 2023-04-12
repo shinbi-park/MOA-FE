@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { recruitDummy } from "../common/DummyData";
-import axios from "axios";
 import PostTab from "./PostTab/PostTab";
 import PostTitle from "./PostTitle";
-import { useRecoilValue } from "recoil";
-import { postData } from "../common/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { myPostData, postData } from "../common/atoms";
+import { getPostData } from "../common/selector";
+import { useEffect } from "react";
+import axios from "axios";
 
 const PostDetailDiv = styled.div`
   padding-bottom: 5%;
@@ -13,9 +14,41 @@ const PostDetailDiv = styled.div`
 
 const PostDetail = () => {
   const data = useRecoilValue(postData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [post, setPost] = useRecoilState(myPostData);
 
-  // const tokenA = window.localStorage.getItem("Authorization");
-  // const tokenB = window.localStorage.getItem("AuthorizationRefresh");
+  const tokenA = window.localStorage.getItem("Authorization");
+  const tokenB = window.localStorage.getItem("AuthorizationRefresh");
+
+  //recoil + axios 예시
+  const fetchData = async () => {
+    const response = await axios.get(
+      "https://jsonplaceholder.typicode.com/users"
+    );
+    setPost(response.data);
+    setIsLoading(false);
+
+    // axios
+    //   .get("http://13.125.111.131:8080/recruitment/1", {
+    //     headers: {
+    //       Authorization: tokenA,
+    //       AuthorizationRefresh: tokenB,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setPost(response.data);
+    //     console.log(data);
+    //     setIsLoading(false);
+    //   })
+
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   // useEffect(() => {
   //   axios
@@ -36,10 +69,16 @@ const PostDetail = () => {
   // }, []);
 
   return (
-    <PostDetailDiv>
-      <PostTitle />
-      <PostTab />
-    </PostDetailDiv>
+    <>
+      {isLoading ? (
+        ""
+      ) : (
+        <PostDetailDiv>
+          <PostTitle />
+          <PostTab />
+        </PostDetailDiv>
+      )}
+    </>
   );
 };
 

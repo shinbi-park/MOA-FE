@@ -1,6 +1,8 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
+import { IoClose } from "react-icons/io5";
 
 import styled from "styled-components";
 
@@ -19,9 +21,10 @@ const CloseBtn = styled.button`
   background: none;
   border: none;
   position: absolute;
-  right: 20px;
+  right: 15px;
   top: 20px;
   cursor: pointer;
+  font-size: 22px;
 `;
 
 const Wrapper = styled.div`
@@ -138,6 +141,18 @@ const InfoDetail = ({ isOpen, handlecloseInfo }) => {
   const [links, setLinks] = useState(["naver.com", "github.com"]);
   const [location, setLocation] = useState("지하철역");
 
+  // const fetchInfo = async() => {
+  //   const response = await axios.get("http://192.168.0.26:8080/", {
+  //           headers: {
+  //             Authorization: tokenA,
+  //             AuthorizationRefresh: tokenB,
+  //           },
+  //         })
+  //         .then((response) => {
+
+  //         })
+  //       }
+
   const infoRef = useRef();
 
   useEffect(() => {
@@ -156,7 +171,9 @@ const InfoDetail = ({ isOpen, handlecloseInfo }) => {
   return (
     <InfoDetailDiv ref={infoRef}>
       <Wrapper>
-        <CloseBtn onClick={handlecloseInfo}>X</CloseBtn>
+        <CloseBtn onClick={handlecloseInfo}>
+          <IoClose />
+        </CloseBtn>
         <Table>
           <tbody>
             <tr>

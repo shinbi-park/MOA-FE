@@ -67,7 +67,7 @@ const SignInForm = () => {
       password: password,
     };
 
-    fetch("http://192.168.0.26:8080/user/login", {
+    fetch("http://13.125.111.131:8080/user/login", {
       method: "POST",
       body: JSON.stringify(logInData),
       headers: {
@@ -83,6 +83,7 @@ const SignInForm = () => {
           "AuthorizationRefresh",
           response.headers.get("AuthorizationRefresh")
         );
+        console.log(response);
       })
 
       .catch((error) => {

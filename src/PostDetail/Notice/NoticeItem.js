@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Dropdownbutton from "./Dropdownbutton";
+import { ImCheckmark, ImCross } from "react-icons/im";
 
 const NoticeListWrap = styled.div`
   width: 1045px;
@@ -40,6 +41,13 @@ const NoticeListContent = styled.div`
   font-family: "Inter";
   font-style: normal;
   font-size: 18px;
+  height: 50px;
+`;
+
+const NoticeEditInput = styled.textarea`
+  resize: none;
+  width: 1000px;
+  height: 50px;
 `;
 
 const VotingBtnDiv = styled.div`
@@ -61,6 +69,12 @@ const VotingNegative = styled.button`
   background: none;
   color: #ff4242;
   cursor: pointer;
+`;
+
+const VoteFinishNotice = styled.p`
+  position: relative;
+  bottom: 13px;
+  left: 5px;
 `;
 
 const NoticeItem = ({
@@ -115,7 +129,7 @@ const NoticeItem = ({
         </>
       ) : (
         <NoticeListContent>
-          <textarea
+          <NoticeEditInput
             value={curContent}
             onChange={(e) => setCurContent(e.target.value)}
           />
@@ -128,14 +142,18 @@ const NoticeItem = ({
         </NoticeListContent>
       )}
 
-      {newnotice.check && (
+      {newnotice.check && !isEdit && (
         <VotingBtnDiv>
-          <VotingPositive>참여 V</VotingPositive>
-          <VotingNegative>불참 X</VotingNegative>
+          <VotingPositive>
+            참여 <ImCheckmark />
+          </VotingPositive>
+          <VotingNegative>
+            불참여 <ImCross />
+          </VotingNegative>
         </VotingBtnDiv>
       )}
 
-      {!isVote && <p>투표가 마감되었습니다</p>}
+      {!isVote && <VoteFinishNotice>투표가 마감되었습니다</VoteFinishNotice>}
     </NoticeListWrap>
   );
 };

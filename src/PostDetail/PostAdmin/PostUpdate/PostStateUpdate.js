@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { titleState } from "../../../common/atoms";
+import { useEffect } from "react";
+import axios from "axios";
 
 const SelectDiv = styled.div`
   margin-bottom: 70px;
@@ -28,11 +30,26 @@ const SelectBtn = styled.button`
 const PostStateUpdate = () => {
   const [titles, setTitles] = useRecoilState(titleState);
   const [setting, setSetting] = useState();
+  const stateArr = [1, 2, 3];
 
-  const onChangeSetting = () => {
-    setTitles(setting);
+  // useEffect(() => {
+  //   fetchState();
+  // },[setting])
+
+  // const fetchState = async () => {
+  //  await axios.post(`http://192.168.0.26:8080//recruitment/${recruitmentId}?statusCode=${setting}`, {
+  //         headers: {
+  //           Authorization: tokenA,
+  //           AuthorizationRefresh: tokenB,
+  //         },
+  //       })
+  //     }
+
+  const onChangeSetting = async () => {
+    setTitles(parseInt(setting));
     setSetting(setting);
   };
+
   return (
     <SelectDiv>
       <h1>상태 변경</h1>
@@ -40,9 +57,9 @@ const PostStateUpdate = () => {
         value={setting}
         onChange={(e) => setSetting(e.target.value)}
       >
-        <option value="1">모집 중</option>
-        <option value="2">모집 완료 </option>
-        <option value="3">프로젝트 완료</option>
+        <option value={stateArr[0]}>모집 중</option>
+        <option value={stateArr[1]}>모집 완료 </option>
+        <option value={stateArr[2]}>프로젝트 완료</option>
       </SelectOption>
       <SelectBtn onClick={onChangeSetting}>변경하기</SelectBtn>
     </SelectDiv>

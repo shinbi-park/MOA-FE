@@ -29,7 +29,7 @@ function App() {
         <Route path="/applicantDetail" element={<InfoDetail />} />
         <Route path="/mypage/mylist" element={<MyPostList />} />
         <Route path="/mypage/likedlist" element={<Likedlist />} />
-        <Route path="/detail/:id" element={<PostDetail />} />
+        <Route path="/detail" element={<PostDetail />} />
         <Route path="/edit" element={<PostEdit />} />
       </Routes>
     </>

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import {
   ScheduleHover,
+  ScheduleLeftUser,
   ScheduleSelect,
   ScheduleUser,
 } from "../../common/atoms";
@@ -69,6 +70,7 @@ const AvailableTableTitle = styled.li`
 
 const ScheduleInfo = () => {
   const user = useRecoilValue(ScheduleUser);
+  const leftUser = useRecoilValue(ScheduleLeftUser);
   const isHover = useRecoilValue(ScheduleHover);
   const select = useRecoilValue(ScheduleSelect);
 
@@ -108,14 +110,26 @@ const ScheduleInfo = () => {
         <div>
           <AvailableTableUl>
             <AvailableTableTitle>Available</AvailableTableTitle>
-            {isHover && select.value && <li>{user}</li>}
+            {isHover && select.value && (
+              <>
+                {user.map((item) => (
+                  <li key={item.id}>{item.name}</li>
+                ))}
+              </>
+            )}
           </AvailableTableUl>
         </div>
 
         <div>
           <AvailableTableUl>
             <AvailableTableTitle>Unavailable</AvailableTableTitle>
-            {isHover && !select.value && <li>{user}</li>}
+            {isHover && leftUser.length >= 1 && (
+              <>
+                {leftUser.map((item) => (
+                  <li key={item.id}>{item.name}</li>
+                ))}
+              </>
+            )}
           </AvailableTableUl>
         </div>
       </AvailableTableDiv>
