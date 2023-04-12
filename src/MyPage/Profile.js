@@ -6,7 +6,7 @@ import Sidebar from "./Sidebar/Sidebar";
 import ProfileLink from "./Component/ProfileLink"
 import ProfileTag from "./Component/ProfileTag"
 
-import KakaoMap from "./Component/KakaoMap";
+import KakaoMap from "../component/KakaoMap";
 
 const Wrapper = styled.div`
   height: 92vh;

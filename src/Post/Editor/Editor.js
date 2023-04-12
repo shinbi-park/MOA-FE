@@ -72,6 +72,7 @@ const Editor = ({ handleTitleChange, handleContentChange, isEdit, data }) => {
           <TitleInput
             onChange={handleTitleChange}
             placeholder="제목을 입력해주세요"
+            required
           />
           <ReactQuill
             style={{ height: "300px", width: "710px", marginLeft: "30px" }}
@@ -82,7 +83,7 @@ const Editor = ({ handleTitleChange, handleContentChange, isEdit, data }) => {
         </>
       ) : (
         <>
-          <TitleInput value={curTitle} onChange={curTitleHandle} />
+          <TitleInput value={curTitle} onChange={curTitleHandle} required />
           <ReactQuill
             style={{ height: "300px", width: "710px", marginLeft: "30px" }}
             onChange={curContentHandle}

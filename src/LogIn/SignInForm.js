@@ -6,6 +6,7 @@ const Form = styled.form`
   flex-direction: column;
   align-items: left;
   margin-top: 10px;
+  z-index: 20;
   h3 {
     margin: 0;
     margin-bottom: 1.5rem;

@@ -53,6 +53,15 @@ const Post = ({ isEdit, data }) => {
       tags: tags,
     });
 
+    if (content.trim() === "") {
+      alert("프로젝트 소개를 입력해주세요!");
+      return;
+    }
+
+    if (tags.length === 0) {
+      alert("태그를 적어도 하나 추가해주세요!");
+      return;
+    }
     //������ ����
     fetch("http://13.125.111.131:8080/recruitment", {
       method: "POST",

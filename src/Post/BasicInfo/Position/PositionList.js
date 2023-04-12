@@ -40,6 +40,15 @@ const PostionList = ({ positions, onInsert, onRemove, onPositionChange }) => {
     onPositionChange(id, total, field);
   };
 
+  const onClickInsert = (e) => {
+    e.preventDefault();
+    onInsert();
+  };
+  const onClickRemove = (e) => {
+    e.preventDefault();
+    onRemove(lastId);
+  };
+
   return (
     <PositionBlock className="PositionList">
       {positions.map((position) => (
@@ -55,7 +64,7 @@ const PostionList = ({ positions, onInsert, onRemove, onPositionChange }) => {
         <Button
           backgroundColor={"white"}
           border={"1px solid black"}
-          onClick={() => onInsert()}
+          onClick={onClickInsert}
         >
           {" "}
           추가{" "}
@@ -63,7 +72,7 @@ const PostionList = ({ positions, onInsert, onRemove, onPositionChange }) => {
         <Button
           backgroundColor={"#D9D9D9"}
           border={"none"}
-          onClick={() => onRemove(lastId)}
+          onClick={onClickRemove}
         >
           {" "}
           삭제{" "}
