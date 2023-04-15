@@ -121,7 +121,7 @@ const ProjectList = React.memo(({ projects, color, className }) => (
 const CancelApply = (e) => {
   e.preventDefault();
   const result = window.confirm(
-    "지원을 취소한 이후에는 다시 지원할 수 없습니다. 지원을 취소하겠습니까?"
+    "지원을 취소하겠습니까?"
   );
   if (result) {
     fetch(`/`, {
@@ -152,6 +152,7 @@ const ApplyItem = React.memo(
       <ButtonContainer>
         <Button
           style={{ visibility: status === "대기중" ? "visible" : "hidden" }}
+          onClick={CancelApply}
         >
           {" "}
           지원취소{" "}
