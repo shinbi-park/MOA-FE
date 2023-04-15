@@ -128,6 +128,7 @@ const SaveButton = styled.button`
 
 function UserEdit() {
   const [user, setUser] = useState({
+    profileImage: "string type",
     email: "example@gmail.com",
     name: "username",
     nickname: "nickname",
@@ -232,7 +233,6 @@ function UserEdit() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    event.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
 

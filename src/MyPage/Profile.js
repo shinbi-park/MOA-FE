@@ -73,17 +73,75 @@ margin-bottom: 20px;
 `;
 
 const Profile = () => {
-    const [introduce, setIntroduce] = useState("");
-    const [location, setLocation] = useState(null);
+  /*
+  useEffect(() => {
+    //api에서 데이터 받아오기
+  }, []);
+*/
+  const [userProfile, setUserProfile] = useState(
+    {
+      "email" : "userId@email.com",
+      "name" : "username",
+      "nickname" : "nickname",
+      "locationLatitude" : 34.545,
+      "locationLongitude" : 126.9779451,
+      "popularity" : {
+          "rate" : 2.3,
+          "count" : 3
+      },
+      "details" : "details",
+      "interests" : [
+          "백엔드",
+          "자바"
+      ],
+      "link" : [
+           "https://github.com"
+      ]
+  });
 
+    const [introduce, setIntroduce] = useState(userProfile.details);
+    const [location, setLocation] = useState({lat: userProfile.locationLatitude, lng: userProfile.locationLongitude});
+    const [userTags, setUserTags] = useState(userProfile.interests);
+    const [userLinks, setUserLinks] = useState(userProfile.link);
     const handleUserLocation = (address) => {
       setLocation(address);
-      console.log(address);// ex. {lat: 37.4, lng: 126.6783068702164}
     }
 
     const handleContentChange = (value) => {
       setIntroduce(value);
     };
+
+    const handleUserTags = (value) => {
+      setUserTags(value);
+    };
+
+    const handleUserLinks = (value) => {
+      setUserLinks(value);
+    };
+
+    const onSubmit = (e) => {
+      e.preventDefault();
+      const userProfileData = {
+        "locationLatitude" : location.lat,
+        "locationLongitude" : location.lng,
+        "details" : introduce,
+        "interests" : userTags,
+        "link" : userLinks,
+      }
+      console.log(userProfileData); //
+
+      fetch("http://13.125.111.131:8080/user/info/profile", {
+      method: "POST",
+      body: JSON.stringify(userProfileData),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("Authorization"),
+        AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+    }
     const modules = {
       toolbar: false,
     };
@@ -97,14 +155,15 @@ const Profile = () => {
           <Container>
             <h3>선호 지역</h3>
             <MapWrapper>
-            <KakaoMap handleUserLocation={handleUserLocation}/>
+            <KakaoMap handleUserLocation={handleUserLocation} 
+            data={ {lat: userProfile.locationLatitude, lng: userProfile.locationLongitude} }/>
           </MapWrapper>
 
             <h3>링크</h3>
-            <ProfileLink />
+            <ProfileLink data={userProfile.link} handleUserLinks={handleUserLinks}/>
 
             <h3>관심 태그</h3>
-            <ProfileTag /> 
+            <ProfileTag data={userProfile.interests} handleUserTags={handleUserTags}/> 
 
             <h3>상세 소개</h3>
             <EditorWrapper>

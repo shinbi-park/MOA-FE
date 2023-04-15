@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 
 const TagBoxBlock = styled.div`
@@ -15,7 +15,7 @@ const TagForm = styled.div`
     width: 500px;
     border-radius: 4px;
     border: 1px solid #707070;
-    box-shadow: 2px 1px 5px #BDBDBD;
+    box-shadow: 2px 1px 5px #bdbdbd;
   }
 
   button {
@@ -28,12 +28,11 @@ const TagForm = styled.div`
     color: black;
     font-size: 16px;
     margin-left: 10px;
-    box-shadow: 2px 1px 5px #BDBDBD;
-    &:hover{
-        cursor: pointer;
+    box-shadow: 2px 1px 5px #bdbdbd;
+    &:hover {
+      cursor: pointer;
     }
   }
-  
 `;
 
 const Tag = styled.div`
@@ -41,8 +40,8 @@ const Tag = styled.div`
   margin-right: 0.2rem;
   font-size: 17px;
   color: gray;
-  &:hover{
-      cursor: pointer;
+  &:hover {
+    cursor: pointer;
   }
 `;
 
@@ -62,10 +61,9 @@ const TagList = React.memo(({ tags, onRemove }) => (
     ))}
   </TagListBlock>
 ));
-
-const ProfileTag = () => {
+const ProfileTag = ({ data, handleUserTags }) => {
   const [input, setInput] = useState("");
-  const [localTags, setLocalTags] = useState(["태그를 입력하세요"]);
+  const [localTags, setLocalTags] = useState(data);
 
   const intertTag = useCallback(
     (tag) => {
@@ -81,7 +79,6 @@ const ProfileTag = () => {
     (tag) => {
       const newTags = localTags.filter((t) => t !== tag);
       setLocalTags(newTags);
-      
     },
     [localTags]
   );
@@ -98,19 +95,26 @@ const ProfileTag = () => {
     },
     [input, intertTag]
   );
+
+  useEffect(() => {
+    handleUserTags(localTags);
+  }, [localTags, handleUserTags]);
+
   return (
     <TagBoxBlock>
-        <TagForm>
+      <TagForm>
         <input
-            placeholder="태그를 입력하세요!"
-            value={input}
-            onChange={onChange}
+          placeholder="태그를 입력하세요!"
+          value={input}
+          onChange={onChange}
         />
-        <button type="submit" onClick={onSubmit}> 추가 </button>
-        </TagForm>
-        <TagList tags={localTags} onRemove={onRemove} />
-  </TagBoxBlock>
-
+        <button type="submit" onClick={onSubmit}>
+          {" "}
+          추가{" "}
+        </button>
+      </TagForm>
+      <TagList tags={localTags} onRemove={onRemove} />
+    </TagBoxBlock>
   );
 };
 

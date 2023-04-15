@@ -1,14 +1,14 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 
 const ItemContainer = styled.div`
   display: inline-flex;
-  button{
+  button {
     border: none;
-    background-Color: white;
+    background-color: white;
     margin-left: 10px;
     margin-right: 10px;
-    &:hover{
+    &:hover {
       cursor: pointer;
     }
   }
@@ -17,7 +17,7 @@ const ItemContainer = styled.div`
 const Container = styled.div`
   display: flex;
 
-  input{
+  input {
     align-items: center;
     margin-bottom: 15px;
     padding: 8px;
@@ -26,10 +26,10 @@ const Container = styled.div`
     font-size: 16px;
     width: 500px;
     height: 25px;
-    box-shadow: 2px 1px 5px #BDBDBD;
+    box-shadow: 2px 1px 5px #bdbdbd;
   }
 
-  button{
+  button {
     width: 50px;
     height: 40px;
     padding: 8px;
@@ -39,8 +39,8 @@ const Container = styled.div`
     color: black;
     font-size: 16px;
     margin-left: 10px;
-    box-shadow: 2px 1px 5px #BDBDBD;
-    &:hover{
+    box-shadow: 2px 1px 5px #bdbdbd;
+    &:hover {
       cursor: pointer;
     }
   }
@@ -56,10 +56,9 @@ const Link = styled.div`
   color: black;
   text-decoration: underline;
   font-size: 17px;
-  &+&{
+  & + & {
     margin-left: 20px;
   }
-  
 `;
 
 const LinkListBlock = styled.div`
@@ -70,71 +69,87 @@ const LinkListBlock = styled.div`
 `;
 
 const LinkItem = React.memo(({ link, onRemove }) => (
-    <ItemContainer>
-    <Link > <a href = { "http://" + link} target="_blank" rel="noreferrer">{link}</a></Link>
+  <ItemContainer>
+    <Link>
+      {" "}
+      <a href={link} target="_blank" rel="noreferrer">
+        {link}
+      </a>
+    </Link>
     <button onClick={() => onRemove(link)}> x </button>
-    </ItemContainer>
-  ));
-  
-  const LinkList = React.memo(({ links, onRemove }) => (
-    <LinkListBlock>
-      {links.map((link) => (
-        <LinkItem key={link} link={link} onRemove={onRemove} />
-      ))}
-    </LinkListBlock>
-  ));
+  </ItemContainer>
+));
 
-const ProfileLink = () => {
-    const [input, setInput] = useState("");
-    const [localLink, setLocalLinks] = useState(["LINK"]);
-    
-    const intertLink = useCallback(
-        (link) => {
-          if (!link) return;
-          if (localLink.includes(link)) return;
-          if(localLink.length > 2 ) {
-              alert('링크는 최대 3개까지만 등록 가능합니다!'); 
-              return;
-            }
-          setLocalLinks([...localLink, link]);
-        },
-        [localLink]
-      );
-    
-      const onRemove = useCallback(
-        (link) => {
-            setLocalLinks(localLink.filter((l) => l !== link));
-        },
-        [localLink]
-      );
-    
-      const onChange = useCallback((e) => {
-        setInput(e.target.value);
-      }, []);
-    
-      const onSubmit = useCallback(
-        (e) => {
-          e.preventDefault();
-          intertLink(input.trim());
-          setInput("");
-        },
-        [input, intertLink]
-      );
+const LinkList = React.memo(({ links, onRemove }) => (
+  <LinkListBlock>
+    {links.map((link) => (
+      <LinkItem key={link} link={link} onRemove={onRemove} />
+    ))}
+  </LinkListBlock>
+));
 
-    return(
-        <Wrapper>
-        <Container >
-            <input type="text"
-                placeholder="링크를 추가하세요!"
-                value={input}
-                onChange={onChange}/>
-            <button type="submit" onClick={onSubmit}>추가</button>
-        </Container>
+const ProfileLink = ({ data, handleUserLinks }) => {
+  const [input, setInput] = useState("");
+  const [localLink, setLocalLinks] = useState(data);
 
-        <LinkList links={localLink} onRemove={onRemove} />
-        </Wrapper>
-        
-    )
-}
+  const insertLink = useCallback(
+    (link) => {
+      if (!link) return;
+      if (localLink.includes(link)) return;
+      if (localLink.length > 2) {
+        alert("링크는 최대 3개까지만 등록 가능합니다!");
+        return;
+      }
+      setLocalLinks([...localLink, link]);
+    },
+    [localLink]
+  );
+
+  const onRemove = useCallback(
+    (link) => {
+      setLocalLinks(localLink.filter((l) => l !== link));
+    },
+    [localLink]
+  );
+
+  const onChange = useCallback((e) => {
+    setInput(e.target.value);
+  }, []);
+
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      let newInput = input;
+      if (!input.includes("http://")) {
+        //"http://"없으면 추가
+        newInput = "http://" + input;
+      }
+      insertLink(newInput.trim());
+      setInput("");
+    },
+    [input, insertLink]
+  );
+  useEffect(() => {
+    handleUserLinks(localLink);
+  }, [localLink, handleUserLinks]);
+
+  return (
+    <Wrapper>
+      <Container>
+        <input
+          type="text"
+          placeholder="링크를 추가하세요!"
+          value={input}
+          onChange={onChange}
+        />
+        <button type="submit" onClick={onSubmit}>
+          추가
+        </button>
+      </Container>
+
+      <LinkList links={localLink} onRemove={onRemove} />
+    </Wrapper>
+  );
+};
 
 export default ProfileLink;
