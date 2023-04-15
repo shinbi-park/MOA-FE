@@ -23,7 +23,7 @@ const Table = styled.table`
     border: 1px solid #bbb9b9;
     font-weight: 500;
     height: 40px;
-    line-height: 20px; 
+    line-height: 20px;
   }
 
   td:nth-child(odd),
@@ -48,7 +48,6 @@ const Table = styled.table`
     width: 30%;
   }
 `;
-
 
 const IntroContainer = styled.div`
   display: flex;
@@ -140,7 +139,7 @@ const LinkItem = React.memo(({ link }) => (
 const InfoDetail = () => {
   /*
   useEffect( () => {
-    fetch(`/user/info/profile`, {
+    fetch(`/user/info/profile?userId=`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -157,15 +156,13 @@ const InfoDetail = () => {
     nickname: "nickname",
     locationLatitude: 34.545,
     locationLongitude: 126.9779451,
-    popularity : {
-      "rate" : 2.3,
-      "count" : 3
-  },
+    popularity: {
+      rate: 2.3,
+      count: 3
+    },
     details: "details",
-    interests: ["백엔드", "자바"]
+    link: ["https://github.com"]
   });
-  
-  const [links, setLinks] = useState(["naver.com", "github.com"]);
 
   return (
     <Wrapper>
@@ -191,14 +188,15 @@ const InfoDetail = () => {
       </Table>
 
       <StarContaienr>
-        <h3>지원자 별점</h3> <span>총 {userInfo.popularity.count}개의 평가 중</span>{" "}
+        <h3>지원자 별점</h3>{" "}
+        <span>총 {userInfo.popularity.count}개의 평가 중</span>{" "}
         <UserPopularity rate={userInfo.popularity.rate} />
       </StarContaienr>
 
       <h3>지원자 상세 소개</h3>
       <IntroContainer>{userInfo.details}</IntroContainer>
       <h3>링크</h3>
-      <LinkList links={links} />
+      <LinkList links={userInfo.links} />
 
       <h3>선호지역</h3>
       <Container>
