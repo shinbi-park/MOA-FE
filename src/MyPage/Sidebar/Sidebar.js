@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import profile from "../../component/profileImg.png";
@@ -17,7 +17,8 @@ const Side = styled.div`
   padding: 16px;
   font-weight: 650;
   font-size: 19px;
-  a, a:visited {
+  a,
+  a:visited {
     text-decoration: none;
     color: #292929;
   }
@@ -43,7 +44,7 @@ const Menu = styled.div`
     color: #5d5fef !important;
     text-decoration: underline;
   }
-  p{
+  p {
     margin-bottom: 18px;
     margin-top: 18px;
     cursor: pointer;
@@ -57,12 +58,18 @@ const PopularityContainer = styled.div`
 `;
 
 function Sidebar() {
+  useEffect(() => {
+    // /user/info/profile?userId= 에서 popularity 받아오기
+  }, []);
+
+  const [popularity, setPopularity] = useState(2.3); //api에서 받아온 값으로 수정하기
+
   const menus = [
     { name: "프로필", path: "/mypage/profile" },
     { name: "내 활동", path: "/mypage/activity" },
     { name: "작성한 글", path: "/mypage/mylist" },
     { name: "관심글", path: "/mypage/likedlist" },
-    { name: "정보설정", path: "/mypage/setting" },
+    { name: "정보설정", path: "/mypage/setting" }
   ];
 
   const onClickWithdraw = () => {
@@ -74,21 +81,20 @@ function Sidebar() {
           Authorization:
             "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo4LCJleHAiOjE2ODEyNzcwOTF9.qNFbSaIv_fUcJ4BV-gPIRY_t5u84zbEFahx4FdgSukw7qnvV-OdnVifFdxBg0Zk5cs1I0VfO1YBTjaJJUwSmbA",
           AuthorizationRefresh:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyNzcxOTF9.fhkN47qnZY-Xqgik3RRWH_BXYjy1y95nYBzFwp77Wz1m81ZA_9PbJmb6sTWMciNXkOTenWEg100694CEDApEww",
-        },
-      })
-        .then((response) =>
-          response === 200
-            ? alert("회원 탈퇴가 되었습니다!")
-            : alert("회원 탈퇴에 실패하였습니다")
-        );
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyNzcxOTF9.fhkN47qnZY-Xqgik3RRWH_BXYjy1y95nYBzFwp77Wz1m81ZA_9PbJmb6sTWMciNXkOTenWEg100694CEDApEww"
+        }
+      }).then((response) =>
+        response === 200
+          ? alert("회원 탈퇴가 되었습니다!")
+          : alert("회원 탈퇴에 실패하였습니다")
+      );
     }
   };
   return (
     <Side>
       <Profile src={profile} alt="프로필 사진"></Profile>
       <PopularityContainer>
-        <UserPopularity />
+        <UserPopularity rate={popularity} />
       </PopularityContainer>
       <Menu>
         {menus.map((menu, index) => {
