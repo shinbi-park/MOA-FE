@@ -48,16 +48,18 @@ flex-direction: row;
   }
 `;
 
-function KakaoMap({ handleUserLocation }) {
+function KakaoMap({ handleUserLocation, data }) {
+  const initial = { lat: 37.5662952, lng: 126.9779451 };
   const [state, setState] = useState({
-    center: { lat: 37.5662952, lng: 126.9779451 },
+    center: { lat: data ? data.lat : initial.lat, lng: data ? data.lng : initial.lng },
     isPanto: true
   });
   const [searchAddress, setSearchAddress] = useState("");
-  const [markerPosition, setMarkerPosition] = useState({});
+  const [markerPosition, setMarkerPosition] = useState({lat: data?.lat, lng: data?.lng || null});
   const [userAddress, setUserAddress] = useState(null);
 
   const geocoder = new window.kakao.maps.services.Geocoder();
+
   const handleMapClick = (map, mouseEvent) => {
     const latlng = mouseEvent.latLng;
     setMarkerPosition({
@@ -115,11 +117,23 @@ function KakaoMap({ handleUserLocation }) {
       }
     };
 
+    if(markerPosition.lng && markerPosition.lat){
+      const geocoder = new window.kakao.maps.services.Geocoder();
+      geocoder.coord2Address(markerPosition.lng, markerPosition.lat, (result, status) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          setUserAddress(result[0].address.address_name);
+        } else {
+          console.log("error");
+        }
+      });
+    }
+
     handleLoad();
     return () => {
       window.removeEventListener("load", handleLoad);
     };
   }, []);
+
   return (
     <Wrapper>
       <SearchContainer>
@@ -134,7 +148,7 @@ function KakaoMap({ handleUserLocation }) {
         <span>선택된 지역이 없습니다</span>
       ) : (
         <span>
-          선택된 지역은 <span className="userAddress">{userAddress}</span>{" "}
+          현재 선택된 지역은 <span className="userAddress">{userAddress}</span>{" "}
           입니다.
         </span>
       )}
