@@ -42,15 +42,18 @@ export default function Category({ handleCategoriesChange, isEdit, data }) {
           <Select
             name="select-category"
             id="category"
-            defaultValue="programming"
+            defaultValue="PROGRAMMING"
             onChange={handleCategoriesChange}
           >
-            <option value="programming">프로그래밍</option>
-            <option value="language"> 어학 </option>
-            <option value="job">취업</option>
-            <option value="public">고시/공무</option>
-            <option value="hobby">자율</option>
-            <option value="etc">기타</option>
+            <option value="PROGRAMMING">프로그래밍</option>
+            <option value="EXAMINATION">고시</option>
+            <option value="INTERVIEW">면접</option>
+            <option value="LANGUAGE"> 어학 </option>
+            <option value="CERTIFICATION">자격증</option>
+            <option value="AUTONOMY">자율</option>
+            <option value="HOBBY">취미</option>
+            <option value="EMPLOYMENT">취업</option>
+            <option value="ETC">기타</option>
           </Select>
         </>
       ) : (

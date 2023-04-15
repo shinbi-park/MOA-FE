@@ -1,10 +1,7 @@
 import styled from "styled-components";
 import React, {useState, useEffect, lazy, Suspense } from "react";
 
-const TopPost = lazy(() => import('./TopPost'));
-const NewPost = lazy(() => import('./NewPost'));
-const RecruitingPost = lazy(() => import('./RecruitingPost'));
-const RecommendPost = lazy(() => import('./RecommendPost'));
+const HomeTabComponent = lazy(() => import('./HomeTabComponent'));
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,7 +61,7 @@ const HomeTab = () => {
           Title: <div onClick={() => onClickTab(0)}>새로운 글</div>,
           Content: (
             <Suspense>
-              <NewPost/>
+              <HomeTabComponent type="new"/>
             </Suspense>
           )
         },
@@ -72,7 +69,7 @@ const HomeTab = () => {
           Title: <div onClick={() => onClickTab(1)}>모집 중인 글</div>,
           Content: (
             <Suspense>
-              <RecruitingPost />
+              <HomeTabComponent type="recruiting"/>
             </Suspense>
           )
         },
@@ -80,7 +77,7 @@ const HomeTab = () => {
           Title: <div onClick={() => onClickTab(2)}>추천 글</div>,
           Content: (
             <Suspense>
-              <RecommendPost/>        
+              <HomeTabComponent type="recommend"/>        
             </Suspense>
           )
         },
@@ -88,7 +85,7 @@ const HomeTab = () => {
           Title: <div onClick={() => onClickTab(3)}>인기글</div>,
           Content: (
             <Suspense>
-              <TopPost />      
+              <HomeTabComponent type="popular"/>      
             </Suspense>
           )
         }

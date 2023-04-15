@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import profile from "../component/profileImg.png";
 import { AiOutlineEdit } from "react-icons/ai";
@@ -127,6 +128,7 @@ const SaveButton = styled.button`
 
 function UserEdit() {
   const [user, setUser] = useState({
+    profileImage: "string type",
     email: "example@gmail.com",
     name: "username",
     nickname: "nickname",
@@ -143,6 +145,32 @@ function UserEdit() {
   const [newPwdConfirm, setPwdConfirm] = useState("");
   const [newUsername, setNewUsername] = useState("");
   const [error, setError] = useState("");
+
+  const fetchInfo = async () => {
+    const response = await axios
+      .get("http://13.125.111.131:8080/user/info/profile", {
+        headers: {
+          Authorization:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo4LCJleHAiOjE2ODEyNzcwOTF9.qNFbSaIv_fUcJ4BV-gPIRY_t5u84zbEFahx4FdgSukw7qnvV-OdnVifFdxBg0Zk5cs1I0VfO1YBTjaJJUwSmbA",
+          AuthorizationRefresh:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyNzcxOTF9.fhkN47qnZY-Xqgik3RRWH_BXYjy1y95nYBzFwp77Wz1m81ZA_9PbJmb6sTWMciNXkOTenWEg100694CEDApEww",
+        },
+      })
+      .then((response) => {
+        setUser({
+          email: response.data.email,
+          name: response.data.name,
+          nickname: response.data.nickname,
+          password: "12345678",
+        });
+
+        console.log(setUser);
+      });
+  };
+
+  useEffect(() => {
+    fetchInfo();
+  });
   /*
   const handleUsernameChange = (event) => {
     const { username, value } = event.target;
@@ -205,7 +233,6 @@ function UserEdit() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    event.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
 

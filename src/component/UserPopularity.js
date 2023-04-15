@@ -17,8 +17,8 @@ const Comment = styled.div`
     flex-direction: column;
     font-size: 15px;
 `;
-function UserPopularity() {
-    const [popularity, setPopularity] = useState(3.7);
+function UserPopularity( {rate}) {
+    const popularity = rate;
     const STAR_IDX_ARR = ['1', '2', '3', '4', '5'];
     const [ratesResArr, setRatesResArr] = useState([0, 0, 0, 0, 0]); 
     const calcStarRates = () => {
