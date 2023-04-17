@@ -128,16 +128,15 @@ const SaveButton = styled.button`
 
 function UserEdit() {
   const [user, setUser] = useState({
-    profileImage: "string type",
-    email: "example@gmail.com",
-    name: "username",
-    nickname: "nickname",
-    password: ""
+    email: "",
+    name: "",
+    nickname: "",
+    password: "",
   });
   const [file, setFile] = useState("");
   const [profileImg, setProfileImg] = useState("");
-  const [nicknameInput, setNicknameInput] = useState(user.nickname);
-  const [usernameInput, setUsernameInput] = useState(user.name);
+  const [nicknameInput, setNicknameInput] = useState("");
+  const [usernameInput, setUsernameInput] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
   const [currentPwd, setCurrentPwd] = useState("");
@@ -196,7 +195,7 @@ function UserEdit() {
     const { nickname, value } = event.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [nickname]: value
+      [nickname]: value,
     }));
   };
 
@@ -204,7 +203,7 @@ function UserEdit() {
     const { nickname, value } = event.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [nickname]: value
+      [nickname]: value,
     }));
   };
 
@@ -212,7 +211,7 @@ function UserEdit() {
     const { nickname, value } = event.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [nickname]: value
+      [nickname]: value,
     }));
   };
 
@@ -296,7 +295,8 @@ function UserEdit() {
               />
             ) : (
               <h3 onClick={handleEditClick}>
-                {usernameInput} <AiOutlineEdit onClick={handleEditClick} />
+                <Input value={usernameInput} />{" "}
+                <AiOutlineEdit onClick={handleEditClick} />
               </h3>
             )}
           </Profile>

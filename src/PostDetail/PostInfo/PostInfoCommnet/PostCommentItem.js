@@ -45,9 +45,9 @@ const CommentEditInput = styled.textarea`
   }
 `;
 
-const PostCommentItem = ({ item, onDeleteComment, onEditComment }) => {
+const PostCommentItem = ({ exCom, onDeleteComment, onEditComment }) => {
   const [isEdit, setIsEdit] = useState(false);
-  const [curContent, setCurContent] = useState(item.content);
+  const [curContent, setCurContent] = useState(exCom.content);
 
   const editCommentHandelr = (id, curContent) => {
     onEditComment(id, curContent);
@@ -56,12 +56,12 @@ const PostCommentItem = ({ item, onDeleteComment, onEditComment }) => {
 
   return (
     <div>
-      <CommentUserName>{item.userName}</CommentUserName>
-      <CommentTime>{item.created_time}</CommentTime>
+      <CommentUserName>{exCom.author}</CommentUserName>
+      <CommentTime>{exCom.createDate}</CommentTime>
       {isEdit ? (
         <>
           <CommentEditBtn
-            onClick={() => editCommentHandelr(item.commentId, curContent)}
+            onClick={() => editCommentHandelr(exCom.replyId, curContent)}
           >
             수정완료
           </CommentEditBtn>
@@ -74,14 +74,14 @@ const PostCommentItem = ({ item, onDeleteComment, onEditComment }) => {
           <CommentEditBtn onClick={() => setIsEdit(!isEdit)}>
             수정
           </CommentEditBtn>
-          <CommentEditBtn onClick={() => onDeleteComment(item.commentId)}>
+          <CommentEditBtn onClick={() => onDeleteComment(exCom.replyId)}>
             삭제
           </CommentEditBtn>
         </>
       )}
 
       {!isEdit ? (
-        <CommentContent> {item.content} </CommentContent>
+        <CommentContent> {exCom.content} </CommentContent>
       ) : (
         <CommentContent>
           <CommentEditInput

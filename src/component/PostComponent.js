@@ -175,18 +175,28 @@ const MenuItem = styled.li`
   }
 `;
 
-const PostComponent = ({ type, title, author, category, tags, recruitStatus, date, profileImg, replyCount }) => {
+const PostComponent = ({
+  type,
+  title,
+  author,
+  category,
+  tags,
+  recruitStatus,
+  date,
+  profileImg,
+  replyCount,
+}) => {
   const [isMypost, setIsMypost] = useState(false);
   const [isMyLiked, setIsMyLiked] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
-  if(tags.length > 5) {
-    tags = tags.slice(0, 5); 
+  if (tags.length > 5) {
+    tags = tags.slice(0, 5);
   }
-  if(title.length > 50) {
-    title = title.slice(0,47) + "...";
+  if (title.length > 50) {
+    title = title.slice(0, 47) + "...";
   }
-  
+
   let recruitmentId = 1; //수정하기
 
   useEffect(() => {
@@ -207,26 +217,27 @@ const PostComponent = ({ type, title, author, category, tags, recruitStatus, dat
     fetch(`/recruitment/${recruitmentId}`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then((response) => {});
-
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {});
   };
 
   const handleDeleteClick = () => {
     console.log("Delete clicked");
     const result = window.confirm("글을 정말 삭제할까요?");
     if (result) {
-      fetch(`/recruitment/${recruitmentId}`, {
+      fetch("http://13.125.111.131:8080/recruitment/1", {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      .then((response) => response === 200 ? alert("글이 삭제되었습니다!") : alert("글 삭제에 실패하였습니다"))
-    };
+          "Content-Type": "application/json",
+        },
+      }).then((response) =>
+        response === 200
+          ? alert("글이 삭제되었습니다!")
+          : alert("글 삭제에 실패하였습니다")
+      );
     }
+  };
 
   return (
     <Wrapper>

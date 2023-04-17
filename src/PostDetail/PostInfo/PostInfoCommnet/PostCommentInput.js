@@ -37,7 +37,7 @@ const PostCommentInput = ({ onCommentSubmit, comment, onCommentChange }) => {
   return (
     <div>
       <CommentForm onSubmit={onCommentSubmit}>
-        <CommentInput value={comment.content} onChange={onCommentChange} />
+        <CommentInput value={comment} onChange={onCommentChange} />
         <CommentBtnWrap>
           <CommentBtn>확인</CommentBtn>
         </CommentBtnWrap>

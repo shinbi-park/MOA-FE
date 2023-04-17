@@ -3,6 +3,11 @@ import styled from "styled-components";
 import PageCommentInput from "./PostCommentInput";
 import PostInfoReply from "./PostInfoReply";
 import PostCommentItem from "./PostCommentItem";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { myPostComment } from "../../../common/atoms";
 
 const HrCommentLine = styled.hr`
   background: #d9d9d9;
@@ -18,35 +23,61 @@ const CommentUl = styled.ul`
 `;
 
 const PostInfoComment = () => {
-  const [comment, setComment] = useState({
-    userName: "user1",
-    content: "",
-    created_time: "",
-    commentId: 0,
-  });
+  const postComment = useRecoilValue(myPostComment);
+  const [comment, setComment] = useState("");
+
+  const exCom = postComment[1];
+
+  const { postId } = useParams();
 
   const [comment_count, setComment_count] = useState(0);
   const [newComment, setNewComment] = useState([]);
 
   const onCommentChange = (e) => {
-    setComment({ ...comment, content: e.target.value });
+    setComment(e.target.value);
   };
 
   const onCommentSubmit = (e) => {
     e.preventDefault();
-    comment.created_time = new Date()
-      .toLocaleString()
-      .slice(0, 24)
-      .replace("T", " ");
-    setNewComment((newComment) => {
-      return [comment, ...newComment];
-    });
-    setComment({
-      ...comment,
-      commentId: comment.commentId + 1,
-      content: "",
-    });
-    setComment_count(comment_count + 1);
+
+    axios
+      .post(
+        `http://13.125.111.131:8080/recruitment/${postId}/reply?content=`,
+        {
+          params: {
+            content: comment,
+          },
+        },
+
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization:
+              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+
+            AuthorizationRefresh:
+              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+      });
+
+    // comment.created_time = new Date()
+    //   .toLocaleString()
+    //   .slice(0, 24)
+    //   .replace("T", " ");
+
+    // setNewComment((newComment) => {
+    //   return [comment, ...newComment];
+    // });
+    // setComment({
+    //   ...comment,
+    //   commentId: comment.commentId + 1,
+    //   content: "",
+    // });
+    // setComment_count(comment_count + 1);
   };
 
   const onEditComment = (id, newContent) => {
@@ -72,7 +103,15 @@ const PostInfoComment = () => {
         onCommentChange={onCommentChange}
       />
 
-      {newComment.map((item) => (
+      <CommentUl>
+        <PostCommentItem
+          exCom={exCom}
+          onDeleteComment={onDeleteComment}
+          onEditComment={onEditComment}
+        />
+      </CommentUl>
+
+      {/* {newComment.map((item) => (
         <CommentUl key={item.commentId}>
           <PostCommentItem
             item={item}
@@ -82,8 +121,8 @@ const PostInfoComment = () => {
 
           {<PostInfoReply commentId={item.commentId} />}
           <HrCommentLine />
-        </CommentUl>
-      ))}
+     
+      ))} */}
     </div>
   );
 };

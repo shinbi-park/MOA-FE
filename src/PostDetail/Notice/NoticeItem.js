@@ -125,7 +125,7 @@ const NoticeItem = ({
 
       {!isEdit ? (
         <>
-          <NoticeListContent> {newnotice.content} </NoticeListContent>
+          <NoticeListContent>{newnotice.content}</NoticeListContent>
         </>
       ) : (
         <NoticeListContent>
