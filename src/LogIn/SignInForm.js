@@ -76,15 +76,28 @@ const SignInForm = () => {
       },
     })
       .then((response) => {
-        window.localStorage.setItem(
-          "Authorization",
-          response.headers.get("Authorization")
-        );
-        window.localStorage.setItem(
-          "AuthorizationRefresh",
-          response.headers.get("AuthorizationRefresh")
-        );
-        console.log(response);
+        if(response.status === 404) {
+          alert("존재하지 않는 이메일 입니다! 회원가입 후 진행해주세요 :)");
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        else if (response.status === 400){
+          alert("비밀번호를 다시 확인해 주세요!");
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        if(response.headers.get("Authorization")){
+          window.localStorage.setItem(
+            "Authorization",
+            response.headers.get("Authorization")
+          );
+          window.localStorage.setItem(
+            "AuthorizationRefresh",
+            response.headers.get("AuthorizationRefresh")
+          );
+          console.log(response);
+          window.location.href = '/';
+        }
+        
       })
 
       .catch((error) => {

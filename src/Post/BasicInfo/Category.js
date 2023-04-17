@@ -46,11 +46,14 @@ export default function Category({ handleCategoriesChange, isEdit, Editdata }) {
             onChange={handleCategoriesChange}
           >
             <option value="PROGRAMMING">프로그래밍</option>
+            <option value="EXAMINATION">고시</option>
+            <option value="INTERVIEW">면접</option>
             <option value="LANGUAGE"> 어학 </option>
+            <option value="CERTIFICATION">자격증</option>
+            <option value="AUTONOMY">자율</option>
+            <option value="HOBBY">취미</option>
             <option value="EMPLOYMENT">취업</option>
-            <option value="EXAMINATION">고시/공무</option>
-            <option value="HOBBY">자율</option>
-            <option value="CERTIFICATE">기타</option>
+            <option value="ETC">기타</option>
           </Select>
         </>
       ) : (

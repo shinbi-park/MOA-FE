@@ -48,30 +48,28 @@ const ComponentWrapper = styled.div`
 
 const MyPostList = () => {
   const [myPost, setMyPost] = useState([]);
-  const fetchData = async () => {
-    axios
-      .get("http://13.125.111.131:8080/recruitment/1", {
-        headers: {
-          Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo4LCJleHAiOjE2ODEyNzcwOTF9.qNFbSaIv_fUcJ4BV-gPIRY_t5u84zbEFahx4FdgSukw7qnvV-OdnVifFdxBg0Zk5cs1I0VfO1YBTjaJJUwSmbA",
 
-          AuthorizationRefresh:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyNzcxOTF9.fhkN47qnZY-Xqgik3RRWH_BXYjy1y95nYBzFwp77Wz1m81ZA_9PbJmb6sTWMciNXkOTenWEg100694CEDApEww",
-        },
-      })
+  useEffect(() => {
+    fetch("http://13.125.111.131:8080/user/info/writing", {
+      method: "GET",
+      headers: {
+        Authorization:
+          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo4LCJleHAiOjE2ODEyNzcwOTF9.qNFbSaIv_fUcJ4BV-gPIRY_t5u84zbEFahx4FdgSukw7qnvV-OdnVifFdxBg0Zk5cs1I0VfO1YBTjaJJUwSmbA",
+        AuthorizationRefresh:
+          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyNzcxOTF9.fhkN47qnZY-Xqgik3RRWH_BXYjy1y95nYBzFwp77Wz1m81ZA_9PbJmb6sTWMciNXkOTenWEg100694CEDApEww",
+      },
+    })
       .then((response) => {
-        setMyPost(response.data);
+        if (response !== 200) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        setMyPost(response.value);
+        console.log(response);
       })
-
       .catch((error) => {
         console.error("Error:", error);
       });
-  };
-
-  useEffect(() => {
-    fetchData();
   }, []);
-  console.log(myPost);
 
   return (
     <Wrapper>
