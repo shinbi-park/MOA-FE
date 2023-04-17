@@ -1,19 +1,18 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { postData } from "../../../common/atoms";
-import { useEffect } from "react";
-import { useState } from "react";
+import { myPostData } from "../../../common/atoms";
+
 import Post from "../../../Post/Post";
+import { useState } from "react";
 
 const PostEdit = () => {
-  const data = useRecoilValue(postData);
-  const [curData, setCurData] = useState([]);
-
+  const data = useRecoilValue(myPostData);
+  const [Editdata, setEditData] = useState(data);
+  // 작성한 글 =  EditData
   return (
     <div>
       <div>
-        <Post isEdit={true} data={data} />
+        <Post isEdit={true} Editdata={Editdata} />
       </div>
     </div>
   );

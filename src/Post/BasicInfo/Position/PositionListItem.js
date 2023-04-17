@@ -32,55 +32,96 @@ const Button = styled.button`
   }
 `;
 
-const PositionListItem = ({ position, onPositionChange }) => {
+const PositionListItem = ({
+  position,
+  onPositionChange,
+  field,
+  total,
+  isEdit,
+}) => {
   const [num, setNum] = useState(1);
   const [positionName, setPositionName] = useState("");
+  const [curNum, setCurNum] = useState();
+  const [curPositon, setCurPositon] = useState("");
+
+  useEffect(() => {
+    if (isEdit) {
+      setCurNum(total);
+      setCurPositon(field);
+    }
+  }, [isEdit]);
 
   const onChange = useCallback(
     (e) => {
-      setPositionName(e.target.value);
-      onPositionChange(position.id, num, e.target.value);
+      if (!isEdit) {
+        setPositionName(e.target.value);
+        onPositionChange(position.recruitMemberId, num, positionName);
+      } else {
+        setCurPositon(e.target.value);
+        onPositionChange(position.recruitMemberId, curNum, curPositon);
+      }
     },
-    [position.id, num, onPositionChange]
+    [position.recruitMemberId, num, onPositionChange, positionName]
   );
 
   const addPeople = (event) => {
     event.preventDefault();
-    setNum((prevNum) => {
-      if (prevNum < 8) {
+    if (!isEdit) {
+      if (num < 8) {
         // 최대 8명까지
-        const newNum = prevNum + 1;
-        onPositionChange(position.id, newNum, positionName);
-        return newNum;
+        const newNum = num + 1;
+        onPositionChange(position.recruitMemberId, newNum, positionName);
+        setNum(newNum);
       } else return 8;
-    });
+    } else {
+      if (curNum < 8) {
+        // 최대 8명까지
+        setCurNum(curNum + 1);
+        onPositionChange(position.recruitMemberId, curNum, curPositon);
+      } else return 8;
+    }
   };
 
   const removePeople = (event) => {
     event.preventDefault();
 
-    setNum((prevNum) => {
-      if (prevNum > 1) {
-        //최소 1명
-        const newNum = prevNum - 1;
-        onPositionChange(position.id, newNum, positionName);
-        return newNum;
-      } else return 1;
-    });
+    if (num > 1) {
+      //최소 1명
+      const newNum = num - 1;
+      onPositionChange(position.recruitMemberId, newNum, positionName);
+      setNum(newNum);
+    } else return 1;
   };
 
   return (
     <>
-      <Block>
-        <InputText
-          placeholder="예시) 프론트엔드"
-          value={positionName}
-          onChange={onChange}
-          required
-        />
-        <Button onClick={removePeople}> - </Button> {num}
-        <Button onClick={addPeople}> + </Button>
-      </Block>
+      {!isEdit ? (
+        <>
+          <Block>
+            <InputText
+              placeholder="예시) 프론트엔드"
+              value={positionName}
+              onChange={onChange}
+              required
+            />
+            <Button onClick={removePeople}> - </Button> {num}
+            <Button onClick={addPeople}> + </Button>{" "}
+          </Block>
+        </>
+      ) : (
+        <>
+          <Block>
+            <InputText
+              placeholder="예시) 프론트엔드"
+              value={curPositon}
+              onChange={onChange}
+              required
+            />
+            <Button onClick={removePeople}> - </Button> {curNum}
+            <Button onClick={addPeople}> + </Button>{" "}
+          </Block>
+        </>
+      )}
     </>
   );
 };

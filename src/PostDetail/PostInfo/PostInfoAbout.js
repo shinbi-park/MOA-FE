@@ -23,13 +23,13 @@ const HrLine = styled.hr`
 `;
 
 const PostInfoAbout = ({ curPost }) => {
-  const data = useRecoilValue(postData);
+  const data = useRecoilValue(myPostData);
 
   return (
     <div>
       <h1>프로젝트 소개</h1>
       <div>
-        <IntroductionDiv>{curPost.bs}</IntroductionDiv>
+        <IntroductionDiv dangerouslySetInnerHTML={{ __html: data.content }} />
       </div>
       <HrLine />
     </div>

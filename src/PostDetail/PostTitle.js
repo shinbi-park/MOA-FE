@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { postData, titleState } from "../common/atoms";
+import { myPostData, titleState } from "../common/atoms";
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -60,16 +60,26 @@ const RecruitState = styled.span`
   }
 `;
 
+const PostTagsDiv = styled.div`
+  margin: 10px 0 auto;
+`;
+
+const PostTags = styled.span`
+  margin-right: 15px;
+  color: gray;
+`;
+
 const PostTitle = () => {
-  const data = useRecoilValue(postData);
+  const data = useRecoilValue(myPostData);
   const titles = useRecoilValue(titleState);
+  const [user, setUser] = useState(data.postUser);
   return (
     <div>
       <PostTitlewrap>
-        <PostTitleHeader>{data[0].title}</PostTitleHeader>
+        <PostTitleHeader>{data.title}</PostTitleHeader>
       </PostTitlewrap>
       <PostRecruitwrap>
-        <RecruitPart>{data[0].postUser.userName}</RecruitPart>
+        <RecruitPart>{user.userName}</RecruitPart>
         <RecruitState
           className={
             (titles === 1 && "recruiting") ||
@@ -77,6 +87,11 @@ const PostTitle = () => {
             (titles === 3 && "projectDone")
           }
         ></RecruitState>
+        <PostTagsDiv>
+          {data.tags.map((item, index) => (
+            <PostTags key={index}>{item}</PostTags>
+          ))}
+        </PostTagsDiv>
       </PostRecruitwrap>
     </div>
   );

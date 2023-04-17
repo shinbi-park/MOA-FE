@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import profile from "../component/profileImg.png";
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineCancel } from "react-icons/md";
 import Sidebar from "./Sidebar/Sidebar";
+import axios from "axios";
 
 const Center = styled.div`
   height: 92vh;
@@ -127,15 +128,15 @@ const SaveButton = styled.button`
 
 function UserEdit() {
   const [user, setUser] = useState({
-    email: "example@gmail.com",
-    name: "username",
-    nickname: "nickname",
-    password: ""
+    email: "",
+    name: "",
+    nickname: "",
+    password: "",
   });
   const [file, setFile] = useState("");
   const [profileImg, setProfileImg] = useState("");
-  const [nicknameInput, setNicknameInput] = useState(user.nickname);
-  const [usernameInput, setUsernameInput] = useState(user.name);
+  const [nicknameInput, setNicknameInput] = useState("");
+  const [usernameInput, setUsernameInput] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
   const [currentPwd, setCurrentPwd] = useState("");
@@ -143,15 +144,15 @@ function UserEdit() {
   const [newPwdConfirm, setPwdConfirm] = useState("");
   const [newUsername, setNewUsername] = useState("");
   const [error, setError] = useState("");
-  /*
-  const handleUsernameChange = (event) => {
-    const { username, value } = event.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [username]: value
-    }));
-  };
-*/
+
+  // const handleUsernameChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setUser((prevUser) => ({
+  //     ...prevUser,
+  //     [name]: value,
+  //   }));
+  // };
+
   const handleEditClick = () => {
     setIsEditing(true);
   };
@@ -168,7 +169,7 @@ function UserEdit() {
     const { nickname, value } = event.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [nickname]: value
+      [nickname]: value,
     }));
   };
 
@@ -176,7 +177,7 @@ function UserEdit() {
     const { nickname, value } = event.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [nickname]: value
+      [nickname]: value,
     }));
   };
 
@@ -184,7 +185,7 @@ function UserEdit() {
     const { nickname, value } = event.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [nickname]: value
+      [nickname]: value,
     }));
   };
 
@@ -242,6 +243,31 @@ function UserEdit() {
     */
   };
 
+  const fetchInfo = async () => {
+    const response = await axios
+      .get("http://13.125.111.131:8080/user/info/profile", {
+        headers: {
+          Authorization:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo4LCJleHAiOjE2ODEyNzcwOTF9.qNFbSaIv_fUcJ4BV-gPIRY_t5u84zbEFahx4FdgSukw7qnvV-OdnVifFdxBg0Zk5cs1I0VfO1YBTjaJJUwSmbA",
+          AuthorizationRefresh:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyNzcxOTF9.fhkN47qnZY-Xqgik3RRWH_BXYjy1y95nYBzFwp77Wz1m81ZA_9PbJmb6sTWMciNXkOTenWEg100694CEDApEww",
+        },
+      })
+      .then((response) => {
+        setUser({
+          email: response.data.email,
+          name: response.data.name,
+          nickname: response.data.nickname,
+          password: "12345678",
+        });
+        setNicknameInput(user.nickname);
+      });
+  };
+
+  useEffect(() => {
+    fetchInfo();
+  }, []);
+
   return (
     <Center>
       <Sidebar />
@@ -269,7 +295,8 @@ function UserEdit() {
               />
             ) : (
               <h3 onClick={handleEditClick}>
-                {usernameInput} <AiOutlineEdit onClick={handleEditClick} />
+                <Input value={usernameInput} />{" "}
+                <AiOutlineEdit onClick={handleEditClick} />
               </h3>
             )}
           </Profile>
