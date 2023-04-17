@@ -15,10 +15,35 @@ const PostContainerWrapper = styled.div`
   }
 `;
 
+const EmptyContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  height: 100px;
+  width: 800px;
+  font-size: 20px;
+  font-weight: 650;
+  line-height: 2;
+`;
+
 const HomeTabComponent = ({type}) => {
     const [postData, setPostData] = useState([]);
-    
+    const [comment, setComment] = useState(null);
+
     useEffect(() => {
+      if(type === "new") {
+        setComment(<p>현재 새로운 글이 없습니다 <br/>새로운 글을 등록해보세요!</p>)
+      }
+      else if(type === "recruiting"){
+        setComment(<p>현재 모집 중인 글이 없습니다 <br/>새로운 글을 등록해보세요!</p>)
+      }
+      else if(type === "recommend") {
+        setComment(<p>추천 글은 로그인 후 이용할 수 있습니다!</p>)
+      }
+      else if(type === "popular") {
+        setComment(<p>현재 인기글이 없습니다 <br/>새로운 글을 등록해보세요!</p>)
+      }
         const URI = "/home/recruitment/" + type;
         console.log(URI);
         fetch("http://13.125.111.131:8080" + URI, {
@@ -34,25 +59,30 @@ const HomeTabComponent = ({type}) => {
             if (response !== 200) {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
-            setPostData(response.value);
-            console.log(response);
+            setPostData(response.json);
+            console.log(response.json);
           })
+          .then(data => console.log(data))
           .catch((error) => {
             console.error("Error:", error);
           });
       }, [type]);
-
+      
 return(
 
     <PostContainerWrapper>
-       {postData.map((post, index)=> (
+       { postData.length > 0 ? postData.map((post, index)=> (
               <PostComponent key={index} 
               type="main"
               title={post.title}
               author={post.author} category={post.category} tags={post.tags} recruitStatus={post.recruitStatus} date={post.createAt}replyCount={post.replyCount}
               />
-            ))}
-  
+            ))
+          : <EmptyContent>
+            {comment}
+          </EmptyContent>
+          }
+
     </PostContainerWrapper>
 )
 
