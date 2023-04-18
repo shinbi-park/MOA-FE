@@ -1,25 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Sidebar from "./Sidebar/Sidebar";
-import { Link } from "react-router-dom";
 
 const Wrapper = styled.div`
   height: 92vh;
   display: flex;
-  flex: 1;
   flex-direction: row;
 `;
 
-const SidebarContainer = styled.div`
-  flex: 1;
-`;
-
 const Container = styled.div`
-  display: "flex";
   justify-content: center;
-  flex: 2;
-  margin-top: 23px;
   font-size: 17px;
+  
   text-decoration: none;
   h3 {
     display: inline-block;
@@ -192,36 +183,33 @@ const MyActivity = () => {
     fetch("http://13.125.111.131:8080/user/info/activity", {
       method: "GET",
       headers: {
-        Authorization:
-          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo4LCJleHAiOjE2ODEyNzcwOTF9.qNFbSaIv_fUcJ4BV-gPIRY_t5u84zbEFahx4FdgSukw7qnvV-OdnVifFdxBg0Zk5cs1I0VfO1YBTjaJJUwSmbA",
-        AuthorizationRefresh:
-          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyNzcxOTF9.fhkN47qnZY-Xqgik3RRWH_BXYjy1y95nYBzFwp77Wz1m81ZA_9PbJmb6sTWMciNXkOTenWEg100694CEDApEww"
+        Authorization: localStorage.getItem("Authorization"),
+        AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
       }
     })
-      .then((response) => {
-        if (response !== 200) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        setUserActivity(response);
-        console.log(response);
-      })
+    .then((response) => {
+      if (response.status !== 200) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      setUserActivity(data);
+    })
       .catch((error) => {
         console.error("Error:", error);
       });
   }, []);
 
-  const currentProject = userActivity.approvedProjects.CONCURRENT;
-  const applyProject = userActivity.etcProjects;
-  const pastProject = userActivity.approvedProjects.FINISH;
+  const currentProject = userActivity?.approvedProjects?.CONCURRENT;
+  const applyProject = userActivity?.etcProjects;
+  const pastProject = userActivity?.approvedProjects?.FINISH;
 
   return (
     <Wrapper>
-      <SidebarContainer>
-        <Sidebar />
-      </SidebarContainer>
       <Container>
         <h3>현재 참여중인 프로젝트</h3>
-        {currentProject.length > 0 ? (
+        {currentProject?.length > 0 ? (
           <ProjectList
             color="#5d5fef"
             projects={currentProject}
@@ -232,14 +220,14 @@ const MyActivity = () => {
         )}
 
         <h3>지원한 프로젝트</h3>
-        {applyProject.length > 0 ? (
+        {applyProject?.length > 0 ? (
           <ApplyList projects={applyProject} />
         ) : (
           <EmptyProject> 지원한 프로젝트가 없습니다 </EmptyProject>
         )}
 
         <h3>완료한 프로젝트</h3>
-        {pastProject.length > 0 ? (
+        {pastProject?.length > 0 ? (
           <ProjectList
             color="#707070"
             projects={pastProject}

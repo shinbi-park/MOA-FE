@@ -24,6 +24,7 @@ function UserPopularity( {rate}) {
     const calcStarRates = () => {
         let tempStarRatesArr = [0, 0, 0, 0, 0];
         let starVerScore = (popularity * 70)/5 ; 
+        if( popularity === 0) starVerScore = 0;
         let idx = 0;
         while (starVerScore > 14) {
             tempStarRatesArr[idx] = 14;
@@ -34,7 +35,7 @@ function UserPopularity( {rate}) {
         return tempStarRatesArr;
     };
     useEffect(() => {
-        setRatesResArr(calcStarRates)
+        setRatesResArr(calcStarRates);
     }, [])
     return (
         <StarWrapper>
