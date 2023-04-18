@@ -10,6 +10,7 @@ const Wrapper = styled.div`
 const Container = styled.div`
   justify-content: center;
   font-size: 17px;
+  
   text-decoration: none;
   h3 {
     display: inline-block;
