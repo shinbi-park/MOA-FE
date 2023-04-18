@@ -32,9 +32,15 @@ const Button = styled.button`
   }
 `;
 
-const PostionList = ({ positions, onInsert, onRemove, onPositionChange }) => {
+const PostionList = ({
+  positions,
+  onInsert,
+  onRemove,
+  onPositionChange,
+  isEdit,
+}) => {
   const lastPosition = positions[positions.length - 1];
-  const lastId = lastPosition ? lastPosition.id : 0;
+  const lastId = lastPosition ? lastPosition.recruitMemberId : 0;
 
   const handlePositionChange = (id, total, field) => {
     onPositionChange(id, total, field);
@@ -51,35 +57,70 @@ const PostionList = ({ positions, onInsert, onRemove, onPositionChange }) => {
 
   return (
     <PositionBlock className="PositionList">
-      {positions.map((position) => (
-        <PositionListItem
-          position={position}
-          key={position.id}
-          onRemove={onRemove}
-          onInsert={onInsert}
-          field={position.field}
-          total={position.total}
-          onPositionChange={handlePositionChange}
-        />
-      ))}
-      <div>
-        <Button
-          backgroundColor={"white"}
-          border={"1px solid black"}
-          onClick={onClickInsert}
-        >
-          {" "}
-          추가{" "}
-        </Button>
-        <Button
-          backgroundColor={"#D9D9D9"}
-          border={"none"}
-          onClick={onClickRemove}
-        >
-          {" "}
-          삭제{" "}
-        </Button>
-      </div>
+      {!isEdit ? (
+        <>
+          {positions.map((position) => (
+            <PositionListItem
+              position={position}
+              key={position.recruitMemberId}
+              onRemove={onRemove}
+              onInsert={onInsert}
+              onPositionChange={handlePositionChange}
+            />
+          ))}
+          <div>
+            <Button
+              backgroundColor={"white"}
+              border={"1px solid black"}
+              onClick={onClickInsert}
+            >
+              {" "}
+              추가{" "}
+            </Button>
+            <Button
+              backgroundColor={"#D9D9D9"}
+              border={"none"}
+              onClick={onClickRemove}
+            >
+              {" "}
+              삭제{" "}
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          {positions.map((position) => (
+            <PositionListItem
+              isEdit={isEdit}
+              position={position}
+              key={position.recruitMemberId}
+              onRemove={onRemove}
+              onInsert={onInsert}
+              onPositionChange={handlePositionChange}
+              field={position.recruitField}
+              total={position.totalCount}
+            />
+          ))}
+          <div>
+            <Button
+              backgroundColor={"white"}
+              border={"1px solid black"}
+              onClick={onClickInsert}
+            >
+              {" "}
+              추가{" "}
+            </Button>
+            <Button
+              backgroundColor={"#D9D9D9"}
+              border={"none"}
+              onClick={onClickRemove}
+            >
+              {" "}
+              삭제{" "}
+            </Button>
+          </div>
+        </>
+      )}
     </PositionBlock>
   );
 };
