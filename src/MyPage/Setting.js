@@ -133,7 +133,7 @@ const EditIcons = styled(AiOutlineEdit)`
   right: -20px;
 `;
 
-function UserEdit() {
+function Setting() {
   const [user, setUser] = useState({
     email: "",
           name: "",
@@ -362,4 +362,4 @@ function UserEdit() {
   );
 }
 
-export default UserEdit;
+export default Setting;
