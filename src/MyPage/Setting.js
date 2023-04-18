@@ -3,8 +3,6 @@ import axios from "axios";
 import styled from "styled-components";
 import profile from "../component/profileImg.png";
 import { AiOutlineEdit } from "react-icons/ai";
-import { MdOutlineCancel } from "react-icons/md";
-import Sidebar from "./Sidebar/Sidebar";
 
 const Center = styled.div`
   height: 92vh;
@@ -27,8 +25,6 @@ const Wrapper = styled.div`
   padding: 20px;
   border-radius: 20px;
   padding-top: 15px;
-  margin-top: 40px;
-  margin-left: 100px;
   margin-right: 100px;
   margin-bottom: 100px;
   box-shadow: 1px 1px 5px 1px #c0c0c0;
@@ -39,6 +35,7 @@ const Profile = styled.div`
   align-items: center;
   text-decoration: underline;
   margin-left: 10px;
+  position: relative;
 `;
 
 const ProfileImgContainer = styled.div`
@@ -124,6 +121,15 @@ const SaveButton = styled.button`
   &:hover {
     cursor: pointer;
   }
+`;
+
+const EditIcons = styled(AiOutlineEdit)`
+  display: flex;
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  bottom: 23.5px;
+  right: -20px;
 `;
 
 function UserEdit() {
@@ -271,7 +277,6 @@ function UserEdit() {
 
   return (
     <Center>
-      <Sidebar />
       <Main>
         <Wrapper>
           <ProfileImgContainer>
@@ -282,8 +287,8 @@ function UserEdit() {
                 type="file"
                 id="profile-image-upload"
                 onChange={handleFileChange}
-                accept="image/*" // 이미지 파일만 선택 가능하도록 설정
-                style={{ display: "none" }} // 실제로 보이지 않도록 숨김 처리
+                accept="image/*" 
+                style={{ display: "none" }} 
               />
             </EditIcon>
           </ProfileImgContainer>
@@ -295,9 +300,12 @@ function UserEdit() {
                 onChange={handleUsernameChange}
               />
             ) : (
+              <>
               <h3 onClick={handleEditClick}>
-                {usernameInput} <AiOutlineEdit onClick={handleEditClick} />
+                {usernameInput}
               </h3>
+              <EditIcons onClick={handleEditClick}/>
+              </>
             )}
           </Profile>
 
