@@ -6,7 +6,7 @@ import UserPopularity from "../component/UserPopularity";
 const Profile = lazy(() => import("./Profile"));
 const Likedlist = lazy(() => import("./Likedlist"));
 const MyActivity = lazy(() => import("./MyActivity"));
-const MyPost = lazy(() => import("./MyPost"));
+const MyPost = lazy(() => import("./MyPostList"));
 const Setting = lazy(() => import("./Setting"));
 
 const Wrapper = styled.div`
