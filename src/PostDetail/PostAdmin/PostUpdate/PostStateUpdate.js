@@ -29,23 +29,28 @@ const SelectBtn = styled.button`
 
 const PostStateUpdate = () => {
   const [titles, setTitles] = useRecoilState(titleState);
-  const [setting, setSetting] = useState();
+  const [setting, setSetting] = useState(titles);
   const stateArr = [1, 2, 3];
 
   // useEffect(() => {
   //   fetchState();
-  // },[setting])
+  // }, []);
 
   // const fetchState = async () => {
-  //  await axios.post(`http://192.168.0.26:8080//recruitment/${recruitmentId}?statusCode=${setting}`, {
-  //         headers: {
-  //           Authorization: tokenA,
-  //           AuthorizationRefresh: tokenB,
-  //         },
-  //       })
-  //     }
+  //   await axios
+  //     .post(`http://13.125.111.131:8080/recruitment/2?statusCode=${setting}`, {
+  //       headers: {
+  //         Authorization:
+  //           "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo5LCJleHAiOjE2ODEyODc5NDl9.T-2IXekDbG9a0y8TaSepcWfpOSxJgpUPZvlkkeXWQ3EucSwgWgmWafudaxelZPSSl3xcWGH8hbpfY_0GIMRYHg",
 
-  const onChangeSetting = async () => {
+  //         AuthorizationRefresh:
+  //           "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyODgwNDl9.KXHwTPY1HvTwhfZo9PdCPdMWgRElud6mh18ymofGyi65ozWAVLAPqpcYB1LRTRzqX5J0iDtt3IS_w8VZa2eLsQ",
+  //       },
+  //     })
+  //     .then((response) => console.log(response));
+  // };
+
+  const onChangeSetting = () => {
     setTitles(parseInt(setting));
     setSetting(setting);
   };

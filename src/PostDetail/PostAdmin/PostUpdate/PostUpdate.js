@@ -1,6 +1,6 @@
 import React from "react";
 import PostStateUpdate from "./PostStateUpdate";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { FaRegEdit } from "react-icons/fa";
 
@@ -21,12 +21,13 @@ const EditLink = styled(Link)`
 `;
 
 const PostUpdate = () => {
+  const { postId } = useParams();
   return (
     <div>
       <h1>모집글 관리</h1>
       <EditTitle>글 수정하기</EditTitle>
       <EditLinkDiv>
-        <EditLink to="/edit">
+        <EditLink to={`/edit/${postId}`}>
           <FaRegEdit />
           수정 페이지로
         </EditLink>

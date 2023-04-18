@@ -3,7 +3,12 @@ import { recruitDummy } from "./DummyData";
 
 export const postData = atom({
   key: "postData",
-  default: recruitDummy,
+  default: [],
+});
+
+export const postID = atom({
+  key: "postID",
+  default: 0,
 });
 
 export const titleState = atom({
@@ -38,5 +43,10 @@ export const ScheduleSelect = atom({
 
 export const myPostData = atom({
   key: "myPostData",
-  default: "",
+  default: [],
+});
+
+export const myPostComment = atom({
+  key: "myPostComment",
+  default: [],
 });

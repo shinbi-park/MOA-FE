@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NoticeItem from "./NoticeItem";
+import axios from "axios";
 
 const NoticeWrap = styled.div`
   width: 1025px;
@@ -42,29 +43,57 @@ const NoticeAddBtn = styled.button`
 `;
 
 const AddNotice = () => {
-  //   const [notice, setNotice] = useState({
-  //     "title" : """,
-  //     "content" : "",
-  //     "meetingTime" : "",
-  //     "confirmedLocation" : "",
-  //     "checkVote" : false
-  // })
+  const [notice, setNotice] = useState("");
 
-  const [notice, setNotice] = useState({
-    noticeId: 0,
-    content: "",
-    check: "",
-  });
-  const [newNotice, setNewNotice] = useState([]);
+  const [newNotice, setNewNotice] = useState({});
   const [isChecked, setisChecked] = useState(false);
+
+  const fetchNotice = async () => {
+    const response = await axios
+      .get("http://13.125.111.131:8080/recruitment/2/notice", {
+        headers: {
+          Authorization:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo5LCJleHAiOjE2ODEyODc5NDl9.T-2IXekDbG9a0y8TaSepcWfpOSxJgpUPZvlkkeXWQ3EucSwgWgmWafudaxelZPSSl3xcWGH8hbpfY_0GIMRYHg",
+
+          AuthorizationRefresh:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyODgwNDl9.KXHwTPY1HvTwhfZo9PdCPdMWgRElud6mh18ymofGyi65ozWAVLAPqpcYB1LRTRzqX5J0iDtt3IS_w8VZa2eLsQ",
+        },
+      })
+      .then((response) => {
+        console.log(response.data.notices);
+        setNewNotice(response.data.notices[3]);
+      });
+  };
+  // useEffect(() => {
+  //   fetchNotice();
+  // }, [newNotice]);
 
   const onSubmitNotice = (e) => {
     e.preventDefault();
-    notice.check = isChecked;
-    setNewNotice([notice, ...newNotice]);
-    setNotice({ noticeId: notice.noticeId + 1, content: "", check: "" });
+    // notice.check = isChecked;
+
+    axios
+      .post(
+        "http://13.125.111.131:8080/recruitment/2/notice",
+        {
+          content: notice.content,
+          checkVote: isChecked,
+        },
+        {
+          headers: {
+            Authorization:
+              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo5LCJleHAiOjE2ODEyODc5NDl9.T-2IXekDbG9a0y8TaSepcWfpOSxJgpUPZvlkkeXWQ3EucSwgWgmWafudaxelZPSSl3xcWGH8hbpfY_0GIMRYHg",
+
+            AuthorizationRefresh:
+              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyODgwNDl9.KXHwTPY1HvTwhfZo9PdCPdMWgRElud6mh18ymofGyi65ozWAVLAPqpcYB1LRTRzqX5J0iDtt3IS_w8VZa2eLsQ",
+          },
+        }
+      )
+
+      .then((response) => console.log(response));
+    // setNewNotice([notice, ...newNotice]);
+    setNotice("");
     setisChecked(false);
-    //const response = await axios.post(`/recruitment/${recruitmentId}/notice`,{data});
   };
 
   const onNoticeDelete = (id) => {
@@ -72,23 +101,23 @@ const AddNotice = () => {
     setNewNotice(newNotice.filter((item) => item.noticeId !== id));
   };
 
-  const onEditNotice = (id, newContent) => {
-    //const response = await axios.Patch(`/recruitment/{recruitmentId}/notice/{noticeId}`,{data});
-    setNewNotice(
-      newNotice.map((item) =>
-        item.noticeId === id ? { ...item, content: newContent } : item
-      )
-    );
-  };
+  // const onEditNotice = (id, newContent) => {
+  //   //const response = await axios.Patch(`/recruitment/{recruitmentId}/notice/{noticeId}`,{data});
+  //   setNewNotice(
+  //     newNotice.map((item) =>
+  //       item.noticeId === id ? { ...item, content: newContent } : item
+  //     )
+  //   );
+  // };
 
-  const onVoteFinish = (id, votestate) => {
-    setisChecked(votestate);
-    setNewNotice(
-      newNotice.map((item) =>
-        item.noticeId === id ? { ...item, check: isChecked } : item
-      )
-    );
-  };
+  // const onVoteFinish = (id, votestate) => {
+  //   setisChecked(votestate);
+  //   setNewNotice(
+  //     newNotice.map((item) =>
+  //       item.noticeId === id ? { ...item, check: isChecked } : item
+  //     )
+  //   );
+  // };
 
   return (
     <div>
@@ -98,10 +127,8 @@ const AddNotice = () => {
           <NoticeWrap>
             <NoticeInput
               placeholder="공지사항을 입력하세요"
-              value={notice.content}
-              onChange={(e) =>
-                setNotice({ ...notice, content: e.target.value })
-              }
+              value={notice}
+              onChange={(e) => setNotice(notice)}
             />
             <VotingCheckDiv>
               <label>
@@ -119,7 +146,7 @@ const AddNotice = () => {
           </NoticeAddBtnDiv>
         </form>
       </div>
-      {newNotice.map((newnotice) => (
+      {/* {newNotice.map((newnotice) => (
         <div key={newnotice.noticeId}>
           <NoticeItem
             newnotice={newnotice}
@@ -128,7 +155,17 @@ const AddNotice = () => {
             onVoteFinish={onVoteFinish}
           />
         </div>
-      ))}
+      ))} */}
+      {newNotice ? (
+        <NoticeItem
+          newnotice={newNotice}
+          // onNoticeDelete={onNoticeDelete}
+          // onEditNotice={onEditNotice}
+          // onVoteFinish={onVoteFinish}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
