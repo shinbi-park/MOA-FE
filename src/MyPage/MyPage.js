@@ -6,7 +6,7 @@ import UserPopularity from "../component/UserPopularity";
 const Profile = lazy(() => import("./Profile"));
 const Likedlist = lazy(() => import("./Likedlist"));
 const MyActivity = lazy(() => import("./MyActivity"));
-const MyPostList = lazy(() => import("./MyPostList"));
+const MyPost = lazy(() => import("./MyPost"));
 const Setting = lazy(() => import("./Setting"));
 
 const Wrapper = styled.div`
@@ -150,7 +150,7 @@ const MyPage = () => {
       Title: <div onClick={() => onClickTab(2)}>작성한 글</div>,
       Content: (
         <Suspense>
-          <MyPostList />
+          <MyPost />
         </Suspense>
       )
     },
