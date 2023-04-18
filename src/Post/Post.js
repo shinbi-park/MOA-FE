@@ -49,7 +49,7 @@ const Post = ({ isEdit, data }) => {
       title: title,
       content: content,
       memberFields: memberFields,
-      categories: categories,
+      categorName: categories,
       tags: tags,
     });
 

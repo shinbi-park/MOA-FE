@@ -57,6 +57,8 @@ const PostionList = ({ positions, onInsert, onRemove, onPositionChange }) => {
           key={position.id}
           onRemove={onRemove}
           onInsert={onInsert}
+          field={position.field}
+          total={position.total}
           onPositionChange={handlePositionChange}
         />
       ))}

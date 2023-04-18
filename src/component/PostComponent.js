@@ -154,13 +154,13 @@ const MenuList = styled.ul`
   align-items: center;
   padding: 3px;
   top: 10%;
-  right: -18%;
+  right: -70px;
   list-style: none;
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 10px;
-  width: 50px;
+  width: 60px;
   height: 50px;
   z-index: 1;
   font-size: 16px;
@@ -175,7 +175,7 @@ const MenuItem = styled.li`
   }
 `;
 
-const PostComponent = ({ type, title, author, category, tags, recruitStatus, date, profileImg, replyCount }) => {
+const PostComponent = ({ type, id, title, author, category, tags, recruitStatus, date, profileImg, replyCount }) => {
   const [isMypost, setIsMypost] = useState(false);
   const [isMyLiked, setIsMyLiked] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -187,7 +187,7 @@ const PostComponent = ({ type, title, author, category, tags, recruitStatus, dat
     title = title.slice(0,47) + "...";
   }
   
-  let recruitmentId = 1; //수정하기
+  const recruitmentId = id; //수정하기
 
   useEffect(() => {
     if (type === "MyPost") setIsMypost(true);
@@ -203,15 +203,7 @@ const PostComponent = ({ type, title, author, category, tags, recruitStatus, dat
   };
 
   const handleEditClick = () => {
-    console.log("Edit clicked");
-    fetch(`/recruitment/${recruitmentId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then((response) => {});
-
+    window.location.href = `/recruitment/${recruitmentId}`;
   };
 
   const handleDeleteClick = () => {

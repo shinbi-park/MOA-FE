@@ -10,8 +10,12 @@ export default function Position({ handleFieldsChange, isEdit, data }) {
       id: 1,
       total: 1,
       field: "",
-    },
+    }
   ]);
+
+  if(isEdit){
+    setPosition(data.members);
+  }
 
   const onInsert = useCallback(() => {
     const position = {

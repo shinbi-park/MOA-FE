@@ -32,9 +32,9 @@ const Button = styled.button`
   }
 `;
 
-const PositionListItem = ({ position, onPositionChange }) => {
-  const [num, setNum] = useState(1);
-  const [positionName, setPositionName] = useState("");
+const PositionListItem = ({ position, onPositionChange, field, total}) => {
+  const [num, setNum] = useState(total || 1);
+  const [positionName, setPositionName] = useState(field || "");
 
   const onChange = useCallback(
     (e) => {
