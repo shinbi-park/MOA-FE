@@ -3,8 +3,6 @@ import axios from "axios";
 import styled from "styled-components";
 import profile from "../component/profileImg.png";
 import { AiOutlineEdit } from "react-icons/ai";
-import { MdOutlineCancel } from "react-icons/md";
-import Sidebar from "./Sidebar/Sidebar";
 
 const Center = styled.div`
   height: 92vh;
@@ -14,7 +12,7 @@ const Center = styled.div`
 `;
 
 const Main = styled.div`
-  display: "flex";
+  display: flex;
   flex: 2;
 `;
 
@@ -27,8 +25,6 @@ const Wrapper = styled.div`
   padding: 20px;
   border-radius: 20px;
   padding-top: 15px;
-  margin-top: 40px;
-  margin-left: 100px;
   margin-right: 100px;
   margin-bottom: 100px;
   box-shadow: 1px 1px 5px 1px #c0c0c0;
@@ -39,6 +35,7 @@ const Profile = styled.div`
   align-items: center;
   text-decoration: underline;
   margin-left: 10px;
+  position: relative;
 `;
 
 const ProfileImgContainer = styled.div`
@@ -106,6 +103,7 @@ const EmailInput = styled.input`
   font-size: 16px;
   width: 400px;
   border: none;
+  color: black;
   background-color: #d1d1d1;
   margin-bottom: 5px;
   pointer-events: none;
@@ -126,50 +124,58 @@ const SaveButton = styled.button`
   }
 `;
 
+const EditIcons = styled(AiOutlineEdit)`
+  display: flex;
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  bottom: 23.5px;
+  right: -20px;
+`;
+
 function UserEdit() {
   const [user, setUser] = useState({
     email: "",
-    name: "",
-    nickname: "",
-    password: "",
+          name: "",
+          nickname: "",
+          password: ""
   });
   const [file, setFile] = useState("");
   const [profileImg, setProfileImg] = useState("");
-  const [nicknameInput, setNicknameInput] = useState("");
-  const [usernameInput, setUsernameInput] = useState("");
+  const [nicknameInput, setNicknameInput] = useState(user.nickname);
+  const [usernameInput, setUsernameInput] = useState(user.name);
   const [isEditing, setIsEditing] = useState(false);
-
   const [currentPwd, setCurrentPwd] = useState("");
   const [newPwd, setNewPwd] = useState("");
   const [newPwdConfirm, setPwdConfirm] = useState("");
   const [newUsername, setNewUsername] = useState("");
   const [error, setError] = useState("");
-
-  const fetchInfo = async () => {
-    const response = await axios
-      .get("http://13.125.111.131:8080/user/info/profile", {
-        headers: {
-          Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo4LCJleHAiOjE2ODEyNzcwOTF9.qNFbSaIv_fUcJ4BV-gPIRY_t5u84zbEFahx4FdgSukw7qnvV-OdnVifFdxBg0Zk5cs1I0VfO1YBTjaJJUwSmbA",
-          AuthorizationRefresh:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyNzcxOTF9.fhkN47qnZY-Xqgik3RRWH_BXYjy1y95nYBzFwp77Wz1m81ZA_9PbJmb6sTWMciNXkOTenWEg100694CEDApEww",
-        },
-      })
+  useEffect(() => {
+    fetch(`http://13.125.111.131:8080/user/info/profile`, {
+      method: "GET",
+      headers: {
+        Authorization: localStorage.getItem("Authorization"),
+        AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+      }
+    })
       .then((response) => {
+        if (response.status !== 200) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
         setUser({
-          email: response.data.email,
-          name: response.data.name,
-          nickname: response.data.nickname,
+          email: data.email,
+          name: data.name,
+          nickname: data.nickname,
           password: "12345678",
         });
-
-        console.log(setUser);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
-  };
-
-  useEffect(() => {
-    fetchInfo();
-  });
+  },[]);
   /*
   const handleUsernameChange = (event) => {
     const { username, value } = event.target;
@@ -195,7 +201,7 @@ function UserEdit() {
     const { nickname, value } = event.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [nickname]: value,
+      [nickname]: value
     }));
   };
 
@@ -203,7 +209,7 @@ function UserEdit() {
     const { nickname, value } = event.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [nickname]: value,
+      [nickname]: value
     }));
   };
 
@@ -211,7 +217,7 @@ function UserEdit() {
     const { nickname, value } = event.target;
     setUser((prevUser) => ({
       ...prevUser,
-      [nickname]: value,
+      [nickname]: value
     }));
   };
 
@@ -270,7 +276,6 @@ function UserEdit() {
 
   return (
     <Center>
-      <Sidebar />
       <Main>
         <Wrapper>
           <ProfileImgContainer>
@@ -281,8 +286,8 @@ function UserEdit() {
                 type="file"
                 id="profile-image-upload"
                 onChange={handleFileChange}
-                accept="image/*" // 이미지 파일만 선택 가능하도록 설정
-                style={{ display: "none" }} // 실제로 보이지 않도록 숨김 처리
+                accept="image/*" 
+                style={{ display: "none" }} 
               />
             </EditIcon>
           </ProfileImgContainer>
@@ -294,10 +299,12 @@ function UserEdit() {
                 onChange={handleUsernameChange}
               />
             ) : (
+              <>
               <h3 onClick={handleEditClick}>
-                <Input value={usernameInput} />{" "}
-                <AiOutlineEdit onClick={handleEditClick} />
+                {user.name}
               </h3>
+              <EditIcons onClick={handleEditClick}/>
+              </>
             )}
           </Profile>
 
@@ -308,6 +315,7 @@ function UserEdit() {
               name="email"
               placeholder="이메일"
               value={user.email}
+              disabled
             />
           </InputContainer>
 
