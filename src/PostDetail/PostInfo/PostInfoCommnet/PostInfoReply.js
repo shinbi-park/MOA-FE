@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import PostReplyItem from "./PostReplyItem";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const ReplyBtnDiv = styled.div`
   padding-left: 1%;
@@ -56,38 +58,59 @@ const ReplyUl = styled.ul`
   list-style: none;
 `;
 
-const PostInfoReply = ({ commentId }) => {
-  const [reply, setReply] = useState({
-    userName: "user2",
-    content: "",
-    created_time: "",
-    replyId: 0,
-  });
-
-  const [newReply, setNewReply] = useState([]);
+const PostInfoReply = ({ item, fetchComment }) => {
+  const [reply, setReply] = useState("");
+  const { postId } = useParams();
+  const [newReply, setNewReply] = useState(item.subReplies);
   const [replyToggle, setReplyToggle] = useState(false);
 
-  const onReplySubmit = (e) => {
-    e.preventDefault();
-    reply.created_time = new Date()
-      .toLocaleString()
-      .slice(0, 24)
-      .replace("T", " ");
-    setNewReply((newReply) => {
-      return [reply, ...newReply];
-    });
-    setReply({
-      ...reply,
-      replyId: reply.replyId + 1,
-      content: "",
-    });
+  const onReplySubmit = async () => {
+    const params = {
+      content: reply,
+      parent: item.replyId,
+    };
+
+    await axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply`,
+      null,
+
+      {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+
+          AuthorizationRefresh:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+        },
+
+        params,
+      }
+    );
+
+    setReply("");
   };
 
   const onReplyToggle = () => {
     setReplyToggle(!replyToggle);
   };
 
-  const onDeleteReply = (id) => {
+  const onDeleteReply = async (id) => {
+    await axios.delete(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+
+      {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+
+          AuthorizationRefresh:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+        },
+      }
+    );
+
     setNewReply(newReply.filter((it) => it.replyId !== id));
   };
 
@@ -105,34 +128,27 @@ const PostInfoReply = ({ commentId }) => {
         <ReplyBtn onClick={onReplyToggle}>답글</ReplyBtn>
       </ReplyBtnDiv>
       {replyToggle && (
-        <ReplyForm onSubmit={onReplySubmit}>
+        <ReplyForm>
           <ReplyInput
             placeholder="답글을 입력해주세요"
-            value={reply.content}
-            onChange={(e) =>
-              setReply({
-                ...reply,
-                content: e.target.value,
-              })
-            }
+            value={reply}
+            onChange={(e) => setReply(e.target.value)}
           />
           <ReplyAddBtnWrap>
-            <ReplyAddBtn>확인</ReplyAddBtn>
+            <ReplyAddBtn onClick={onReplySubmit}>확인</ReplyAddBtn>
           </ReplyAddBtnWrap>
         </ReplyForm>
       )}
 
-      {newReply.map((item) => {
-        return (
-          <ReplyUl key={item.replyId}>
-            <PostReplyItem
-              item={item}
-              onDeleteReply={onDeleteReply}
-              onEditReply={onEditReply}
-            />
-          </ReplyUl>
-        );
-      })}
+      {newReply.map((item) => (
+        <ReplyUl key={item.replyId}>
+          <PostReplyItem
+            item={item}
+            onDeleteReply={onDeleteReply}
+            onEditReply={onEditReply}
+          />
+        </ReplyUl>
+      ))}
     </div>
   );
 };

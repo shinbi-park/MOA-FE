@@ -57,8 +57,8 @@ const PostReplyItem = ({ item, onDeleteReply, onEditReply }) => {
   };
   return (
     <div>
-      <ReplyUserName>{item.userName}</ReplyUserName>
-      <ReplyTime> {item.created_time}</ReplyTime>
+      <ReplyUserName>{item.author}</ReplyUserName>
+      <ReplyTime> {item.createDate}</ReplyTime>
       {isEdit ? (
         <>
           <ReplyEditBtn

@@ -153,16 +153,7 @@ const LinkItem = React.memo(({ link }) => (
 ));
 
 const InfoDetail = ({ isOpen, handlecloseInfo }) => {
-  const [userInfo, setUserInfo] = useState({
-    email: "userId@email.com",
-    name: "username",
-    nickname: "nickname",
-    locationLatitude: 34.545,
-    locationLongitude: 34.545234,
-    popularity: 2.4,
-    details: "details",
-    interests: ["백엔드", "자바"],
-  });
+  const [userInfo, setUserInfo] = useState({});
 
   const [applicant, setApplicant] = useState("user1");
   const [popularityCnt, setPopularityCnt] = useState(5); //평가 받은 프로젝트 수
@@ -172,14 +163,15 @@ const InfoDetail = ({ isOpen, handlecloseInfo }) => {
   const [location, setLocation] = useState("지하철역");
 
   // const fetchInfo = async() => {
-  //   const response = await axios.get("http://192.168.0.26:8080/", {
+  //   const params = {userId:""}
+  //   const response = await axios.get("http://13.125.111.131:8080//user/info/profile", null,{params},{
   //           headers: {
-  //             Authorization: tokenA,
-  //             AuthorizationRefresh: tokenB,
+  //             Authorization: "" ,
+  //             AuthorizationRefresh: "",
   //           },
   //         })
   //         .then((response) => {
-
+  //           console.log(response.data)
   //         })
   //       }
 

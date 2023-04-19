@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import PageCommentInput from "./PostCommentInput";
 import PostInfoReply from "./PostInfoReply";
+import { useRecoilState, useRecoilValue } from "recoil";
 import PostCommentItem from "./PostCommentItem";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { useRecoilValue } from "recoil";
 import { myPostComment } from "../../../common/atoms";
 
 const HrCommentLine = styled.hr`
@@ -24,72 +24,103 @@ const CommentUl = styled.ul`
 
 const PostInfoComment = () => {
   const postComment = useRecoilValue(myPostComment);
+  const [Comments, setComments] = useRecoilState(myPostComment);
   const [comment, setComment] = useState("");
-
-  const exCom = postComment[1];
-
   const { postId } = useParams();
-
-  const [comment_count, setComment_count] = useState(0);
+  const [comment_count, setComment_count] = useState(Comments.length);
   const [newComment, setNewComment] = useState([]);
 
-  const onCommentChange = (e) => {
-    setComment(e.target.value);
-  };
-
-  const onCommentSubmit = (e) => {
-    e.preventDefault();
-
-    axios
-      .post(
-        `http://13.125.111.131:8080/recruitment/${postId}/reply?content=`,
-        {
-          params: {
-            content: comment,
-          },
-        },
-
-        {
+  useEffect(() => {
+    const fetchComment = async () => {
+      const response = await axios
+        .get(`http://13.125.111.131:8080/recruitment/${postId}`, {
           headers: {
-            // 로그인 후 받아오는 인증토큰값
             Authorization:
               "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
 
             AuthorizationRefresh:
               "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
           },
-        }
-      )
-      .then((response) => {
-        console.log(response);
-      });
+        })
+        .then((response) => {
+          setNewComment(response.data.repliesInfo.info);
+        })
 
-    // comment.created_time = new Date()
-    //   .toLocaleString()
-    //   .slice(0, 24)
-    //   .replace("T", " ");
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    };
 
-    // setNewComment((newComment) => {
-    //   return [comment, ...newComment];
-    // });
-    // setComment({
-    //   ...comment,
-    //   commentId: comment.commentId + 1,
-    //   content: "",
-    // });
-    // setComment_count(comment_count + 1);
+    fetchComment();
+  }, []);
+
+  const onCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  const onCommentSubmit = async () => {
+    const params = {
+      content: comment,
+    };
+
+    const response = await axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply`,
+      null,
+
+      {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+
+          AuthorizationRefresh:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+        },
+
+        params,
+      }
+    );
+
+    setComment("");
+    setComment_count(comment_count + 1);
   };
 
   const onEditComment = (id, newContent) => {
-    setNewComment(
-      newComment.map((item) =>
-        item.commentId === id ? { ...item, content: newContent } : item
-      )
+    axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+      {
+        content: newContent,
+      },
+
+      {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+
+          AuthorizationRefresh:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+        },
+      }
     );
   };
 
-  const onDeleteComment = (id) => {
-    setNewComment(newComment.filter((item) => item.commentId !== id));
+  const onDeleteComment = async (id) => {
+    await axios.delete(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+
+      {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+
+          AuthorizationRefresh:
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+        },
+      }
+    );
+    setComments(Comments.filter((item) => item.replyId !== id));
     setComment_count(comment_count - 1);
   };
 
@@ -103,26 +134,19 @@ const PostInfoComment = () => {
         onCommentChange={onCommentChange}
       />
 
-      <CommentUl>
-        <PostCommentItem
-          exCom={exCom}
-          onDeleteComment={onDeleteComment}
-          onEditComment={onEditComment}
-        />
-      </CommentUl>
-
-      {/* {newComment.map((item) => (
-        <CommentUl key={item.commentId}>
+      {Comments.map((item) => (
+        <CommentUl key={item.replyId}>
           <PostCommentItem
             item={item}
             onDeleteComment={onDeleteComment}
             onEditComment={onEditComment}
           />
 
-          {<PostInfoReply commentId={item.commentId} />}
+          <PostInfoReply item={item} />
+
           <HrCommentLine />
-     
-      ))} */}
+        </CommentUl>
+      ))}
     </div>
   );
 };

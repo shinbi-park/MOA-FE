@@ -24,20 +24,20 @@ const PostDetail = () => {
   // const tokenB = window.localStorage.getItem("AuthorizationRefresh");
 
   //recoil + axios 예시
-  const fetchData = async () => {
+
+  useEffect(() => {
     axios
       .get(`http://13.125.111.131:8080/recruitment/${postId}`, {
         headers: {
           Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE4NzI2NzF9.8KM_OoUUPEZ6XdE1ewjpSNmgARmjpVSATlUThQahApglgBNaM6b_56gxm1zhWDqrpBPCxjYr5tvOObmHXG6Wrw",
 
           AuthorizationRefresh:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODMwNzA4NzF9.IpuiAZaZcWyDuXtCgbxGe9nFoYmlKnx6n3LHj42kaJZX_V_VQ-DsWIWmJ_7VzgGNreeqtVEI1VfkVnqpb4yylg",
         },
       })
       .then((response) => {
         setPost(response.data.recruitInfo);
-
         setIsLoading(false);
         setTitles(response.data.state);
         setPostComment(response.data.repliesInfo.info);
@@ -46,11 +46,7 @@ const PostDetail = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  }, [setPost, setTitles, setPostComment, postId]);
 
   return (
     <>
