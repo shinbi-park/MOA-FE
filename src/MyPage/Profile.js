@@ -2,27 +2,19 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import Sidebar from "./Sidebar/Sidebar";
-import ProfileLink from "./Component/ProfileLink"
-import ProfileTag from "./Component/ProfileTag"
-
+import ProfileLink from "./MyPageComponent/ProfileLink"
+import ProfileTag from "./MyPageComponent/ProfileTag"
 import KakaoMap from "../component/KakaoMap";
 
 const Wrapper = styled.div`
   height: 92vh;
   display: flex;
-  flex: 1;
   flex-direction: row;
-`;
-
-const SidebarContainer = styled.div`
-  flex: 1;
+  margin: 0;
 `;
 
 const Container = styled.div`
   display: flex;
-  flex: 2;
-  margin-top: 23px;
   align-items: left;
   flex-direction: column;
   h3{
@@ -73,36 +65,38 @@ margin-bottom: 20px;
 `;
 
 const Profile = () => {
-  /*
-  useEffect(() => {
-    //api에서 데이터 받아오기
-  }, []);
-*/
-  const [userProfile, setUserProfile] = useState(
-    {
-      "email" : "userId@email.com",
-      "name" : "username",
-      "nickname" : "nickname",
-      "locationLatitude" : 34.545,
-      "locationLongitude" : 126.9779451,
-      "popularity" : {
-          "rate" : 2.3,
-          "count" : 3
-      },
-      "details" : "details",
-      "interests" : [
-          "백엔드",
-          "자바"
-      ],
-      "link" : [
-           "https://github.com"
-      ]
-  });
+  const [introduce, setIntroduce] = useState("");
+  const [location, setLocation] = useState(null);
+  const [userTags, setUserTags] = useState([]);
+  const [userLinks, setUserLinks] = useState([]);
+  useEffect(() => { //데이터 받아오기
+    fetch("http://13.125.111.131:8080/user/info/profile", {
+      method: "GET",
+      headers: {
+        Authorization: localStorage.getItem("Authorization"),
+        AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+      }
+    })
+    .then((response) => {
+      if (response.status !== 200) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      setUserTags(data.interests);
+      setUserLinks(data.link);
+      setIntroduce(data.details);
+      setLocation({lat: data.locationLatitude === 0 ? null : data.locationLatitude
+        , lng: data.locationLongitude === 0 ? null : data.locationLongitude})
+    })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
 
-    const [introduce, setIntroduce] = useState(userProfile.details);
-    const [location, setLocation] = useState({lat: userProfile.locationLatitude, lng: userProfile.locationLongitude});
-    const [userTags, setUserTags] = useState(userProfile.interests);
-    const [userLinks, setUserLinks] = useState(userProfile.link);
+  }, []);
+  
     const handleUserLocation = (address) => {
       setLocation(address);
     }
@@ -119,7 +113,7 @@ const Profile = () => {
       setUserLinks(value);
     };
 
-    const onSubmit = (e) => {
+    const onSubmit = (e) => { //데이터보내기
       e.preventDefault();
       const userProfileData = {
         "locationLatitude" : location.lat,
@@ -145,25 +139,20 @@ const Profile = () => {
     const modules = {
       toolbar: false,
     };
-
     return (
         <Wrapper>
-          <SidebarContainer>
-            <Sidebar />
-          </SidebarContainer>
-
           <Container>
             <h3>선호 지역</h3>
             <MapWrapper>
             <KakaoMap handleUserLocation={handleUserLocation} 
-            data={ {lat: userProfile.locationLatitude, lng: userProfile.locationLongitude} }/>
+            data={location}/>
           </MapWrapper>
 
             <h3>링크</h3>
-            <ProfileLink data={userProfile.link} handleUserLinks={handleUserLinks}/>
+            <ProfileLink data={userLinks} handleUserLinks={handleUserLinks}/>
 
             <h3>관심 태그</h3>
-            <ProfileTag data={userProfile.interests} handleUserTags={handleUserTags}/> 
+            <ProfileTag data={userTags} handleUserTags={handleUserTags}/> 
 
             <h3>상세 소개</h3>
             <EditorWrapper>
@@ -176,7 +165,7 @@ const Profile = () => {
           </EditorWrapper>
 
             <SaveButtonContainer>
-            <SaveButton type="submit" backgroundColor={"black"} >저장하기</SaveButton>
+            <SaveButton type="submit" backgroundColor={"black"} onClick={onSubmit}>저장하기</SaveButton>
             </SaveButtonContainer>
           </Container>
       </Wrapper>
