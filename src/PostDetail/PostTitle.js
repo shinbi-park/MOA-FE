@@ -66,10 +66,10 @@ const PostTitle = () => {
   return (
     <div>
       <PostTitlewrap>
-        <PostTitleHeader>{data[0].title}</PostTitleHeader>
+        <PostTitleHeader>{data.title}</PostTitleHeader>
       </PostTitlewrap>
       <PostRecruitwrap>
-        <RecruitPart>{data[0].postUser.userName}</RecruitPart>
+        <RecruitPart>{data.postUser.userName}</RecruitPart>
         <RecruitState
           className={
             (titles === 1 && "recruiting") ||

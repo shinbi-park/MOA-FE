@@ -18,8 +18,8 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/applicantDetail" element={<InfoDeatil />} />
-        <Route path="/detail" element={<PostDetail />} />
-        <Route path="/edit" element={<PostEdit />} />
+        <Route path="/detail/:postId" element={<PostDetail />} />
+        <Route path="/edit/:postId" element={<PostEdit />} />
       </Routes>
     </>
   );
