@@ -194,6 +194,7 @@ const MyActivity = () => {
       return response.json();
     })
     .then((data) => {
+      console.log(data);
       setUserActivity(data);
     })
       .catch((error) => {

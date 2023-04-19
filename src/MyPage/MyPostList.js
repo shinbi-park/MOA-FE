@@ -58,6 +58,7 @@ useEffect(() => {
     return response.json();
   })
   .then((data) => {
+    console.log(data);
     setMyPost(data.writing);
   })
     .catch((error) => {

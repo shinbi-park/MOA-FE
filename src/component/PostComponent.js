@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useNavigate } from "react";
 import styled from "styled-components";
 import profile from "./profileImg.png";
 import { AiOutlineComment, AiFillHeart } from "react-icons/ai";
@@ -176,6 +176,7 @@ const MenuItem = styled.li`
 `;
 
 const PostComponent = ({
+  id,
   type,
   title,
   author,
@@ -189,6 +190,7 @@ const PostComponent = ({
   const [isMypost, setIsMypost] = useState(false);
   const [isMyLiked, setIsMyLiked] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();
 
   if (tags.length > 5) {
     tags = tags.slice(0, 5);
@@ -197,36 +199,31 @@ const PostComponent = ({
     title = title.slice(0, 47) + "...";
   }
 
-  let recruitmentId = 1; //수정하기
-
   useEffect(() => {
     if (type === "MyPost") setIsMypost(true);
     else if (type === "MyLike") setIsMyLiked(true);
   }, []);
 
   const handleLikeClick = () => {
-    setIsMyLiked(!isMyLiked);
+    setIsMyLiked(!isMyLiked); //좋아요 삭제 api 추가
   };
 
   const handleMenuClick = () => {
     setShowMenu(!showMenu);
   };
 
+  const linkToDetail = () => {
+    navigate(`http://13.125.111.131:8080/recruitment/${id}`);
+  };
+
   const handleEditClick = () => {
-    console.log("Edit clicked");
-    fetch(`/recruitment/${recruitmentId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((response) => {});
+    navigate(`/edit/${id}`);
   };
 
   const handleDeleteClick = () => {
-    console.log("Delete clicked");
     const result = window.confirm("글을 정말 삭제할까요?");
     if (result) {
-      fetch("http://13.125.111.131:8080/recruitment/1", {
+      fetch(`http://13.125.111.131:8080/recruitment/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -240,7 +237,7 @@ const PostComponent = ({
   };
 
   return (
-    <Wrapper>
+    <Wrapper onClick={linkToDetail}>
       {showMenu && (
         <MenuList>
           <MenuItem onClick={handleEditClick}>글 수정</MenuItem>

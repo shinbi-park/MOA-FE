@@ -89,7 +89,7 @@ const ContentContainer = styled.div`
   display: flex;
   flex: 2;
   margin-top: -150px;
-  margin-left: -80px;
+  margin-left: 0px;
   h3 {
     font-size: 23px;
   }
