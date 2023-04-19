@@ -49,7 +49,7 @@ export default function Category({ handleCategoriesChange, isEdit, data }) {
             <option value="EXAMINATION">고시</option>
             <option value="INTERVIEW">면접</option>
             <option value="LANGUAGE"> 어학 </option>
-            <option value="CERTIFICATION">자격증</option>
+            <option value="CERTIFICATE">자격증</option>
             <option value="AUTONOMY">자율</option>
             <option value="HOBBY">취미</option>
             <option value="EMPLOYMENT">취업</option>
