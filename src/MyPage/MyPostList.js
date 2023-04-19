@@ -58,6 +58,7 @@ useEffect(() => {
     return response.json();
   })
   .then((data) => {
+    console.log(data);
     setMyPost(data.writing);
   })
     .catch((error) => {
@@ -68,8 +69,8 @@ useEffect(() => {
   return (
     <Wrapper>
       <Content>
-        <h3>³» ÀÛ¼º±Û</h3>
-        {myPost?.length < 1 ? <EmptyPost>±ÛÀ» ÀÛ¼ºÇØº¸¼¼¿ä!</EmptyPost> 
+        <h3>ë‚´ ì‘ì„±ê¸€</h3>
+        {myPost?.length < 1 ? <EmptyPost>ê¸€ì„ ì‘ì„±í•´ë³´ì„¸ìš”!</EmptyPost> 
           : <ComponentWrapper>
             {myPost?.map((post, index)=> (
               <PostComponent key={index} 

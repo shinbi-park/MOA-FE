@@ -21,6 +21,7 @@ const Wrapper = styled.div`
   align-items: center;
   flex-direction: column;
   height: 680px;
+  min-width: 500px;
   border: 0.5px solid #a2a2a2;
   padding: 20px;
   border-radius: 20px;
@@ -33,9 +34,11 @@ const Wrapper = styled.div`
 const Profile = styled.div`
   display: flex;
   align-items: center;
-  text-decoration: underline;
   margin-left: 10px;
   position: relative;
+  h3{
+    text-decoration: underline;
+  }
 `;
 
 const ProfileImgContainer = styled.div`
@@ -95,6 +98,7 @@ const PwdInput = styled.input`
 const Input = styled.input`
   ${inputStyle}
   margin-bottom: 16px;
+  
 `;
 
 const EmailInput = styled.input`
@@ -150,6 +154,7 @@ function Setting() {
   const [newPwdConfirm, setPwdConfirm] = useState("");
   const [newUsername, setNewUsername] = useState("");
   const [error, setError] = useState("");
+
   useEffect(() => {
     fetch(`http://13.125.111.131:8080/user/info/profile`, {
       method: "GET",
@@ -171,6 +176,8 @@ function Setting() {
           nickname: data.nickname,
           password: "12345678",
         });
+        setNicknameInput(data.nickname);
+        setUsernameInput(data.name);
       })
       .catch((error) => {
         console.error("Error:", error);
