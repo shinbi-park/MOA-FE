@@ -34,13 +34,18 @@ const TitleInput = styled.input`
   display: flex;
 `;
 
-const Editor = ({ handleTitleChange, handleContentChange, isEdit, data }) => {
+const Editor = ({
+  handleTitleChange,
+  handleContentChange,
+  isEdit,
+  Editdata,
+}) => {
   const [curTitle, setCurTitle] = useState("");
   const [curContent, setCurContent] = useState("");
   useEffect(() => {
     if (isEdit) {
-      setCurTitle(data[0].title);
-      setCurContent(data[0].content);
+      setCurTitle(Editdata.title);
+      setCurContent(Editdata.content);
     }
   }, [isEdit]);
 

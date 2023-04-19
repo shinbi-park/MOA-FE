@@ -32,7 +32,7 @@ export const Select = styled.select`
   box-shadow: 2px 1px 5px #bdbdbd;
 `;
 
-export default function Category({ handleCategoriesChange, isEdit, data }) {
+export default function Category({ handleCategoriesChange, isEdit, Editdata }) {
   return (
     <CategoryBlock>
       {!isEdit ? (
@@ -63,15 +63,15 @@ export default function Category({ handleCategoriesChange, isEdit, data }) {
           <Select
             name="select-category"
             id="category"
-            defaultValue={data[0].categories}
+            defaultValue={Editdata.category}
             onChange={handleCategoriesChange}
           >
-            <option value="programming">프로그래밍</option>
-            <option value="language"> 어학 </option>
-            <option value="job">취업</option>
-            <option value="public">고시/공무</option>
-            <option value="hobby">자율</option>
-            <option value="etc">기타</option>
+            <option value="PROGRAMMING">프로그래밍</option>
+            <option value="LANGUAGE"> 어학 </option>
+            <option value="EMPLOYMENT">취업</option>
+            <option value="EXAMINATION">고시/공무</option>
+            <option value="HOBBY">자율</option>
+            <option value="CERTIFICATE">기타</option>
           </Select>
         </>
       )}
