@@ -37,8 +37,8 @@ const PostInfoComment = () => {
     setComment(e.target.value);
   };
 
-  const onCommentSubmit = (e) => {
-    e.preventDefault();
+  const onCommentSubmit = () => {
+    //e.preventDefault();
 
     axios
       .post(
@@ -82,7 +82,7 @@ const PostInfoComment = () => {
 
   const onEditComment = (id, newContent) => {
     setNewComment(
-      newComment.map((item) =>
+      newComment?.map((item) =>
         item.commentId === id ? { ...item, content: newContent } : item
       )
     );
