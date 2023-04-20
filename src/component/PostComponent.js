@@ -199,7 +199,6 @@ const PostComponent = ({
   const [isMyLiked, setIsMyLiked] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [isMain, setIsMain] = useState(false);
-  const [searchTag, setSearchTag] = useState("");
 
   if (tags.length > 5) {
     tags = tags.slice(0, 5);
@@ -234,7 +233,7 @@ const PostComponent = ({
 
   const handleLikeClick = (e) => {
     e.preventDefault();
-    setIsMyLiked(!isMyLiked); //좋아요 삭제 api 추가
+    setIsMyLiked(!isMyLiked);
     if (isMyLiked === false) {
       axios
         .post(
@@ -249,10 +248,12 @@ const PostComponent = ({
             }
           }
         )
-        .then((response) => {
-          if(response.status !== 200){
-            alert("관심글 등록에 실패하였습니다")
+        .catch(error => {
+          if(error.response.status === 403){
+            alert("관심글은 로그인 후 등록할 수 있습니다!");
+            setIsMyLiked(false);
           }
+
         });
     } else if (isMyLiked === true) {
       axios
@@ -264,13 +265,7 @@ const PostComponent = ({
               AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
             }
           }
-        )
-        .then((response) => {
-          if(response.status !== 200){
-            alert("관심글 삭제에 실패하였습니다")
-          }
-        });
-    }
+        )};
   };
 
   const handleMenuClick = () => {
