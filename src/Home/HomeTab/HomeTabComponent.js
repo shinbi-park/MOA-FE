@@ -39,47 +39,6 @@ const HomeTabComponent = ({
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    let url = "";
-
-    switch (type) {
-      case "new":
-        setComment(
-          <p>
-            현재 새로운 글이 없습니다 <br />
-            새로운 글을 등록해보세요!
-          </p>
-        );
-        url = `/recruitment/search/slice?page=${page}&size=12&sort=createdDate,desc`;
-        break;
-      case "recruiting":
-        setComment(
-          <>
-            <p>
-              현재 모집 중인 글이 없습니다
-              <br />
-              새로운 글을 등록해보세요!
-            </p>
-          </>
-        );
-        url = `/recruitment/search/page?page=${page}&size=12&stateCode=1`;
-        break;
-      case "recommend":
-        setComment(<p>추천 글은 관심 태그 등록 후 이용할 수 있습니다!</p>);
-        url = "/home/recruitment/recommend";
-        break;
-      case "popular":
-        setComment(
-          <p>
-            현재 인기글이 없습니다 <br />
-            새로운 글을 등록해보세요!
-          </p>
-        );
-        url = "/home/recruitment/popular";
-        break;
-      default:
-        break;
-    }
-
     if (searchData) {
       setPostData(searchData);
       if (searchData.length === 0) {
@@ -92,8 +51,55 @@ const HomeTabComponent = ({
         );
       }
     } else {
+      let headers = {};
+      let url = "";
+      switch (type) {
+        case "new":
+          setComment(
+            <p>
+              현재 새로운 글이 없습니다 <br />
+              새로운 글을 등록해보세요!
+            </p>
+          );
+          url = `/recruitment/search/slice?page=${page}&size=12&sort=createdDate,desc`;
+          break;
+        case "recruiting":
+          setComment(
+            <>
+              <p>
+                현재 모집 중인 글이 없습니다
+                <br />
+                새로운 글을 등록해보세요!
+              </p>
+            </>
+          );
+          url = `/recruitment/search/page?page=${page}&size=12&stateCode=1`;
+          break;
+        case "recommend":
+          setComment(
+            <p>추천 글은 관심 태그 등록 후 이용할 수 있습니다!</p>
+          );
+          headers = {
+            Authorization: localStorage.getItem("Authorization"),
+            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+          };
+          url = "/home/recruitment/recommend";
+          break;
+        case "popular":
+          setComment(
+            <p>
+              현재 인기글이 없습니다 <br />
+              새로운 글을 등록해보세요!
+            </p>
+          );
+          url = "/home/recruitment/popular";
+          break;
+        default:
+          break;
+      }
+    
       axios
-        .get("http://13.125.111.131:8080" + url)
+        .get("http://13.125.111.131:8080" + url, { headers })
         .then((response) => {
           setPostData(response.data.value);
         })
@@ -102,6 +108,7 @@ const HomeTabComponent = ({
           console.log(error);
         });
     }
+    
   }, [type, page, searchData]);
 
   return (
