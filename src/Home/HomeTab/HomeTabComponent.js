@@ -5,7 +5,10 @@ import PostComponent from "../../component/PostComponent";
 
 const PostContainerWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, calc((100% - 40px) / 3)));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(300px, calc((100% - 40px) / 3))
+  );
   grid-gap: 10px;
   width: 150%;
   align-items: center;
@@ -102,28 +105,30 @@ const HomeTabComponent = ({
   }, [type, page, searchData]);
 
   return (
-    <PostContainerWrapper>
+    <>
       {postData.length > 0 ? (
-        postData.map((post, index) => (
-          <PostComponent
-            key={index}
-            type="main"
-            id={post.id}
-            title={post.title}
-            author={post.author}
-            category={post.category}
-            tags={post.tags}
-            recruitStatus={post.recruitStatus}
-            date={post.createdDate}
-            replyCount={post.replyCount}
-            onClickCategory={onClickCategory}
-            onClickTag={onClickTag}
-          />
-        ))
+        <PostContainerWrapper>
+          {postData.map((post, index) => (
+            <PostComponent
+              key={index}
+              type="main"
+              id={post.id}
+              title={post.title}
+              author={post.author}
+              category={post.category}
+              tags={post.tags}
+              recruitStatus={post.recruitStatus}
+              date={post.createdDate}
+              replyCount={post.replyCount}
+              onClickCategory={onClickCategory}
+              onClickTag={onClickTag}
+            />
+          ))}
+        </PostContainerWrapper>
       ) : (
         <EmptyContent>{comment}</EmptyContent>
       )}
-    </PostContainerWrapper>
+    </>
   );
 };
 

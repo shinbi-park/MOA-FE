@@ -50,6 +50,8 @@ const TabList = styled.div`
 const PostContainer = styled.div`
   display: flex;
   width: 130%;
+  align-content: center;
+  justify-content: center;
 `;
 
 const SearchContainer = styled.div`
