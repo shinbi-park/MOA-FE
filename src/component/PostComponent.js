@@ -199,6 +199,7 @@ const PostComponent = ({
   const [isMyLiked, setIsMyLiked] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [isMain, setIsMain] = useState(false);
+  const [searchTag, setSearchTag] = useState("");
 
   if (tags.length > 5) {
     tags = tags.slice(0, 5);
@@ -213,22 +214,24 @@ const PostComponent = ({
     else {
       setIsMain(true);
     }
-    axios
-      .get(`http://13.125.111.131:8080/user/info/concern`, {
-        headers: {
-          Authorization: localStorage.getItem("Authorization"),
-          AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
-        }
-      })
-      .then((response) => {
-        response.data.writing.map(post => {
-          if (post.id === id) {
-            setIsMyLiked(true);
+    if (localStorage.getItem("Authorization")) {
+      axios
+        .get(`http://13.125.111.131:8080/user/info/concern`, {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
           }
+        })
+        .then((response) => {
+          response.data.writing.map((post) => {
+            if (post.id === id) {
+              setIsMyLiked(true);
+            }
+          });
         });
-      });
+    }
   }, []);
-  
+
   const handleLikeClick = (e) => {
     e.preventDefault();
     setIsMyLiked(!isMyLiked); //좋아요 삭제 api 추가
@@ -247,16 +250,14 @@ const PostComponent = ({
           }
         )
         .then((response) => {
-          console.log(response);
+          if(response.status !== 200){
+            alert("관심글 등록에 실패하였습니다")
+          }
         });
     } else if (isMyLiked === true) {
       axios
         .delete(
           `http://13.125.111.131:8080/recruitment/${id}/concern`,
-          {
-            value: id
-          },
-
           {
             headers: {
               Authorization: localStorage.getItem("Authorization"),
@@ -265,7 +266,9 @@ const PostComponent = ({
           }
         )
         .then((response) => {
-          console.log(response);
+          if(response.status !== 200){
+            alert("관심글 삭제에 실패하였습니다")
+          }
         });
     }
   };
@@ -322,7 +325,12 @@ const PostComponent = ({
       )}
       <Top>
         <CatergoryBlock>
-          <Tag backgroundColor="#EAEAEA" color="#5D5FEF" style={{ cursor: "pointer" }} onClick={isMain ? handleCategoryClick : undefined}>
+          <Tag
+            backgroundColor="#EAEAEA"
+            color="#5D5FEF"
+            style={isMain ? { cursor: "pointer" } : null}
+            onClick={isMain ? handleCategoryClick : undefined}
+          >
             {category}
           </Tag>
           <Tag color="black">{recruitStatus}</Tag>
@@ -343,7 +351,11 @@ const PostComponent = ({
       <h3 onClick={linkToDetail}>{title}</h3>
       <TagListBlock>
         {tags.map((tag) => (
-          <Tag key={tag} style={{ cursor: "pointer" }} onClick={() => handleTagClick(tag)}>
+          <Tag
+            key={tag}
+            style={isMain ? { cursor: "pointer" } : null}
+            onClick={isMain ? () => handleTagClick(tag) : null}
+          >
             #{tag}
           </Tag>
         ))}
