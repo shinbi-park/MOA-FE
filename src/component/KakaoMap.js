@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import styled from "styled-components";
 
@@ -10,17 +10,19 @@ const Wrapper = styled.div`
     color: #5d5fef;
     font-weight: 700;
   }
+  width: 100%;
 `;
 const StyledMap = styled(Map)`
-  width: 575px;
+  min-width: 570px;
   height: 300px;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
   margin-top: 10px;
 `;
 const SearchContainer = styled.div`
-display: flex;
-flex-direction: row;
+  display: flex;
+  flex-direction: row;
   input {
+    flex:1;
     align-items: center;
     box-shadow: 2px 1px 5px #bdbdbd;
     margin-bottom: 20px;
@@ -28,7 +30,7 @@ flex-direction: row;
     border-radius: 4px;
     border: 1px solid #707070;
     font-size: 16px;
-    width: 500px;
+    min-width: 500px;
     min-height: 15px;
   }
   button {
@@ -51,43 +53,70 @@ flex-direction: row;
 function KakaoMap({ handleUserLocation, data }) {
   const initial = { lat: 37.5662952, lng: 126.9779451 };
   const [state, setState] = useState({
-    center: { lat: data ? data.lat : initial.lat, lng: data ? data.lng : initial.lng },
+    center: { 
+      lat: data ===undefined ? initial.lat :  data.lat, 
+      lng: data ===undefined ?  initial.lng : data.lng },
     isPanto: true
   });
   const [searchAddress, setSearchAddress] = useState("");
-  const [markerPosition, setMarkerPosition] = useState({lat: data?.lat, lng: data?.lng || null});
+  const [markerPosition, setMarkerPosition] = useState({
+    lat: data?.lat,
+    lng: data?.lng || null
+  });
   const [userAddress, setUserAddress] = useState(null);
+  const geocoder = useRef(new window.kakao.maps.services.Geocoder()).current;
 
-  const geocoder = new window.kakao.maps.services.Geocoder();
+  useEffect(() => {
+    setState({
+      center: { 
+        lat: data ===undefined ? initial.lat :  data.lat, 
+        lng: data ===undefined ?  initial.lng : data.lng },
+      isPanto: true
+    });
 
-  const handleMapClick = (map, mouseEvent) => {
-    const latlng = mouseEvent.latLng;
     setMarkerPosition({
-      lat: latlng.getLat(),
-      lng: latlng.getLng()
+      lat: data === undefined ? null :  data.lat,
+      lng: data === undefined ?  null : data.lng
     });
-    handleUserLocation({
-      lat: latlng.getLat(),
-      lng: latlng.getLng()
-    });
-    const latLng = new window.kakao.maps.LatLng(
-      latlng.getLat(),
-      latlng.getLng()
-    );
-    geocoder.coord2Address(
-      latLng.getLng(),
-      latLng.getLat(),
-      (result, status) => {
-        if (status === window.kakao.maps.services.Status.OK) {
-          setUserAddress(result[0].address.address_name);
-        } else {
-          console.log("error");
-        }
+    geocoder.coord2Address(data?.lng, data?.lat, (result, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        setUserAddress(result[0].address.address_name);
+      } else {
+        console.log("error");
       }
-    );
-  };
+    });
+  }, [data, geocoder]);
+  const handleMapClick = useCallback(
+    (map, mouseEvent) => {
+      const latlng = mouseEvent.latLng;
+      setMarkerPosition({
+        lat: latlng.getLat(),
+        lng: latlng.getLng()
+      });
+      handleUserLocation({
+        lat: latlng.getLat(),
+        lng: latlng.getLng()
+      });
+      const latLng = new window.kakao.maps.LatLng(
+        latlng.getLat(),
+        latlng.getLng()
+      );
+      geocoder.coord2Address(
+        latLng.getLng(),
+        latLng.getLat(),
+        (result, status) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            setUserAddress(result[0].address.address_name);
+          } else {
+            console.log("error");
+          }
+        }
+      );
+    },
+    [geocoder, handleUserLocation]
+  );
 
-  const SearchMap = () => {
+  const SearchMap = useCallback(() => {
     const geocoder = new window.kakao.maps.services.Geocoder();
     let callback = function (result, status) {
       if (status === window.kakao.maps.services.Status.OK) {
@@ -99,40 +128,27 @@ function KakaoMap({ handleUserLocation, data }) {
       }
     };
     geocoder.addressSearch(searchAddress, callback);
-  };
+  }, [searchAddress]);
 
-  const handleSearchAddress = (e) => {
+  const handleSearchAddress = useCallback((e) => {
     setSearchAddress(e.target.value);
-  };
+  }, []);
 
   useEffect(() => {
-    const handleLoad = () => {
-      if (window.kakao && window.kakao.maps) {
-        console.log("Kakao Maps SDK loaded!");
-      } else {
-        console.log(
-          "Kakao Maps SDK not loaded yet. Trying again in 1 second..."
-        );
-        setTimeout(handleLoad, 1000);
-      }
-    };
-
-    if(markerPosition.lng && markerPosition.lat){
-      const geocoder = new window.kakao.maps.services.Geocoder();
-      geocoder.coord2Address(markerPosition.lng, markerPosition.lat, (result, status) => {
-        if (status === window.kakao.maps.services.Status.OK) {
-          setUserAddress(result[0].address.address_name);
-        } else {
-          console.log("error");
+    if (markerPosition.lng && markerPosition.lat) {
+      geocoder.coord2Address(
+        markerPosition.lng,
+        markerPosition.lat,
+        (result, status) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            setUserAddress(result[0].address.address_name);
+          } else {
+            console.log("error");
+          }
         }
-      });
+      );
     }
-
-    handleLoad();
-    return () => {
-      window.removeEventListener("load", handleLoad);
-    };
-  }, []);
+  }, [geocoder, markerPosition]);
 
   return (
     <Wrapper>
@@ -165,4 +181,4 @@ function KakaoMap({ handleUserLocation, data }) {
   );
 }
 
-export default KakaoMap;
+export default React.memo(KakaoMap);
