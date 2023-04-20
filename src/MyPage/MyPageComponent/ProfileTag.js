@@ -7,8 +7,11 @@ const TagBoxBlock = styled.div`
 
 const TagForm = styled.div`
   display: flex;
+  min-width: 570px;
+  margin-right: 150px;
   font-size: inherit;
   input {
+    flex: 1;
     padding: 0.5rem;
     height: 25px;
     font-size: inherit;
@@ -56,34 +59,40 @@ const TagItem = React.memo(({ tag, onRemove }) => (
 
 const TagList = React.memo(({ tags, onRemove }) => (
   <TagListBlock>
-    {tags.map((tag) => (
+    {tags?.map((tag) => (
       <TagItem key={tag} tag={tag} onRemove={onRemove} />
     ))}
   </TagListBlock>
 ));
 const ProfileTag = ({ data, handleUserTags }) => {
   const [input, setInput] = useState("");
-  const [localTags, setLocalTags] = useState(data);
+  const [localTags, setLocalTags] = useState([]);
 
+  useEffect(() => {
+    setLocalTags([...data]);
+  }, [data]);
   const intertTag = useCallback(
     (tag) => {
       if (!tag) return;
       if (localTags.includes(tag)) return;
       const newTags = [...localTags, tag];
       setLocalTags(newTags);
+      handleUserTags(newTags);
     },
-    [localTags]
+    [localTags, handleUserTags]
   );
 
   const onRemove = useCallback(
     (tag) => {
       const newTags = localTags.filter((t) => t !== tag);
       setLocalTags(newTags);
+      handleUserTags(newTags);
     },
-    [localTags]
+    [localTags, handleUserTags]
   );
 
   const onChange = useCallback((e) => {
+    e.preventDefault();
     setInput(e.target.value);
   }, []);
 

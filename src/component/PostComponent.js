@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useNavigate } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import profile from "./profileImg.png";
 import { AiOutlineComment, AiFillHeart } from "react-icons/ai";
 import { CiMenuKebab } from "react-icons/ci";
+import axios from "axios";
 
 const Wrapper = styled.div`
   height: 350px;
@@ -13,15 +14,19 @@ const Wrapper = styled.div`
   border-radius: 20px;
   justify-content: left;
   position: relative;
+
   h3 {
     font-size: 19px;
     margin-right: 20px;
     margin-bottom: 10px;
+    cursor: pointer;
   }
   > * {
     margin: 10px 20px 0 25px;
   }
-  margin-right: 20px;
+  &:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 const Top = styled.div`
@@ -118,6 +123,7 @@ const CommentBox = styled.div`
   left: 200px;
   align-items: center;
   color: gray;
+  cursor: pointer;
   p {
     margin: 8px;
   }
@@ -186,11 +192,14 @@ const PostComponent = ({
   date,
   profileImg,
   replyCount,
+  onClickCategory,
+  onClickTag
 }) => {
   const [isMypost, setIsMypost] = useState(false);
   const [isMyLiked, setIsMyLiked] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const navigate = useNavigate();
+  const [isMain, setIsMain] = useState(false);
+  const [searchTag, setSearchTag] = useState("");
 
   if (tags.length > 5) {
     tags = tags.slice(0, 5);
@@ -202,42 +211,112 @@ const PostComponent = ({
   useEffect(() => {
     if (type === "MyPost") setIsMypost(true);
     else if (type === "MyLike") setIsMyLiked(true);
+    else {
+      setIsMain(true);
+    }
+    if (localStorage.getItem("Authorization")) {
+      axios
+        .get(`http://13.125.111.131:8080/user/info/concern`, {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+          }
+        })
+        .then((response) => {
+          response.data.writing.map((post) => {
+            if (post.id === id) {
+              setIsMyLiked(true);
+            }
+          });
+        });
+    }
   }, []);
 
-  const handleLikeClick = () => {
+  const handleLikeClick = (e) => {
+    e.preventDefault();
     setIsMyLiked(!isMyLiked); //좋아요 삭제 api 추가
-  };
-
-  const handleMenuClick = () => {
-    setShowMenu(!showMenu);
-  };
-
-  const linkToDetail = () => {
-    navigate(`http://13.125.111.131:8080/recruitment/${id}`);
-  };
-
-  const handleEditClick = () => {
-    navigate(`/edit/${id}`);
-  };
-
-  const handleDeleteClick = () => {
-    const result = window.confirm("글을 정말 삭제할까요?");
-    if (result) {
-      fetch(`http://13.125.111.131:8080/recruitment/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((response) =>
-        response === 200
-          ? alert("글이 삭제되었습니다!")
-          : alert("글 삭제에 실패하였습니다")
-      );
+    if (isMyLiked === false) {
+      axios
+        .post(
+          `http://13.125.111.131:8080/recruitment/${id}/concern`,
+          {
+            value: id
+          },
+          {
+            headers: {
+              Authorization: localStorage.getItem("Authorization"),
+              AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+            }
+          }
+        )
+        .then((response) => {
+          if(response.status !== 200){
+            alert("관심글 등록에 실패하였습니다")
+          }
+        });
+    } else if (isMyLiked === true) {
+      axios
+        .delete(
+          `http://13.125.111.131:8080/recruitment/${id}/concern`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("Authorization"),
+              AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+            }
+          }
+        )
+        .then((response) => {
+          if(response.status !== 200){
+            alert("관심글 삭제에 실패하였습니다")
+          }
+        });
     }
   };
 
+  const handleMenuClick = () => {
+    setShowMenu((prevState) => !prevState);
+  };
+
+  const linkToDetail = () => {
+    window.open(`../detail/${id}`);
+  };
+
+  const handleEditClick = () => {
+    window.open(`/edit/${id}`);
+  };
+
+  const handleDeleteClick = async () => {
+    const result = window.confirm("글을 정말 삭제할까요?");
+    if (result) {
+      try {
+        const response = await fetch(
+          `http://13.125.111.131:8080/recruitment/${id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+        );
+        response.status === 200
+          ? alert("글이 삭제되었습니다!")
+          : alert("글 삭제에 실패하였습니다");
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleCategoryClick = () => {
+    onClickCategory(category);
+  };
+
+  const handleTagClick = (searchTag) => {
+    onClickTag(searchTag);
+  };
+
   return (
-    <Wrapper onClick={linkToDetail}>
+    <Wrapper>
       {showMenu && (
         <MenuList>
           <MenuItem onClick={handleEditClick}>글 수정</MenuItem>
@@ -246,7 +325,12 @@ const PostComponent = ({
       )}
       <Top>
         <CatergoryBlock>
-          <Tag backgroundColor="#EAEAEA" color="#5D5FEF">
+          <Tag
+            backgroundColor="#EAEAEA"
+            color="#5D5FEF"
+            style={isMain ? { cursor: "pointer" } : null}
+            onClick={isMain ? handleCategoryClick : undefined}
+          >
             {category}
           </Tag>
           <Tag color="black">{recruitStatus}</Tag>
@@ -264,10 +348,16 @@ const PostComponent = ({
         <Date>게시일 | {date}</Date>
       </Top>
 
-      <h3>{title}</h3>
+      <h3 onClick={linkToDetail}>{title}</h3>
       <TagListBlock>
         {tags.map((tag) => (
-          <Tag key={tag}>#{tag}</Tag>
+          <Tag
+            key={tag}
+            style={isMain ? { cursor: "pointer" } : null}
+            onClick={isMain ? () => handleTagClick(tag) : null}
+          >
+            #{tag}
+          </Tag>
         ))}
       </TagListBlock>
 
@@ -277,7 +367,7 @@ const PostComponent = ({
           <UserImg src={profile} alt="프로필 사진" />
           <p>{author}</p>
         </Profile>
-        <CommentBox>
+        <CommentBox onClick={linkToDetail}>
           <CommentIcon />
           {replyCount}
         </CommentBox>

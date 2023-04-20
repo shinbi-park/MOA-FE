@@ -10,14 +10,24 @@ const MyPost = lazy(() => import("./MyPostList"));
 const Setting = lazy(() => import("./Setting"));
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 2.8fr;
 `;
 
 const SidebarContainer = styled.div`
   flex: 1;
+  align-self: start;
+  height: 100%;
+`;
+
+const ContentContainer = styled.div`
+  flex: 2;
+  align-self: end;
+  margin-left: 50px;
+  margin-top: 10px;
+  h3 {
+    font-size: 23px;
+  }
 `;
 
 const SidebarTab = styled.div`
@@ -25,8 +35,9 @@ const SidebarTab = styled.div`
   border-right: 1.5px solid #e0e0e0;
   box-shadow: 2.5px 0 5px 0 rgba(0, 0, 0, 0.1);
   background-color: white;
-  width: 220px;
-  height: 110vh;
+  width: 230px;
+  height: 100%;
+  padding-bottom: 100px;
   flex-direction: column;
   align-content: center;
   align-items: center;
@@ -84,16 +95,6 @@ const TabList = styled.div`
     z-index: 1;
   }
 `;
-
-const ContentContainer = styled.div`
-  display: flex;
-  flex: 2;
-  margin-top: -150px;
-  margin-left: 0px;
-  h3 {
-    font-size: 23px;
-  }
-`;
 const PopularityContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -102,6 +103,7 @@ const PopularityContainer = styled.div`
 
 const MyPage = () => {
   const [popularity, setPopularity] = useState(0);
+
   useEffect(() => {
     fetch(`http://13.125.111.131:8080/user/info/profile`, {
       method: "GET",
@@ -117,14 +119,12 @@ const MyPage = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setPopularity(data.popularity.rate);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }, []);
-
   const [activeTab, setActiveTab] = useState(0);
   const onClickTab = (tabId) => {
     setActiveTab(tabId);
@@ -134,7 +134,7 @@ const MyPage = () => {
       Title: <div onClick={() => onClickTab(0)}>프로필</div>,
       Content: (
         <Suspense>
-          <Profile />
+            <Profile />
         </Suspense>
       )
     },
@@ -180,11 +180,15 @@ const MyPage = () => {
           Authorization: localStorage.getItem("Authorization"),
           AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
         }
-      }).then((response) =>
-        response === 200
+      }).then((response) => {
+        response.status === 200
           ? alert("회원 탈퇴가 되었습니다!")
           : alert("회원 탈퇴에 실패하였습니다")
+        }
       );
+      window.localStorage.removeItem("Authorization");
+      window.localStorage.removeItem("AuthorizationRefresh");
+      window.location.href = "/";
     }
   };
   return (

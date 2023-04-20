@@ -1,30 +1,25 @@
 import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 
-const ItemContainer = styled.div`
-  display: inline-flex;
-  button {
-    border: none;
-    background-color: white;
-    margin-left: 10px;
-    margin-right: 10px;
-    &:hover {
-      cursor: pointer;
-    }
-  }
+const Wrapper = styled.div`
+  display: inline-block;
+  flex-direction: column;
 `;
 
 const Container = styled.div`
+  min-width: 570px;
+  margin-right: 150px;
   display: flex;
-
   input {
+    display: inline-flex;
+    flex: 1;
     align-items: center;
     margin-bottom: 15px;
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #707070;
     font-size: 16px;
-    width: 500px;
+    min-width: 500px;
     height: 25px;
     box-shadow: 2px 1px 5px #bdbdbd;
   }
@@ -46,9 +41,17 @@ const Container = styled.div`
   }
 `;
 
-const Wrapper = styled.div`
-  display: inline-block;
-  flex-direction: column;
+const LinkContainer = styled.div`
+  display: inline-flex;
+  button {
+    border: none;
+    background-color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
 `;
 
 const Link = styled.div`
@@ -69,7 +72,7 @@ const LinkListBlock = styled.div`
 `;
 
 const LinkItem = React.memo(({ link, onRemove }) => (
-  <ItemContainer>
+  <LinkContainer>
     <Link>
       {" "}
       <a href={link} target="_blank" rel="noreferrer">
@@ -77,12 +80,12 @@ const LinkItem = React.memo(({ link, onRemove }) => (
       </a>
     </Link>
     <button onClick={() => onRemove(link)}> x </button>
-  </ItemContainer>
+  </LinkContainer>
 ));
 
 const LinkList = React.memo(({ links, onRemove }) => (
   <LinkListBlock>
-    {links.map((link) => (
+    {links?.map((link) => (
       <LinkItem key={link} link={link} onRemove={onRemove} />
     ))}
   </LinkListBlock>
@@ -90,7 +93,11 @@ const LinkList = React.memo(({ links, onRemove }) => (
 
 const ProfileLink = ({ data, handleUserLinks }) => {
   const [input, setInput] = useState("");
-  const [localLink, setLocalLinks] = useState(data);
+  const [localLink, setLocalLinks] = useState([]);
+
+  useEffect(() => {
+    setLocalLinks([...data]);
+  }, [data]);
 
   const insertLink = useCallback(
     (link) => {

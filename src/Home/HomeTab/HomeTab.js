@@ -1,5 +1,7 @@
 import styled from "styled-components";
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { BiSearch } from "react-icons/bi";
+import axios from "axios";
 
 const HomeTabComponent = lazy(() => import("./HomeTabComponent"));
 
@@ -47,21 +49,133 @@ const TabList = styled.div`
 
 const PostContainer = styled.div`
   display: flex;
+  width: 130%;
   align-content: center;
-  text-align: center;
+  justify-content: center;
+`;
+
+const SearchContainer = styled.div`
+  width: 800px;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 50px;
+  justify-content: center;
+  svg {
+    height: 50px;
+    width: 30px;
+    margin-left: 10px;
+    fill: #5d5fef;
+  }
+`;
+
+const SearchBox = styled.input`
+  border-radius: 20px;
+  border: 1.5px solid #b2b2b2;
+  font-size: 20px;
+  width: 600px;
+  height: 30px;
+  padding: 10px 0 10px 30px;
+  justify-items: center;
+  align-items: center;
 `;
 
 const HomeTab = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const onClickTab = (tabId) => {
+  const [keyword, setKeyword] = useState("");
+  const [searchData, setSearchData] = useState([]);
+  const [placeholderComment, setPlaceholderComment] = useState("검색어를 입력하세요");
+  const [cachedResults, setCachedResults] = useState({}); //검색 결과 캐싱
+
+  const onClickTab = useCallback((tabId) => {
     setActiveTab(tabId);
-  };
+    setPlaceholderComment("검색어를 입력하세요");
+  }, []);
+
+  const onHandleChange = useCallback((event) => {
+    setKeyword(event.target.value);
+  }, []);
+
+  const searchByTitle = useCallback(() => {
+    setPlaceholderComment(keyword + " 키워드 검색 결과");
+
+    if (cachedResults[keyword]) {
+      setSearchData(cachedResults[keyword]);
+    } else {
+      axios
+        .get(
+          "http://13.125.111.131:8080/recruitment/search/page?title=" + keyword
+        )
+        .then((response) => {
+          setSearchData(response.data.value);
+          setCachedResults({ ...cachedResults, [keyword]: response.data.value });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [keyword, cachedResults]);
+
+  const searchByTagOrCategory = useCallback(
+    (type, searchValue) => {
+      const searchType = type === "tag" ? "tag" : "category";
+      const endpoint = `http://13.125.111.131:8080/recruitment/search/page?${searchType}=${searchValue}`;
+
+      setPlaceholderComment(searchValue + ` ${searchType} 검색 결과`);
+
+      if (cachedResults[endpoint]) {
+        setSearchData(cachedResults[endpoint]);
+      } else {
+        axios
+          .get(endpoint)
+          .then((response) => {
+            setSearchData(response.data.value);
+            setCachedResults({ ...cachedResults, [endpoint]: response.data.value });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
+    [cachedResults]
+  );
+
+  const onClickSearch = useCallback(() => {
+    searchByTitle();
+  }, [searchByTitle]);
+
+  const onClickTag = useCallback(
+    (searchTag) => {
+      searchByTagOrCategory("tag", searchTag);
+    },
+    [searchByTagOrCategory]
+  );
+
+  const onClickCategory = useCallback(
+    (searchCategory) => {
+      searchByTagOrCategory("category", searchCategory);
+    },
+    [searchByTagOrCategory]
+  );
+
+  useEffect(() => {
+    setActiveTab(null);
+  }, [searchData]);
+
+  useEffect(() => {
+    setActiveTab(0);
+  }, []);
+
+
   const tabList = [
     {
       Title: <div onClick={() => onClickTab(0)}>새로운 글</div>,
       Content: (
         <Suspense>
-          <HomeTabComponent type="new" />
+          <HomeTabComponent
+            type="new"
+            onClickCategory={onClickCategory}
+            onClickTag={onClickTag}
+          />
         </Suspense>
       )
     },
@@ -69,7 +183,11 @@ const HomeTab = () => {
       Title: <div onClick={() => onClickTab(1)}>모집 중인 글</div>,
       Content: (
         <Suspense>
-          <HomeTabComponent type="recruiting" />
+          <HomeTabComponent
+            type="recruiting"
+            onClickCategory={onClickCategory}
+            onClickTag={onClickTag}
+          />
         </Suspense>
       )
     },
@@ -77,7 +195,11 @@ const HomeTab = () => {
       Title: <div onClick={() => onClickTab(2)}>추천 글</div>,
       Content: (
         <Suspense>
-          <HomeTabComponent type="recommend" />
+          <HomeTabComponent
+            type="recommend"
+            onClickCategory={onClickCategory}
+            onClickTag={onClickTag}
+          />
         </Suspense>
       )
     },
@@ -85,14 +207,26 @@ const HomeTab = () => {
       Title: <div onClick={() => onClickTab(3)}>인기글</div>,
       Content: (
         <Suspense>
-          <HomeTabComponent type="popular" />
+          <HomeTabComponent
+            type="popular"
+            onClickCategory={onClickCategory}
+            onClickTag={onClickTag}
+          />
         </Suspense>
       )
     }
   ];
 
+  useEffect(() => {
+    setActiveTab(0);
+  }, []);
+
   return (
     <Wrapper>
+      <SearchContainer>
+        <SearchBox value={keyword} placeholder={placeholderComment} onChange={onHandleChange} />
+        <BiSearch onClick={onClickSearch} />
+      </SearchContainer>
       <TabContainer>
         {tabList.map((tab, index) => {
           return (
@@ -105,7 +239,13 @@ const HomeTab = () => {
           );
         })}
       </TabContainer>
-      <PostContainer>{tabList[activeTab].Content}</PostContainer>
+      <PostContainer>
+        {activeTab === null ? (
+          <HomeTabComponent searchData={searchData} />
+        ) : (
+          tabList[activeTab].Content
+        )}
+      </PostContainer>
     </Wrapper>
   );
 };

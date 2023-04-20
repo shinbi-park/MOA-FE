@@ -3,15 +3,9 @@ import styled from "styled-components";
 import PostComponent from "../component/PostComponent";
 
 const Wrapper = styled.div`
-  height: 92vh;
   display: flex;
-  flex-direction: row;
-`;
-
-const Content = styled.div`
-  h3{
-    font-size:23px;
-  }
+  flex-direction: column;
+  min-height: 800px;
 `;
 
 const EmptyPost = styled.div`
@@ -23,20 +17,18 @@ const EmptyPost = styled.div`
   justify-content: center;
   align-items: center;
   margin-left: 30px;
-  margin-top: 30px;
   margin-bottom: 20px;
   font-size: 18px;
   font-weight: 550;
 `;
 
 const ComponentWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-
-  & > * {
-    width: calc((100 - 2 * 10px) / 3); 
-    margin: 10px; 
-  }
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(300px, calc((100% - 40px) / 3))
+  );
+  grid-gap: 10px;
 `;
 
 
@@ -58,7 +50,6 @@ useEffect(() => {
     return response.json();
   })
   .then((data) => {
-    console.log(data);
     setMyPost(data.writing);
   })
     .catch((error) => {
@@ -68,7 +59,6 @@ useEffect(() => {
 
   return (
     <Wrapper>
-      <Content>
         <h3>내 작성글</h3>
         {myPost?.length < 1 ? <EmptyPost>글을 작성해보세요!</EmptyPost> 
           : <ComponentWrapper>
@@ -82,8 +72,6 @@ useEffect(() => {
             ))}
             </ComponentWrapper>
         }
-        
-      </Content>
     </Wrapper>
   );
 };
