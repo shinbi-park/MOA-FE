@@ -1,9 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { myPostData, titleState } from "../common/atoms";
 import { useState } from "react";
-import { useEffect } from "react";
 
 const PostTitlewrap = styled.div`
   margin-top: 34px; ;
@@ -73,6 +72,7 @@ const PostTitle = () => {
   const data = useRecoilValue(myPostData);
   const titles = useRecoilValue(titleState);
   const [user, setUser] = useState(data.postUser);
+
   return (
     <div>
       <PostTitlewrap>
@@ -89,7 +89,7 @@ const PostTitle = () => {
         ></RecruitState>
         <PostTagsDiv>
           {data.tags.map((item, index) => (
-            <PostTags key={index}>{item}</PostTags>
+            <PostTags key={index}>#{item}</PostTags>
           ))}
         </PostTagsDiv>
       </PostRecruitwrap>

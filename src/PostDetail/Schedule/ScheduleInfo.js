@@ -112,8 +112,8 @@ const ScheduleInfo = () => {
             <AvailableTableTitle>Available</AvailableTableTitle>
             {isHover && select.value && (
               <>
-                {user.map((item) => (
-                  <li key={item.id}>{item.name}</li>
+                {user.map((item, index) => (
+                  <li key={index}>{item.nickname}</li>
                 ))}
               </>
             )}
@@ -125,8 +125,8 @@ const ScheduleInfo = () => {
             <AvailableTableTitle>Unavailable</AvailableTableTitle>
             {isHover && leftUser.length >= 1 && (
               <>
-                {leftUser.map((item) => (
-                  <li key={item.id}>{item.name}</li>
+                {leftUser.map((item, index) => (
+                  <li key={index}>{item.nickname}</li>
                 ))}
               </>
             )}

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ApplicantListItem from "./ApplicantListItem";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const ApplicantListDiv = styled.div`
   margin-bottom: 70px;
@@ -50,38 +52,68 @@ const ApplycantItemDiv = styled.div`
 
 const ApplicantList = () => {
   const [toggle, setToggle] = useState(false);
+  const { postId } = useParams();
+  const [applyMember, setApplyMember] = useState([]);
 
-  // useEffect(async() => {
-  //   const response = await axios.get(`/recruitment/{recruitmentId}/apply/members?statusCode=1`);
-  // conosle.log(response.data);
-  // },[])
+  const fetchApplicant = async () => {
+    const params = {
+      statusCode: 1,
+    };
+    await axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}/apply/members`, {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+        params,
+      })
+      .then((response) => {
+        console.log(response.data.value);
+        setApplyMember(response.data.value);
+      });
+  };
+
+  useEffect(() => {
+    fetchApplicant();
+  }, []);
   return (
     <ApplicantListDiv>
-      <h1>
-        지원자 현황
-        <button onClick={() => setToggle(!toggle)}>*</button>
-      </h1>
+      <h1>지원자 현황</h1>
 
       <ApplicantListBox>
-        {!toggle ? (
-          <ApplicantNull>현재 지원자가 없습니다</ApplicantNull>
-        ) : (
-          <ApplicantDiv>
+        <ApplicantDiv>
+          {applyMember.length >= 1 ? (
             <AppliCantWrap>
-              <ApplycantPosition>Position 1</ApplycantPosition>
+              <ApplycantPosition>
+                {applyMember.map((item, index) => (
+                  <React.Fragment key={index}>
+                    {item.recruitField}
+                  </React.Fragment>
+                ))}
+              </ApplycantPosition>
               <ApplycantItemDiv>
-                <ApplicantListItem userName={"user1"} />
-                <ApplicantListItem userName={"user2"} />
-              </ApplycantItemDiv>
+                {applyMember.map((item, index) => (
+                  <React.Fragment key={index}>
+                    <ApplicantListItem item={item} />
+                  </React.Fragment>
+                ))}
+              </ApplycantItemDiv>{" "}
             </AppliCantWrap>
-            <AppliCantWrap>
+          ) : (
+            <ApplicantNull>현재 지원자가 없습니다</ApplicantNull>
+          )}
+
+          {/* <AppliCantWrap>
               <ApplycantPosition>Position 2</ApplycantPosition>
               <ApplycantItemDiv>
                 <ApplicantListItem userName={"user1"} />
               </ApplycantItemDiv>
-            </AppliCantWrap>
-          </ApplicantDiv>
-        )}
+            </AppliCantWrap> */}
+        </ApplicantDiv>
       </ApplicantListBox>
     </ApplicantListDiv>
   );

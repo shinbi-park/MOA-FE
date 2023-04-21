@@ -6,8 +6,6 @@ import PostCommentItem from "./PostCommentItem";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { useRecoilValue } from "recoil";
-import { myPostComment } from "../../../common/atoms";
 
 const HrCommentLine = styled.hr`
   background: #d9d9d9;
@@ -23,74 +21,141 @@ const CommentUl = styled.ul`
 `;
 
 const PostInfoComment = () => {
-  const postComment = useRecoilValue(myPostComment);
   const [comment, setComment] = useState("");
-
-  const exCom = postComment[1];
-
   const { postId } = useParams();
 
-  const [comment_count, setComment_count] = useState(0);
   const [newComment, setNewComment] = useState([]);
+  const [comment_count, setComment_count] = useState(0);
+  const fetchComment = async () => {
+    const response = await axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}`, {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => {
+        setNewComment(response.data.repliesInfo.info);
+        setComment_count(response.data.repliesInfo.info.length);
+        console.log(response.data);
+      })
+
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchComment();
+  }, []);
 
   const onCommentChange = (e) => {
+    e.preventDefault();
     setComment(e.target.value);
   };
 
-  const onCommentSubmit = () => {
-    //e.preventDefault();
+  const onCommentSubmit = async (e) => {
+    e.preventDefault();
+    const params = {
+      content: comment,
+    };
 
-    axios
-      .post(
-        `http://13.125.111.131:8080/recruitment/${postId}/reply?content=`,
-        {
-          params: {
-            content: comment,
-          },
+    const response = await axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply`,
+      null,
+
+      {
+        responseType: "json",
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
         },
 
-        {
-          headers: {
-            // 로그인 후 받아오는 인증토큰값
-            Authorization:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
-
-            AuthorizationRefresh:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response);
-      });
-
-    // comment.created_time = new Date()
-    //   .toLocaleString()
-    //   .slice(0, 24)
-    //   .replace("T", " ");
-
-    // setNewComment((newComment) => {
-    //   return [comment, ...newComment];
-    // });
-    // setComment({
-    //   ...comment,
-    //   commentId: comment.commentId + 1,
-    //   content: "",
-    // });
-    // setComment_count(comment_count + 1);
+        params,
+      }
+    );
+    fetchComment();
+    setComment("");
+    setComment_count(comment_count + 1);
   };
 
   const onEditComment = (id, newContent) => {
+    axios.put(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+      {
+        content: newContent,
+      },
+
+      {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      }
+    );
+
     setNewComment(
-      newComment?.map((item) =>
-        item.commentId === id ? { ...item, content: newContent } : item
+      newComment.map((item) =>
+        item.replyId === id ? { ...item, content: newContent } : item
       )
     );
   };
 
-  const onDeleteComment = (id) => {
-    setNewComment(newComment.filter((item) => item.commentId !== id));
+  const onDeleteComment = async (id) => {
+    await axios.delete(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+
+      {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      }
+    );
+    setNewComment(newComment.filter((item) => item.replyId !== id));
     setComment_count(comment_count - 1);
+  };
+
+  const onReplySubmit = async (reply, id) => {
+    const params = {
+      content: reply,
+      parent: id,
+    };
+
+    const response = await axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply`,
+      null,
+
+      {
+        responseType: "json",
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+
+        params,
+      }
+    );
+    fetchComment();
   };
 
   return (
@@ -103,26 +168,24 @@ const PostInfoComment = () => {
         onCommentChange={onCommentChange}
       />
 
-      <CommentUl>
-        <PostCommentItem
-          exCom={exCom}
-          onDeleteComment={onDeleteComment}
-          onEditComment={onEditComment}
-        />
-      </CommentUl>
-
-      {/* {newComment.map((item) => (
-        <CommentUl key={item.commentId}>
+      {newComment?.map((item) => (
+        <CommentUl key={item.replyId}>
           <PostCommentItem
             item={item}
             onDeleteComment={onDeleteComment}
             onEditComment={onEditComment}
           />
 
-          {<PostInfoReply commentId={item.commentId} />}
+          <PostInfoReply
+            item={item}
+            fetchComment={fetchComment}
+            onReplySubmit={onReplySubmit}
+            value={item.subReplies}
+          />
+
           <HrCommentLine />
-     
-      ))} */}
+        </CommentUl>
+      ))}
     </div>
   );
 };

@@ -39,7 +39,7 @@ const PostionList = ({
   onPositionChange,
   isEdit,
 }) => {
-  const lastPosition = positions[positions.length - 1];
+  const lastPosition = positions[positions?.length - 1];
   const lastId = lastPosition ? lastPosition.recruitMemberId : 0;
 
   const handlePositionChange = (id, total, field) => {

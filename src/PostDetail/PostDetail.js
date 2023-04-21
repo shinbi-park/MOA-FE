@@ -15,40 +15,52 @@ const PostDetailDiv = styled.div`
 const PostDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [post, setPost] = useRecoilState(myPostData);
-  const [postComment, setPostComment] = useRecoilState(myPostComment);
+  // const [postComment, setPostComment] = useRecoilState(myPostComment);
   const [text, setText] = useState();
   const [titles, setTitles] = useRecoilState(titleState);
   const { postId } = useParams();
 
-  // const tokenA = window.localStorage.getItem("Authorization");
-  // const tokenB = window.localStorage.getItem("AuthorizationRefresh");
+  const fetchInfo = async () => {
+    await axios
+      .get("http://13.125.111.131:8080/user/info/profile", {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
 
-  //recoil + axios 예시
-  const fetchData = async () => {
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      });
+  };
+
+  useEffect(() => {
     axios
       .get(`http://13.125.111.131:8080/recruitment/${postId}`, {
         headers: {
-          Authorization: localStorage.getItem("Authorization"),
-          AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
         },
       })
       .then((response) => {
         console.log(response);
         setPost(response.data.recruitInfo);
-
         setIsLoading(false);
-        setTitles(response.data.state);
-        setPostComment(response.data.repliesInfo.info);
+        setTitles(response.data.recruitInfo.state);
+        console.log(response.data);
       })
 
       .catch((error) => {
         console.error("Error:", error);
       });
-  };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+    fetchInfo();
+  }, [setPost, setTitles, postId]);
 
   return (
     <>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { selector } from "recoil";
-import { myPostComment, myPostData, postID } from "./atoms";
+import { myPostData, userInfo } from "./atoms";
 
 export const getPostData = selector({
   key: "getPostData",
@@ -10,10 +10,10 @@ export const getPostData = selector({
   },
 });
 
-export const getPostComment = selector({
-  key: "getPostComment",
+export const getUserInfo = selector({
+  key: "getUserInfo",
   get: ({ get }) => {
-    const postComment = get(myPostComment);
-    return postComment;
+    const data = get(userInfo);
+    return data;
   },
 });

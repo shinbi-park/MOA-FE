@@ -70,7 +70,7 @@ const Dropdownbutton = ({
     <div ref={dropRef}>
       <button onClick={() => setDropOpen(!dropOpen)}>=</button>
       {dropOpen &&
-        (newnotice.check ? (
+        (newnotice.checkVote ? (
           <>
             <DropdownDiv>
               <DropDownList onClick={isEditDeliver}>수정</DropDownList>

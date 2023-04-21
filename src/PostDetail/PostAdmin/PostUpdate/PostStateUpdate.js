@@ -4,6 +4,7 @@ import { useRecoilState } from "recoil";
 import { titleState } from "../../../common/atoms";
 import { useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const SelectDiv = styled.div`
   margin-bottom: 70px;
@@ -31,28 +32,39 @@ const PostStateUpdate = () => {
   const [titles, setTitles] = useRecoilState(titleState);
   const [setting, setSetting] = useState(titles);
   const stateArr = [1, 2, 3];
+  const { postId } = useParams();
 
-  // useEffect(() => {
-  //   fetchState();
-  // }, []);
+  const fetchState = async () => {
+    const params = {
+      status: setting,
+    };
+    await axios
+      .post(
+        `http://13.125.111.131:8080/recruitment/${postId}`,
+        null,
 
-  // const fetchState = async () => {
-  //   await axios
-  //     .post(`http://13.125.111.131:8080/recruitment/2?statusCode=${setting}`, {
-  //       headers: {
-  //         Authorization:
-  //           "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo5LCJleHAiOjE2ODEyODc5NDl9.T-2IXekDbG9a0y8TaSepcWfpOSxJgpUPZvlkkeXWQ3EucSwgWgmWafudaxelZPSSl3xcWGH8hbpfY_0GIMRYHg",
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
 
-  //         AuthorizationRefresh:
-  //           "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODEyODgwNDl9.KXHwTPY1HvTwhfZo9PdCPdMWgRElud6mh18ymofGyi65ozWAVLAPqpcYB1LRTRzqX5J0iDtt3IS_w8VZa2eLsQ",
-  //       },
-  //     })
-  //     .then((response) => console.log(response));
-  // };
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+
+          params,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+      });
+  };
 
   const onChangeSetting = () => {
     setTitles(parseInt(setting));
     setSetting(setting);
+    fetchState();
   };
 
   return (

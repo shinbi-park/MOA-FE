@@ -46,7 +46,7 @@ export const myPostData = atom({
   default: [],
 });
 
-export const myPostComment = atom({
-  key: "myPostComment",
-  default: [],
+export const userInfo = atom({
+  key: "userInfo",
+  default: {},
 });

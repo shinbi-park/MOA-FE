@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MemberListItem from "./MemberListItem";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const MemberListDiv = styled.div`
   margin-bottom: 70px;
@@ -29,12 +31,43 @@ const MemberItemDiv = styled.div`
 `;
 
 const MemberList = () => {
+  const { postId } = useParams();
+  const [members, setMembers] = useState([]);
+  const fetchMember = async () => {
+    await axios
+      .get(
+        `http://13.125.111.131:8080/recruitment/${postId}/approved/members`,
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then((response) => {
+        setMembers(response.data);
+      });
+  };
+
+  useEffect(() => {
+    fetchMember();
+  }, []);
+  const memberArr = members.filter((item) => item.recruitField !== "LEADER");
+
   return (
     <MemberListDiv>
       <h1>멤버 현황</h1>
       <MemeberDiv>
         <MemberWrap>
-          <h4>Position 1</h4>
+          {memberArr.map((item) => (
+            <React.Fragment key={item.applyId}>
+              {item.recruitField}
+            </React.Fragment>
+          ))}
           <MemberItemDiv>
             <MemberListItem name={"member1"} />
             <MemberListItem name={"member2"} />

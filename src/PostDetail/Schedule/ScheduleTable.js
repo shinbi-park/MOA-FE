@@ -11,6 +11,8 @@ import {
 } from "../../common/atoms";
 import { scheduleDummy } from "../../common/DummyData";
 import { useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const ScheduleTableDiv = styled.div`
   width: 500px;
@@ -27,39 +29,68 @@ const ScheduleDateCell = styled.div`
 const ScheduleTable = () => {
   const [schedule, setSchedule] = useState([]);
   const [state, setState] = useState();
+  const { postId } = useParams();
   const [user, setUser] = useRecoilState(ScheduleUser);
   const [leftUser, setLeftUser] = useRecoilState(ScheduleLeftUser);
   const [isHover, setIsHover] = useRecoilState(ScheduleHover);
   const [select, setSelect] = useRecoilState(ScheduleSelect);
+  const [text, setText] = useState([
+    {
+      nickname: "nickname1",
+      possibleTimeData: [],
+    },
+  ]);
 
   useEffect(() => {
-    const setTime = scheduleDummy.map((item) => item.data);
+    if (schedule >= 1) {
+      const setTime = text.map((item) => item.possibleTimeData);
 
-    let combinedTime = [];
-    for (let i = 0; i < setTime.length; i++) {
-      const arr = setTime[i];
-      if (arr.length > 0) {
-        combinedTime = combinedTime.concat(arr);
+      let combinedTime = [];
+      for (let i = 0; i < setTime.length; i++) {
+        const arr = setTime[i];
+        if (arr.length > 0) {
+          combinedTime = combinedTime.concat(arr);
+        }
+        setSchedule(combinedTime);
+        setState(setTime);
       }
-      setSchedule(combinedTime);
-      setState(setTime);
     }
-  }, []);
+  }, [schedule]);
+
+  const fetchSchedule = async (schedule) => {
+    await axios.put(
+      `http://13.125.111.131:8080/recruitment/${postId}/time`,
+      {
+        possibleTimeDataList: schedule,
+      },
+      {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      }
+    );
+  };
 
   const getId = (getTime) => {
-    const getUser = scheduleDummy.filter((item) =>
-      item.data.some((it) => it === getTime)
+    const getUser = text.filter((item) =>
+      item.possibleTimeData.some((it) => it === getTime)
     );
     setUser(getUser);
 
-    const getLeftUser = scheduleDummy.filter(
-      (item) => !item.data.includes(getTime)
+    const getLeftUser = text.filter(
+      (item) => !item.possibleTimeData.includes(getTime)
     );
     setLeftUser(getLeftUser);
   };
 
   const scheduleHandler = (newSchedule) => {
     setSchedule(newSchedule);
+    fetchSchedule(newSchedule);
+    console.log(newSchedule);
   };
 
   const startDate = new Date("2023-03-26T09:00:00.000Z");

@@ -193,7 +193,7 @@ const PostComponent = ({
   profileImg,
   replyCount,
   onClickCategory,
-  onClickTag
+  onClickTag,
 }) => {
   const [isMypost, setIsMypost] = useState(false);
   const [isMyLiked, setIsMyLiked] = useState(false);
@@ -219,8 +219,8 @@ const PostComponent = ({
         .get(`http://13.125.111.131:8080/user/info/concern`, {
           headers: {
             Authorization: localStorage.getItem("Authorization"),
-            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
-          }
+            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+          },
         })
         .then((response) => {
           response.data.writing.map((post) => {
@@ -240,34 +240,33 @@ const PostComponent = ({
         .post(
           `http://13.125.111.131:8080/recruitment/${id}/concern`,
           {
-            value: id
+            value: id,
           },
           {
             headers: {
               Authorization: localStorage.getItem("Authorization"),
-              AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
-            }
+              AuthorizationRefresh: localStorage.getItem(
+                "AuthorizationRefresh"
+              ),
+            },
           }
         )
         .then((response) => {
-          if(response.status !== 200){
-            alert("관심글 등록에 실패하였습니다")
+          if (response.status !== 200) {
+            alert("관심글 등록에 실패하였습니다");
           }
         });
     } else if (isMyLiked === true) {
       axios
-        .delete(
-          `http://13.125.111.131:8080/recruitment/${id}/concern`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("Authorization"),
-              AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
-            }
-          }
-        )
+        .delete(`http://13.125.111.131:8080/recruitment/${id}/concern`, {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+          },
+        })
         .then((response) => {
-          if(response.status !== 200){
-            alert("관심글 삭제에 실패하였습니다")
+          if (response.status !== 200) {
+            alert("관심글 삭제에 실패하였습니다");
           }
         });
     }
@@ -294,8 +293,12 @@ const PostComponent = ({
           {
             method: "DELETE",
             headers: {
-              "Content-Type": "application/json"
-            }
+              "Content-Type": "application/json",
+              Authorization: localStorage.getItem("Authorization"),
+              AuthorizationRefresh: localStorage.getItem(
+                "AuthorizationRefresh"
+              ),
+            },
           }
         );
         response.status === 200

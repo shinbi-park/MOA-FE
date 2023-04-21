@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+
 const CommentUserName = styled.li`
   font-family: "Inter";
   font-style: normal;
@@ -45,9 +48,10 @@ const CommentEditInput = styled.textarea`
   }
 `;
 
-const PostCommentItem = ({ exCom, onDeleteComment, onEditComment }) => {
+const PostCommentItem = ({ item, onDeleteComment, onEditComment }) => {
   const [isEdit, setIsEdit] = useState(false);
-  const [curContent, setCurContent] = useState(exCom?.content);
+  const [curContent, setCurContent] = useState(item.content);
+  const { postId } = useParams();
 
   const editCommentHandelr = (id, curContent) => {
     onEditComment(id, curContent);
@@ -56,12 +60,12 @@ const PostCommentItem = ({ exCom, onDeleteComment, onEditComment }) => {
 
   return (
     <div>
-      <CommentUserName>{exCom?.author}</CommentUserName>
-      <CommentTime>{exCom?.createDate}</CommentTime>
+      <CommentUserName>{item.author}</CommentUserName>
+      <CommentTime>{item.createDate}</CommentTime>
       {isEdit ? (
         <>
           <CommentEditBtn
-            onClick={() => editCommentHandelr(exCom.replyId, curContent)}
+            onClick={() => editCommentHandelr(item.replyId, curContent)}
           >
             수정완료
           </CommentEditBtn>
@@ -74,14 +78,14 @@ const PostCommentItem = ({ exCom, onDeleteComment, onEditComment }) => {
           <CommentEditBtn onClick={() => setIsEdit(!isEdit)}>
             수정
           </CommentEditBtn>
-          <CommentEditBtn onClick={() => onDeleteComment(exCom.replyId)}>
+          <CommentEditBtn onClick={() => onDeleteComment(item.replyId)}>
             삭제
           </CommentEditBtn>
         </>
       )}
 
       {!isEdit ? (
-        <CommentContent> {exCom?.content} </CommentContent>
+        <CommentContent> {item.content} </CommentContent>
       ) : (
         <CommentContent>
           <CommentEditInput
