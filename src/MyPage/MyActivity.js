@@ -2,20 +2,15 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  height: 92vh;
   display: flex;
-  flex-direction: row;
-`;
-
-const Container = styled.div`
+  flex-direction: column;
   justify-content: center;
   font-size: 17px;
-  
   text-decoration: none;
   h3 {
     display: inline-block;
     font-size: 22px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 `;
 
@@ -66,13 +61,13 @@ const Button = styled.button`
 
 const EmptyProject = styled.div`
   display: flex;
-  width: 650px;
-  height: 150px;
+  flex: 1;
+  min-width: 650px;
+  min-height: 150px;
+  margin: 20px 150px 20px 0px;
   background: #e8e8e8;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
   font-size: 20px;
   font-weight: bold;
   box-shadow: 2px 1px 2px #bdbdbd;
@@ -207,7 +202,6 @@ const MyActivity = () => {
 
   return (
     <Wrapper>
-      <Container>
         <h3>현재 참여중인 프로젝트</h3>
         {currentProject?.length > 0 ? (
           <ProjectList
@@ -236,7 +230,6 @@ const MyActivity = () => {
         ) : (
           <EmptyProject> 완료한 프로젝트가 없습니다 </EmptyProject>
         )}
-      </Container>
     </Wrapper>
   );
 };

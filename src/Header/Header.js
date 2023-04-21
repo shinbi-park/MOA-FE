@@ -11,7 +11,8 @@ const Nav = styled.nav`
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  height: 40px;
+  height: 50px;
+  margin-bottom: 10px;
 `;
 
 const Logo = styled.h1`

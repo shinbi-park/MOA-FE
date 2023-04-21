@@ -1,26 +1,14 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import styled from "styled-components";
 import profile from "../component/profileImg.png";
 import { AiOutlineEdit } from "react-icons/ai";
-
-const Center = styled.div`
-  height: 92vh;
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-`;
-
-const Main = styled.div`
-  display: flex;
-  flex: 2;
-`;
 
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
   height: 680px;
+  min-width: 500px;
   border: 0.5px solid #a2a2a2;
   padding: 20px;
   border-radius: 20px;
@@ -33,9 +21,11 @@ const Wrapper = styled.div`
 const Profile = styled.div`
   display: flex;
   align-items: center;
-  text-decoration: underline;
   margin-left: 10px;
   position: relative;
+  h3{
+    text-decoration: underline;
+  }
 `;
 
 const ProfileImgContainer = styled.div`
@@ -95,6 +85,7 @@ const PwdInput = styled.input`
 const Input = styled.input`
   ${inputStyle}
   margin-bottom: 16px;
+  
 `;
 
 const EmailInput = styled.input`
@@ -149,7 +140,8 @@ function Setting() {
   const [newPwd, setNewPwd] = useState("");
   const [newPwdConfirm, setPwdConfirm] = useState("");
   const [newUsername, setNewUsername] = useState("");
-  const [error, setError] = useState("");
+  const [userData, setUserData] = useState({});
+
   useEffect(() => {
     fetch(`http://13.125.111.131:8080/user/info/profile`, {
       method: "GET",
@@ -169,56 +161,42 @@ function Setting() {
           email: data.email,
           name: data.name,
           nickname: data.nickname,
-          password: "12345678",
         });
+        setNicknameInput(data.nickname);
+        setUsernameInput(data.name);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   },[]);
-  /*
-  const handleUsernameChange = (event) => {
-    const { username, value } = event.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [username]: value
-    }));
-  };
-*/
+
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
   const handleNicknameChange = (event) => {
+    event.preventDefault();
     setNicknameInput(event.target.value);
   };
 
   const handleUsernameChange = (event) => {
+    event.preventDefault();
     setUsernameInput(event.target.value);
   };
 
   const handlePwdChange = (event) => {
-    const { nickname, value } = event.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [nickname]: value
-    }));
+    event.preventDefault();
+    setCurrentPwd(event.target.value);
   };
 
   const handleNewPwdChange = (event) => {
-    const { nickname, value } = event.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [nickname]: value
-    }));
+    event.preventDefault();
+    setNewPwd(event.target.value);
   };
 
   const handleNewPwdConfirmChange = (event) => {
-    const { nickname, value } = event.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [nickname]: value
-    }));
+    event.preventDefault();
+    setPwdConfirm(event.target.value);
   };
 
   const handleFileChange = (event) => {
@@ -235,48 +213,61 @@ function Setting() {
     reader.readAsDataURL(selectedFile);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-
     const formData = new FormData();
     formData.append("file", file);
 
-    if (nicknameInput.trim() !== "" && nicknameInput !== user.nickname)
-      setUser({ ...user, nickname: nicknameInput });
-
-    //새 비밀번호와 비밀번호 확인이 다르면 리턴
-    if (newPwd !== newPwdConfirm) {
-      setError("새 비밀번호와 비밀번호 확인이 일치하지 않습니다!");
+    if (newPwd.trim() !== "" && currentPwd.trim() === "") {//현재 비밀번호를 입력하지 않고 새 비밀번호 입력시
+      alert("현재 비밀번호를 입력해주세요!");
+      return;
+    } 
+   
+    if (newPwd !== newPwdConfirm) { //새 비밀번호와 비밀번호 확인이 다르면 리턴
+      alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다!");
       return;
     }
-
-    //새로운이름이 빈칸이면 비밀번호만 변경
-    if (newUsername.trim() !== "") {
-      //유저 네임 변경시
-    }
-
-    if (newPwd.trim() !== "" && currentPwd.trim() === "") {
-      //현재 비밀번호를 입력하지 않고 새 비밀번호 입력시
-      setError("현재 비밀번호를 입력해주세요!");
-    } else if (newPwd.trim() !== "" && currentPwd.trim() !== "") {
-      //현재 비밀번호가 맞는지 확인
-      //서버로 바뀐 정보 전송
-    }
-    /*
-    try {
-      const response = await updateUser(user);
+   setUserData  ({
+      "name": usernameInput,
+      "nickname": nicknameInput,
+      "currentPassword": currentPwd,
+      "newPassword" : newPwd
+    })
+    fetch("http://13.125.111.131:8080/user/info/basic", {
+      method: "PATCH",
+      body: JSON.stringify({
+        "name": usernameInput,
+        "nickname": nicknameInput,
+        "currentPassword": currentPwd,
+        "newPassword" : newPwd
+    }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("Authorization"),
+        AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+      },
+    })
+    .then((response) => {
       console.log(response);
-      alert("유저 정보가 수정되었습니다.");
-    } catch (error) {
-      console.error(error);
-      alert("유저 정보 수정에 실패하였습니다.");
-    }
-    */
+      if (response.status === 200) {
+        alert("프로필을 성공적으로 변경하였습니다");
+        setIsEditing(false);
+        setUsernameInput(usernameInput);
+        setUserData({ ...userData });
+      } 
+      else if(response.status === 400){
+        alert("현재 비밀번호를 다시 확인해주세요!")
+      }
+      else {
+        alert("프로필 변경에 실패하였습니다");
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   };
 
   return (
-    <Center>
-      <Main>
         <Wrapper>
           <ProfileImgContainer>
             <Avatar src={profileImg || profile} alt="프로필 사진" />
@@ -301,7 +292,7 @@ function Setting() {
             ) : (
               <>
               <h3 onClick={handleEditClick}>
-                {user.name}
+                {usernameInput}
               </h3>
               <EditIcons onClick={handleEditClick}/>
               </>
@@ -337,18 +328,21 @@ function Setting() {
                 type="password"
                 name="Currentpassword"
                 placeholder="현재 비밀번호"
+                value={currentPwd}
                 onChange={handlePwdChange}
               />
               <PwdInput
                 type="password"
                 name="Newpassword"
                 placeholder="새 비밀번호"
+                value={newPwd}
                 onChange={handleNewPwdChange}
               />
               <PwdInput
                 type="password"
                 name="NewpasswordConfirm"
                 placeholder="새 비밀번호 확인"
+                value={newPwdConfirm}
                 onChange={handleNewPwdConfirmChange}
               />
             </InputContainer>
@@ -357,8 +351,6 @@ function Setting() {
             </SaveButton>
           </Form>
         </Wrapper>
-      </Main>
-    </Center>
   );
 }
 

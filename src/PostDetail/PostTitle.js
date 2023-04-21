@@ -89,7 +89,7 @@ const PostTitle = () => {
         ></RecruitState>
         <PostTagsDiv>
           {data.tags.map((item, index) => (
-            <PostTags key={index}>{item}</PostTags>
+            <PostTags key={index}>#{item}</PostTags>
           ))}
         </PostTagsDiv>
       </PostRecruitwrap>

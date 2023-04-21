@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import PageCommentInput from "./PostCommentInput";
 import PostInfoReply from "./PostInfoReply";
-import { useRecoilState, useRecoilValue } from "recoil";
 import PostCommentItem from "./PostCommentItem";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { myPostComment } from "../../../common/atoms";
 
 const HrCommentLine = styled.hr`
   background: #d9d9d9;
@@ -23,11 +21,8 @@ const CommentUl = styled.ul`
 `;
 
 const PostInfoComment = () => {
-  // const postComment = useRecoilValue(myPostComment);
-  // const [Comments, setComments] = useRecoilState(myPostComment);
   const [comment, setComment] = useState("");
   const { postId } = useParams();
-  const [text, setText] = useState();
 
   const [newComment, setNewComment] = useState([]);
   const [comment_count, setComment_count] = useState(0);

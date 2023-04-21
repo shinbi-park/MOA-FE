@@ -20,7 +20,21 @@ const PostDetail = () => {
   const [titles, setTitles] = useRecoilState(titleState);
   const { postId } = useParams();
 
-  //recoil + axios 예시
+  const fetchInfo = async () => {
+    await axios
+      .get("http://13.125.111.131:8080/user/info/profile", {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      });
+  };
 
   useEffect(() => {
     axios
@@ -34,6 +48,7 @@ const PostDetail = () => {
         },
       })
       .then((response) => {
+        console.log(response);
         setPost(response.data.recruitInfo);
         setIsLoading(false);
         setTitles(response.data.recruitInfo.state);
@@ -43,6 +58,8 @@ const PostDetail = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
+
+    fetchInfo();
   }, [setPost, setTitles, postId]);
 
   return (
