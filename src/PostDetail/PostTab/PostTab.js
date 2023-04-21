@@ -43,12 +43,6 @@ const PostTabContent = styled.div`
 `;
 
 const PostTab = () => {
-  // const [postData, setPostData] = useState();
-  // useEffect(async() => {
-  //   const response = await axios.get(`recruitment/${recruitmentId}`);
-  // setPostData(response.data);
-  // },[])
-
   const [activeTabId, setActiveTabId] = useState(0);
   const tabArr = [
     {

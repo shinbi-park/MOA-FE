@@ -50,26 +50,29 @@ const AddNotice = () => {
   const [newNotice, setNewNotice] = useState([]);
   const [isChecked, setisChecked] = useState(false);
 
-  useEffect(() => {
-    const fetchNotice = async () => {
-      const response = await axios
-        .get(`http://13.125.111.131:8080/recruitment/${postId}/notice`, {
-          headers: {
-            Authorization:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+  const fetchNotice = async () => {
+    const response = await axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}/notice`, {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
 
-            AuthorizationRefresh:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
-          },
-        })
-        .then((response) => {
-          setNewNotice(response.data.notices);
-        });
-    };
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => {
+        setNewNotice(response.data.notices);
+        console.log(response.data.notices);
+      });
+  };
+
+  useEffect(() => {
     fetchNotice();
   }, []);
 
-  const onSubmitNotice = async () => {
+  const onSubmitNotice = async (e) => {
+    e.preventDefault();
     await axios.post(
       `http://13.125.111.131:8080/recruitment/${postId}/notice`,
       {
@@ -78,56 +81,74 @@ const AddNotice = () => {
       },
       {
         headers: {
-          Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+          Authorization: window.localStorage.getItem("Authorization"),
 
-          AuthorizationRefresh:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
         },
-      }
+      },
+      { responseType: "json" }
     );
-
+    fetchNotice();
     setNotice("");
     setisChecked(false);
   };
 
   const onNoticeDelete = async (id) => {
-    // await axios.delete(`/recruitment/${postId}/notice`);
+    axios.delete(
+      `http://13.125.111.131:8080/recruitment/${postId}/notice/${id}`,
+
+      {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      },
+      { responseType: "json" }
+    );
     setNewNotice(newNotice.filter((item) => item.noticeId !== id));
   };
 
   const onEditNotice = async (id, newContent) => {
-    await axios.patch(
-      `http://13.125.111.131:8080/recruitment/${postId}/notice/${id}`,
-      {
-        content: newContent,
-        checkVote: isChecked,
-      },
-      {
-        headers: {
-          Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
-
-          AuthorizationRefresh:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+    await axios
+      .patch(
+        `http://13.125.111.131:8080/recruitment/${postId}/notice/${id}`,
+        {
+          content: newContent,
+          checkVote: "",
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+      });
+
     setNewNotice(
       newNotice.map((item) =>
         item.noticeId === id ? { ...item, content: newContent } : item
       )
     );
   };
-
-  // const onVoteFinish = (id, votestate) => {
-  //   setisChecked(votestate);
-  //   setNewNotice(
-  //     newNotice.map((item) =>
-  //       item.noticeId === id ? { ...item, check: isChecked } : item
-  //     )
-  //   );
-  // };
+  const onVoteFinish = (id, votestate) => {
+    setisChecked(votestate);
+    setNewNotice(
+      newNotice.map((item) =>
+        item.noticeId === id ? { ...item, check: isChecked } : item
+      )
+    );
+  };
 
   return (
     <div>
@@ -162,7 +183,7 @@ const AddNotice = () => {
             newnotice={newnotice}
             onNoticeDelete={onNoticeDelete}
             onEditNotice={onEditNotice}
-            // onVoteFinish={onVoteFinish}
+            onVoteFinish={onVoteFinish}
           />
         </div>
       ))}

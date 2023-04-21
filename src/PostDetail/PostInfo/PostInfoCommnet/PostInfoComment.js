@@ -23,42 +23,47 @@ const CommentUl = styled.ul`
 `;
 
 const PostInfoComment = () => {
-  const postComment = useRecoilValue(myPostComment);
-  const [Comments, setComments] = useRecoilState(myPostComment);
+  // const postComment = useRecoilValue(myPostComment);
+  // const [Comments, setComments] = useRecoilState(myPostComment);
   const [comment, setComment] = useState("");
   const { postId } = useParams();
-  const [comment_count, setComment_count] = useState(Comments.length);
+  const [text, setText] = useState();
+
   const [newComment, setNewComment] = useState([]);
+  const [comment_count, setComment_count] = useState(0);
+  const fetchComment = async () => {
+    const response = await axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}`, {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => {
+        setNewComment(response.data.repliesInfo.info);
+        setComment_count(response.data.repliesInfo.info.length);
+        console.log(response.data);
+      })
+
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
 
   useEffect(() => {
-    const fetchComment = async () => {
-      const response = await axios
-        .get(`http://13.125.111.131:8080/recruitment/${postId}`, {
-          headers: {
-            Authorization:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
-
-            AuthorizationRefresh:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
-          },
-        })
-        .then((response) => {
-          setNewComment(response.data.repliesInfo.info);
-        })
-
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    };
-
     fetchComment();
   }, []);
 
   const onCommentChange = (e) => {
+    e.preventDefault();
     setComment(e.target.value);
   };
 
-  const onCommentSubmit = async () => {
+  const onCommentSubmit = async (e) => {
+    e.preventDefault();
     const params = {
       content: comment,
     };
@@ -68,25 +73,26 @@ const PostInfoComment = () => {
       null,
 
       {
+        responseType: "json",
         headers: {
           // 로그인 후 받아오는 인증토큰값
-          Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+          Authorization: window.localStorage.getItem("Authorization"),
 
-          AuthorizationRefresh:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
         },
 
         params,
       }
     );
-
+    fetchComment();
     setComment("");
     setComment_count(comment_count + 1);
   };
 
   const onEditComment = (id, newContent) => {
-    axios.post(
+    axios.put(
       `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
       {
         content: newContent,
@@ -95,13 +101,19 @@ const PostInfoComment = () => {
       {
         headers: {
           // 로그인 후 받아오는 인증토큰값
-          Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+          Authorization: window.localStorage.getItem("Authorization"),
 
-          AuthorizationRefresh:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
         },
       }
+    );
+
+    setNewComment(
+      newComment.map((item) =>
+        item.replyId === id ? { ...item, content: newContent } : item
+      )
     );
   };
 
@@ -112,16 +124,43 @@ const PostInfoComment = () => {
       {
         headers: {
           // 로그인 후 받아오는 인증토큰값
-          Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+          Authorization: window.localStorage.getItem("Authorization"),
 
-          AuthorizationRefresh:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
         },
       }
     );
-    setComments(Comments.filter((item) => item.replyId !== id));
+    setNewComment(newComment.filter((item) => item.replyId !== id));
     setComment_count(comment_count - 1);
+  };
+
+  const onReplySubmit = async (reply, id) => {
+    const params = {
+      content: reply,
+      parent: id,
+    };
+
+    const response = await axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply`,
+      null,
+
+      {
+        responseType: "json",
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+
+        params,
+      }
+    );
+    fetchComment();
   };
 
   return (
@@ -134,7 +173,7 @@ const PostInfoComment = () => {
         onCommentChange={onCommentChange}
       />
 
-      {Comments.map((item) => (
+      {newComment?.map((item) => (
         <CommentUl key={item.replyId}>
           <PostCommentItem
             item={item}
@@ -142,7 +181,12 @@ const PostInfoComment = () => {
             onEditComment={onEditComment}
           />
 
-          <PostInfoReply item={item} />
+          <PostInfoReply
+            item={item}
+            fetchComment={fetchComment}
+            onReplySubmit={onReplySubmit}
+            value={item.subReplies}
+          />
 
           <HrCommentLine />
         </CommentUl>

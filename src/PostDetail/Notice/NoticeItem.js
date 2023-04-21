@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Dropdownbutton from "./Dropdownbutton";
 import { ImCheckmark, ImCross } from "react-icons/im";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const NoticeListWrap = styled.div`
   width: 1045px;
@@ -87,8 +89,27 @@ const NoticeItem = ({
   const [isEdit, setIsEdit] = useState(false);
   const [isVote, setIsVote] = useState(true);
   const [curContent, setCurContent] = useState(newnotice.content);
+  const { postId } = useParams();
 
-  //const response = await axios.post(`/recruitment/${recruitmentId}/apply`,{"value" : "PENDING");
+  const AttendanceHandler = () => {
+    const value = "ATTENDANCE";
+
+    axios
+      .post(
+        `http://13.125.111.131:8080/recruitment/${postId}/notice/${newnotice.noticeId}/vote/${value}`
+      )
+      .then((response) => console.log(response.data));
+  };
+
+  const NoAttendanceHandler = () => {
+    const value = "NOATTENDANCE";
+
+    axios
+      .post(
+        `http://13.125.111.131:8080/recruitment/${postId}/notice/${newnotice.noticeId}/vote/${value}`
+      )
+      .then((response) => console.log(response.data));
+  };
 
   const isEditSetting = (EditValue) => {
     setIsEdit(EditValue);
@@ -142,12 +163,12 @@ const NoticeItem = ({
         </NoticeListContent>
       )}
 
-      {newnotice.check && !isEdit && (
+      {newnotice.checkVote && !isEdit && (
         <VotingBtnDiv>
-          <VotingPositive>
+          <VotingPositive onClick={AttendanceHandler}>
             참여 <ImCheckmark />
           </VotingPositive>
-          <VotingNegative>
+          <VotingNegative onClick={NoAttendanceHandler}>
             불참여 <ImCross />
           </VotingNegative>
         </VotingBtnDiv>

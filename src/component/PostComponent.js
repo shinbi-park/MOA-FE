@@ -3,6 +3,8 @@ import styled from "styled-components";
 import profile from "./profileImg.png";
 import { AiOutlineComment, AiFillHeart } from "react-icons/ai";
 import { CiMenuKebab } from "react-icons/ci";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Wrapper = styled.div`
   height: 350px;
@@ -176,6 +178,7 @@ const MenuItem = styled.li`
 `;
 
 const PostComponent = ({
+  id,
   type,
   title,
   author,
@@ -189,6 +192,7 @@ const PostComponent = ({
   const [isMypost, setIsMypost] = useState(false);
   const [isMyLiked, setIsMyLiked] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();
 
   if (tags.length > 5) {
     tags = tags.slice(0, 5);
@@ -214,28 +218,24 @@ const PostComponent = ({
 
   const handleEditClick = () => {
     console.log("Edit clicked");
-    fetch(`/recruitment/${recruitmentId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((response) => {});
+    navigate(`/edit/${id}`);
   };
 
   const handleDeleteClick = () => {
     console.log("Delete clicked");
     const result = window.confirm("글을 정말 삭제할까요?");
     if (result) {
-      fetch("http://13.125.111.131:8080/recruitment/1", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((response) =>
-        response === 200
-          ? alert("글이 삭제되었습니다!")
-          : alert("글 삭제에 실패하였습니다")
-      );
+      axios
+        .delete(`http://13.125.111.131:8080/recruitment/${id}`, {
+          headers: {
+            Authorization:
+              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjo2LCJleHAiOjE2ODE4NzYwMzF9.B26grmvt3VpiLv919ZO8b5_OW9xrqMS8JpAWm_mZG8LyngyRpwL4t8cePiLPq7CPoDkh5udOjvURr56qarGJig",
+
+            AuthorizationRefresh:
+              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODMwNzQyMzF9.msnxlc-h-3J8JQJyrSK2L_Rv2GV85zUqMR2J4VJiPOO0WUuk9-UFHeXwNl8d2vanQ-12JDFSyOZhlWFMhAIsfA",
+          },
+        })
+        .then((response) => console.log("글이 삭제되었습니다!"));
     }
   };
 

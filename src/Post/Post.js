@@ -5,6 +5,7 @@ import Editor from "./Editor/Editor";
 import WriteActionButton from "./WriteButton";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { ZoomControl } from "react-kakao-maps-sdk";
 
 const Wrapper = styled.div`
   display: flex;
@@ -69,11 +70,11 @@ const Post = ({ isEdit, Editdata }) => {
           {
             headers: {
               // 로그인 후 받아오는 인증토큰값
-              Authorization:
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+              Authorization: window.localStorage.getItem("Authorization"),
 
-              AuthorizationRefresh:
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+              AuthorizationRefresh: window.localStorage.getItem(
+                "AuthorizationRefresh"
+              ),
             },
           }
         )

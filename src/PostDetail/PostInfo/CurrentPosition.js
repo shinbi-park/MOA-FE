@@ -1,6 +1,7 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 const CurrentPartWrap = styled.div`
   padding-left: 3%;
@@ -61,25 +62,61 @@ const PartApply = styled.button`
 
 const CurrentPosition = ({ item, index }) => {
   const [applyToggle, setApplyToggle] = useState(false);
+  const { postId } = useParams();
+  const [users, setUsers] = useState([]);
+  // useEffect(() => {
+  //   fetchList();
+  // }, []);
 
-  // const fetchApply = async() => {
-  //   if(!applyToggle){
-  //   await axios.post(`http://192.168.0.26:8080//recruitment/${recruitmentId}/apply`, {
-  //           headers: {
-  //             Authorization: tokenA,
-  //             AuthorizationRefresh: tokenB,
-  //           },
-  //         })
-  //       }else{
-  //         await axios.post(`http://192.168.0.26:8080//recruitment/${recruitmentId}/cancel`, {
-  //           headers: {
-  //             Authorization: tokenA,
-  //             AuthorizationRefresh: tokenB,
-  //           },
-  //         })
+  // const fetchList = async () => {
+  //   await axios
+  //     .get(
+  //       `http://13.125.111.131:8080/user/info/activity`,
 
+  //       {
+  //         headers: {
+  //           // 로그인 후 받아오는 인증토큰값
+  //           Authorization: window.localStorage.getItem("Authorization"),
+
+  //           AuthorizationRefresh: window.localStorage.getItem(
+  //             "AuthorizationRefresh"
+  //           ),
+  //         },
   //       }
-  // }
+  //     )
+  //     .then((response) => console.log(response.data));
+  // };
+
+  const fetchApply = async () => {
+    const params = {
+      position: item.recruitField,
+    };
+    if (!applyToggle) {
+      await axios
+        .post(
+          `http://13.125.111.131:8080/recruitment/${postId}/apply`,
+          null,
+
+          {
+            responseType: "json",
+            headers: {
+              // 로그인 후 받아오는 인증토큰값
+              Authorization: window.localStorage.getItem("Authorization"),
+
+              AuthorizationRefresh: window.localStorage.getItem(
+                "AuthorizationRefresh"
+              ),
+            },
+
+            params,
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+        });
+    } else {
+    }
+  };
 
   return (
     <CurrentPartWrap key={index}>
@@ -89,7 +126,8 @@ const CurrentPosition = ({ item, index }) => {
       </PartSectionCount>
       <PartApply
         onClick={() => {
-          setApplyToggle(!applyToggle); /*fetchApply();*/
+          setApplyToggle(!applyToggle);
+          fetchApply();
         }}
         className={
           applyToggle

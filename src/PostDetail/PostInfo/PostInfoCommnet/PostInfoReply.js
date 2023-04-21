@@ -58,36 +58,19 @@ const ReplyUl = styled.ul`
   list-style: none;
 `;
 
-const PostInfoReply = ({ item, fetchComment }) => {
+const PostInfoReply = ({ item, onReplySubmit, value }) => {
   const [reply, setReply] = useState("");
   const { postId } = useParams();
-  const [newReply, setNewReply] = useState(item.subReplies);
+  const [newReply, setNewReply] = useState([]);
   const [replyToggle, setReplyToggle] = useState(false);
 
-  const onReplySubmit = async () => {
-    const params = {
-      content: reply,
-      parent: item.replyId,
-    };
+  useEffect(() => {
+    setNewReply(value);
+  }, [value]);
 
-    await axios.post(
-      `http://13.125.111.131:8080/recruitment/${postId}/reply`,
-      null,
-
-      {
-        headers: {
-          // 로그인 후 받아오는 인증토큰값
-          Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
-
-          AuthorizationRefresh:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
-        },
-
-        params,
-      }
-    );
-
+  const replySubmitHandle = async (e) => {
+    e.preventDefault();
+    await onReplySubmit(reply, item.replyId);
     setReply("");
   };
 
@@ -102,11 +85,11 @@ const PostInfoReply = ({ item, fetchComment }) => {
       {
         headers: {
           // 로그인 후 받아오는 인증토큰값
-          Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
+          Authorization: window.localStorage.getItem("Authorization"),
 
-          AuthorizationRefresh:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
         },
       }
     );
@@ -115,6 +98,23 @@ const PostInfoReply = ({ item, fetchComment }) => {
   };
 
   const onEditReply = (id, newContent) => {
+    axios.put(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+      {
+        content: newContent,
+      },
+
+      {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      }
+    );
     setNewReply(
       newReply.map((item) =>
         item.replyId === id ? { ...item, content: newContent } : item
@@ -128,19 +128,19 @@ const PostInfoReply = ({ item, fetchComment }) => {
         <ReplyBtn onClick={onReplyToggle}>답글</ReplyBtn>
       </ReplyBtnDiv>
       {replyToggle && (
-        <ReplyForm>
+        <ReplyForm onSubmit={replySubmitHandle}>
           <ReplyInput
             placeholder="답글을 입력해주세요"
             value={reply}
             onChange={(e) => setReply(e.target.value)}
           />
           <ReplyAddBtnWrap>
-            <ReplyAddBtn onClick={onReplySubmit}>확인</ReplyAddBtn>
+            <ReplyAddBtn>확인</ReplyAddBtn>
           </ReplyAddBtnWrap>
         </ReplyForm>
       )}
 
-      {newReply.map((item) => (
+      {newReply?.map((item) => (
         <ReplyUl key={item.replyId}>
           <PostReplyItem
             item={item}

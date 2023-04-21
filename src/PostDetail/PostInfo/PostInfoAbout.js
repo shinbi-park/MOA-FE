@@ -1,12 +1,7 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { myPostData, postData } from "../../common/atoms";
-import { useEffect } from "react";
-import { useState } from "react";
-import { getPostData, mySelector } from "../../common/selector";
-import { useMemo } from "react";
-import ReactQuill from "react-quill";
+import { myPostData } from "../../common/atoms";
 
 const IntroductionDiv = styled.div`
   white-space: pre-wrap;

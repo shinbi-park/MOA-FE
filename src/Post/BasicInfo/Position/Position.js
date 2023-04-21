@@ -17,7 +17,7 @@ const Position = ({ handleFieldsChange, isEdit, Editdata }) => {
 
   useEffect(() => {
     if (isEdit) {
-      const member = Editdata.members.filter(
+      const member = Editdata.members?.filter(
         (item) => item.recruitField !== "LEADER"
       );
       setPosition(member);

@@ -36,10 +36,10 @@ const CommentBtn = styled.button`
 const PostCommentInput = ({ onCommentSubmit, comment, onCommentChange }) => {
   return (
     <div>
-      <CommentForm>
+      <CommentForm onSubmit={onCommentSubmit}>
         <CommentInput value={comment} onChange={onCommentChange} />
         <CommentBtnWrap>
-          <CommentBtn onClick={onCommentSubmit}>확인</CommentBtn>
+          <CommentBtn>확인</CommentBtn>
         </CommentBtnWrap>
       </CommentForm>
     </div>
