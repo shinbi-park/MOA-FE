@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 `;
 
 const Post = ({ isEdit, Editdata }) => {
-  const [categoryName, setCategoryName] = useState("programming");
+  const [categoryName, setCategoryName] = useState("PROGRAMMING");
   const [memberFields, setMemberFields] = useState([]);
   const [tags, setTags] = useState([]);
   const [title, setTitle] = useState("");

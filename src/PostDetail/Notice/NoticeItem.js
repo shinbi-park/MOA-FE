@@ -92,21 +92,37 @@ const NoticeItem = ({
   const { postId } = useParams();
 
   const AttendanceHandler = () => {
-    const value = "ATTENDANCE";
-
     axios
       .post(
-        `http://13.125.111.131:8080/recruitment/${postId}/notice/${newnotice.noticeId}/vote/${value}`
+        `http://13.125.111.131:8080/recruitment/${postId}/notice/${newnotice.noticeId}/vote/ATTENDANCE`,
+        null,
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
       )
       .then((response) => console.log(response.data));
   };
 
   const NoAttendanceHandler = () => {
-    const value = "NOATTENDANCE";
-
     axios
       .post(
-        `http://13.125.111.131:8080/recruitment/${postId}/notice/${newnotice.noticeId}/vote/${value}`
+        `http://13.125.111.131:8080/recruitment/${postId}/notice/${newnotice.noticeId}/vote/NONATTENDANCE`,
+        null,
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
       )
       .then((response) => console.log(response.data));
   };

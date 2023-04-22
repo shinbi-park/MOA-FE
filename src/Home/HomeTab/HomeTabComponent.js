@@ -36,8 +36,6 @@ const HomeTabComponent = ({
 }) => {
   const [postData, setPostData] = useState([]);
   const [comment, setComment] = useState(null);
-  const [page, setPage] = useState(1);
-  const [last, setLast] = useState();
   const [count, setCount] = useState(6);
   const [target, setTarget] = useState("");
 
@@ -126,14 +124,13 @@ const HomeTabComponent = ({
         .get("http://13.125.111.131:8080" + url, { headers })
         .then((response) => {
           setPostData(response.data.value);
-          setLast(response.data.last);
         })
         .catch((error) => {
           setPostData([]);
           console.log(error);
         });
     }
-  }, [type, page, searchData, count]);
+  }, [type, searchData, count]);
 
   return (
     <>

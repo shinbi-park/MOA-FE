@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { userInfo } from "../../../common/atoms";
 
 const CommentUserName = styled.li`
   font-family: "Inter";
@@ -52,47 +54,61 @@ const PostCommentItem = ({ item, onDeleteComment, onEditComment }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [curContent, setCurContent] = useState(item.content);
   const { postId } = useParams();
+  const info = useRecoilValue(userInfo);
 
   const editCommentHandelr = (id, curContent) => {
-    onEditComment(id, curContent);
-    setIsEdit(!isEdit);
+    if (curContent.length === 0) {
+      alert("수정할 내용을 입력해주세요!");
+      return setCurContent(item.content);
+    } else {
+      onEditComment(id, curContent);
+      setIsEdit(!isEdit);
+    }
   };
 
   return (
     <div>
       <CommentUserName>{item.author}</CommentUserName>
       <CommentTime>{item.createDate}</CommentTime>
-      {isEdit ? (
+      {info.userId === item.userId ? (
         <>
-          <CommentEditBtn
-            onClick={() => editCommentHandelr(item.replyId, curContent)}
-          >
-            수정완료
-          </CommentEditBtn>
-          <CommentEditBtn onClick={() => setIsEdit(!isEdit)}>
-            취소
-          </CommentEditBtn>
+          {" "}
+          {isEdit ? (
+            <>
+              <CommentEditBtn
+                onClick={() => editCommentHandelr(item.replyId, curContent)}
+              >
+                수정완료
+              </CommentEditBtn>
+              <CommentEditBtn onClick={() => setIsEdit(!isEdit)}>
+                취소
+              </CommentEditBtn>
+            </>
+          ) : (
+            <>
+              <CommentEditBtn onClick={() => setIsEdit(!isEdit)}>
+                수정
+              </CommentEditBtn>
+              <CommentEditBtn onClick={() => onDeleteComment(item.replyId)}>
+                삭제
+              </CommentEditBtn>
+            </>
+          )}
+          {!isEdit ? (
+            <CommentContent> {item.content} </CommentContent>
+          ) : (
+            <CommentContent>
+              <CommentEditInput
+                value={curContent}
+                onChange={(e) => setCurContent(e.target.value)}
+              />
+            </CommentContent>
+          )}
         </>
       ) : (
         <>
-          <CommentEditBtn onClick={() => setIsEdit(!isEdit)}>
-            수정
-          </CommentEditBtn>
-          <CommentEditBtn onClick={() => onDeleteComment(item.replyId)}>
-            삭제
-          </CommentEditBtn>
+          <CommentContent> {item.content} </CommentContent>
         </>
-      )}
-
-      {!isEdit ? (
-        <CommentContent> {item.content} </CommentContent>
-      ) : (
-        <CommentContent>
-          <CommentEditInput
-            value={curContent}
-            onChange={(e) => setCurContent(e.target.value)}
-          />
-        </CommentContent>
       )}
     </div>
   );

@@ -3,7 +3,12 @@ import styled from "styled-components";
 import PostTab from "./PostTab/PostTab";
 import PostTitle from "./PostTitle";
 import { useRecoilState } from "recoil";
-import { myPostComment, myPostData, titleState } from "../common/atoms";
+import {
+  myPostComment,
+  myPostData,
+  titleState,
+  userInfo,
+} from "../common/atoms";
 import { useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -15,9 +20,8 @@ const PostDetailDiv = styled.div`
 const PostDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [post, setPost] = useRecoilState(myPostData);
-  // const [postComment, setPostComment] = useRecoilState(myPostComment);
-  const [text, setText] = useState();
   const [titles, setTitles] = useRecoilState(titleState);
+  const [Info, setInfo] = useRecoilState(userInfo);
   const { postId } = useParams();
 
   const fetchInfo = async () => {
@@ -32,6 +36,7 @@ const PostDetail = () => {
         },
       })
       .then((response) => {
+        setInfo(response.data);
         console.log(response.data);
       });
   };
@@ -48,7 +53,6 @@ const PostDetail = () => {
         },
       })
       .then((response) => {
-        console.log(response);
         setPost(response.data.recruitInfo);
         setIsLoading(false);
         setTitles(response.data.recruitInfo.state);

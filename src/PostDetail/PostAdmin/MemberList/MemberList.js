@@ -50,6 +50,7 @@ const MemberList = () => {
       )
       .then((response) => {
         setMembers(response.data);
+        console.log(response.data);
       });
   };
 

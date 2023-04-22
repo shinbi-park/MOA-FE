@@ -138,8 +138,8 @@ const Button = styled.button`
 
 const LinkList = React.memo(({ links }) => (
   <>
-    {links.map((link) => (
-      <LinkItem key={link} link={link} />
+    {links.map((link, index) => (
+      <LinkItem key={index} link={link} />
     ))}
   </>
 ));
@@ -152,28 +152,44 @@ const LinkItem = React.memo(({ link }) => (
   </Container>
 ));
 
-const InfoDetail = ({ isOpen, handlecloseInfo }) => {
+const InfoDetail = ({ handlecloseInfo, item }) => {
   const [userInfo, setUserInfo] = useState({});
 
-  const [applicant, setApplicant] = useState("user1");
-  const [popularityCnt, setPopularityCnt] = useState(5); //평가 받은 프로젝트 수
-  const [applyPosition, setApplyPosition] = useState("프론트엔드");
-  const [introDetail, setIntroDetail] = useState("지원자 상세 소개");
-  const [links, setLinks] = useState(["naver.com", "github.com"]);
+  const [applicant, setApplicant] = useState("");
+  const [popularityCnt, setPopularityCnt] = useState({}); //평가 받은 프로젝트 수
+  const [applyPosition, setApplyPosition] = useState(item.recruitField);
+  const [introDetail, setIntroDetail] = useState("");
+  const [links, setLinks] = useState([]);
   const [location, setLocation] = useState("지하철역");
 
-  // const fetchInfo = async() => {
-  //   const params = {userId:""}
-  //   const response = await axios.get("http://13.125.111.131:8080//user/info/profile", null,{params},{
-  //           headers: {
-  //             Authorization: "" ,
-  //             AuthorizationRefresh: "",
-  //           },
-  //         })
-  //         .then((response) => {
-  //           console.log(response.data)
-  //         })
-  //       }
+  useEffect(() => {
+    fetchInfo();
+  }, []);
+
+  const fetchInfo = async () => {
+    const params = { userId: item.userId };
+    const response = await axios
+      .get(
+        "http://13.125.111.131:8080/user/info/profile",
+
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+          params,
+        }
+      )
+      .then((response) => {
+        setApplicant(response.data.nickname);
+        setPopularityCnt(response.data.popularity);
+        setIntroDetail(response.data.details);
+        setLinks(response.data.link);
+      });
+  };
 
   const infoRef = useRef();
 
@@ -201,14 +217,14 @@ const InfoDetail = ({ isOpen, handlecloseInfo }) => {
           <tbody>
             <tr>
               <td>지원자</td>
-              <td>{userInfo.nickname}</td>
+              <td>{applicant}</td>
               <td>지원 포지션</td>
               <td>{applyPosition}</td>
             </tr>
           </tbody>
         </Table>
         <StarContaienr>
-          <h3>지원자 별점</h3> <span>총 {popularityCnt}개의 평가 중</span>{" "}
+          <h3>지원자 별점</h3> <span>총 {popularityCnt.count}개의 평가 중</span>
           <UserPopularity />
         </StarContaienr>
         <h3>지원자 상세 소개</h3>
