@@ -69,7 +69,7 @@ const PostTab = () => {
     {
       tabTitle: (
         <>
-          {user.userId === info.userId || userInfoArr.status === "승인" ? (
+          {user.userId === info.userId || userInfoArr?.status === "승인" ? (
             <div onClick={() => onClickTab(1)}>회의시간 조사</div>
           ) : (
             <div>
@@ -84,7 +84,7 @@ const PostTab = () => {
     {
       tabTitle: (
         <>
-          {user.userId === info.userId || userInfoArr.status === "승인" ? (
+          {user.userId === info.userId || userInfoArr?.status === "승인" ? (
             <div onClick={() => onClickTab(2)}>공지사항</div>
           ) : (
             <div>
