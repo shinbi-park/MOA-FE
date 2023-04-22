@@ -110,7 +110,10 @@ const CurrentPosition = ({ item, index, userInfoArr, fetchList, author }) => {
           <PartSectionCount>
             {item.currentCount}/{item.totalCount}
           </PartSectionCount>
-          <PartApply />
+          <PartApply
+            className={item.currentCount === item.totalCount && "applyDone"}
+            disabled={item.currentCount === item.totalCount && true}
+          />
         </>
       ) : (
         <>

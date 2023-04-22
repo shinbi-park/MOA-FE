@@ -31,8 +31,11 @@ const EditParticipantDiv = styled.div`
   left: 121px;
   width: 120px;
   top: 20px;
+  min-height: 130px;
 `;
-const ParticipantUl = styled.ul``;
+const AttendanceDiv = styled.div`
+  margin-bottom: 30px;
+`;
 
 const ParticipantList = styled.li`
   list-style: none;
@@ -98,19 +101,23 @@ const Dropdownbutton = ({
                 onMouseOver={() => setEditHover(true)}
                 onMouseLeave={() => setEditHover(false)}
               >
-                <>참여</>
-                {newnotice.members.ATTENDANCE.map((item, index) => (
-                  <ParticipantUl key={index}>
-                    <ParticipantList>{item}</ParticipantList>
-                  </ParticipantUl>
-                ))}
+                <AttendanceDiv>
+                  참여
+                  {newnotice.members?.ATTENDANCE.map((item, index) => (
+                    <ul key={index}>
+                      <ParticipantList>{item}</ParticipantList>
+                    </ul>
+                  ))}
+                </AttendanceDiv>
 
-                <>불참여</>
-                {newnotice.members.NONATTENDANCE.map((item, index) => (
-                  <ParticipantUl key={index}>
-                    <ParticipantList>{item}</ParticipantList>
-                  </ParticipantUl>
-                ))}
+                <div>
+                  불참여
+                  {newnotice.members?.NONATTENDANCE.map((item, index) => (
+                    <ul key={index}>
+                      <ParticipantList>{item}</ParticipantList>
+                    </ul>
+                  ))}
+                </div>
               </EditParticipantDiv>
             ) : (
               ""
