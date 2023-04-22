@@ -2,7 +2,9 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { userInfo } from "../../common/atoms";
 const CurrentPartWrap = styled.div`
   padding-left: 3%;
   display: flex;
@@ -45,6 +47,7 @@ const PartApply = styled.button`
   }
 
   &.applying {
+    cursor: no-drop;
     background-color: gray;
     &::after {
       content: "지원완료";
@@ -60,32 +63,14 @@ const PartApply = styled.button`
   }
 `;
 
-const CurrentPosition = ({ item, index }) => {
+const CurrentPosition = ({ item, index, userInfoArr, fetchList, author }) => {
   const [applyToggle, setApplyToggle] = useState(false);
+  const info = useRecoilValue(userInfo);
   const { postId } = useParams();
-  const [users, setUsers] = useState([]);
-  // useEffect(() => {
-  //   fetchList();
-  // }, []);
 
-  // const fetchList = async () => {
-  //   await axios
-  //     .get(
-  //       `http://13.125.111.131:8080/user/info/activity`,
-
-  //       {
-  //         headers: {
-  //           // 로그인 후 받아오는 인증토큰값
-  //           Authorization: window.localStorage.getItem("Authorization"),
-
-  //           AuthorizationRefresh: window.localStorage.getItem(
-  //             "AuthorizationRefresh"
-  //           ),
-  //         },
-  //       }
-  //     )
-  //     .then((response) => console.log(response.data));
-  // };
+  useEffect(() => {
+    fetchList();
+  }, []);
 
   const fetchApply = async () => {
     const params = {
@@ -100,7 +85,6 @@ const CurrentPosition = ({ item, index }) => {
           {
             responseType: "json",
             headers: {
-              // 로그인 후 받아오는 인증토큰값
               Authorization: window.localStorage.getItem("Authorization"),
 
               AuthorizationRefresh: window.localStorage.getItem(
@@ -120,24 +104,59 @@ const CurrentPosition = ({ item, index }) => {
 
   return (
     <CurrentPartWrap key={index}>
-      <PartSection>{item.recruitField}</PartSection>
-      <PartSectionCount>
-        {item.currentCount}/{item.totalCount}
-      </PartSectionCount>
-      <PartApply
-        onClick={() => {
-          setApplyToggle(!applyToggle);
-          fetchApply();
-        }}
-        className={
-          applyToggle
-            ? "applying"
-            : "" || item.currentCount === item.totalCount
-            ? "applyDone"
-            : ""
-        }
-        disabled={item.currentCount === item.totalCount && true}
-      />
+      {author.userId === info.userId ? (
+        <>
+          <PartSection>{item.recruitField}</PartSection>
+          <PartSectionCount>
+            {item.currentCount}/{item.totalCount}
+          </PartSectionCount>
+          <PartApply
+            className={item.currentCount === item.totalCount && "applyDone"}
+            disabled={item.currentCount === item.totalCount && true}
+          />
+        </>
+      ) : (
+        <>
+          {item.recruitField === userInfoArr?.field ? (
+            <>
+              {" "}
+              <PartSection>{item.recruitField}</PartSection>
+              <PartSectionCount>
+                {item.currentCount}/{item.totalCount}
+              </PartSectionCount>
+              <PartApply
+                className={
+                  "applying" ||
+                  (item.currentCount === item.totalCount && "applyDone")
+                }
+                disabled={true}
+              />
+            </>
+          ) : (
+            <>
+              {" "}
+              <PartSection>{item.recruitField}</PartSection>
+              <PartSectionCount>
+                {item.currentCount}/{item.totalCount}
+              </PartSectionCount>
+              <PartApply
+                onClick={() => {
+                  setApplyToggle(!applyToggle);
+                  fetchApply();
+                }}
+                className={
+                  applyToggle
+                    ? "applying"
+                    : "" || item.currentCount === item.totalCount
+                    ? "applyDone"
+                    : ""
+                }
+                disabled={item.currentCount === item.totalCount && true}
+              />
+            </>
+          )}
+        </>
+      )}
     </CurrentPartWrap>
   );
 };

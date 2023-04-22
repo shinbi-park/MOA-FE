@@ -70,8 +70,12 @@ const PostInfoReply = ({ item, onReplySubmit, value }) => {
 
   const replySubmitHandle = async (e) => {
     e.preventDefault();
-    await onReplySubmit(reply, item.replyId);
-    setReply("");
+    if (reply.length === 0) {
+      alert("답글 내용을 입력해주세요!");
+    } else {
+      await onReplySubmit(reply, item.replyId);
+      setReply("");
+    }
   };
 
   const onReplyToggle = () => {
@@ -79,20 +83,22 @@ const PostInfoReply = ({ item, onReplySubmit, value }) => {
   };
 
   const onDeleteReply = async (id) => {
-    await axios.delete(
-      `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+    if (window.confirm("답글을 삭제하시겠습니까?")) {
+      await axios.delete(
+        `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
 
-      {
-        headers: {
-          // 로그인 후 받아오는 인증토큰값
-          Authorization: window.localStorage.getItem("Authorization"),
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
 
-          AuthorizationRefresh: window.localStorage.getItem(
-            "AuthorizationRefresh"
-          ),
-        },
-      }
-    );
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      );
+    }
 
     setNewReply(newReply.filter((it) => it.replyId !== id));
   };

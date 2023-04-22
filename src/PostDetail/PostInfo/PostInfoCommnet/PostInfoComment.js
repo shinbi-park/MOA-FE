@@ -23,7 +23,6 @@ const CommentUl = styled.ul`
 const PostInfoComment = () => {
   const [comment, setComment] = useState("");
   const { postId } = useParams();
-
   const [newComment, setNewComment] = useState([]);
   const [comment_count, setComment_count] = useState(0);
   const fetchComment = async () => {
@@ -40,7 +39,6 @@ const PostInfoComment = () => {
       .then((response) => {
         setNewComment(response.data.repliesInfo.info);
         setComment_count(response.data.repliesInfo.info.length);
-        console.log(response.data);
       })
 
       .catch((error) => {
@@ -59,31 +57,35 @@ const PostInfoComment = () => {
 
   const onCommentSubmit = async (e) => {
     e.preventDefault();
-    const params = {
-      content: comment,
-    };
+    if (comment.length === 0) {
+      alert("댓글 내용을 입력해주세요!");
+    } else {
+      const params = {
+        content: comment,
+      };
 
-    const response = await axios.post(
-      `http://13.125.111.131:8080/recruitment/${postId}/reply`,
-      null,
+      const response = await axios.post(
+        `http://13.125.111.131:8080/recruitment/${postId}/reply`,
+        null,
 
-      {
-        responseType: "json",
-        headers: {
-          // 로그인 후 받아오는 인증토큰값
-          Authorization: window.localStorage.getItem("Authorization"),
+        {
+          responseType: "json",
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
 
-          AuthorizationRefresh: window.localStorage.getItem(
-            "AuthorizationRefresh"
-          ),
-        },
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
 
-        params,
-      }
-    );
-    fetchComment();
-    setComment("");
-    setComment_count(comment_count + 1);
+          params,
+        }
+      );
+      fetchComment();
+      setComment("");
+      setComment_count(comment_count + 1);
+    }
   };
 
   const onEditComment = (id, newContent) => {
@@ -113,22 +115,24 @@ const PostInfoComment = () => {
   };
 
   const onDeleteComment = async (id) => {
-    await axios.delete(
-      `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+    if (window.confirm("댓글을 삭제하시겠습니까?")) {
+      await axios.delete(
+        `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
 
-      {
-        headers: {
-          // 로그인 후 받아오는 인증토큰값
-          Authorization: window.localStorage.getItem("Authorization"),
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
 
-          AuthorizationRefresh: window.localStorage.getItem(
-            "AuthorizationRefresh"
-          ),
-        },
-      }
-    );
-    setNewComment(newComment.filter((item) => item.replyId !== id));
-    setComment_count(comment_count - 1);
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      );
+      setNewComment(newComment.filter((item) => item.replyId !== id));
+      setComment_count(comment_count - 1);
+    }
   };
 
   const onReplySubmit = async (reply, id) => {

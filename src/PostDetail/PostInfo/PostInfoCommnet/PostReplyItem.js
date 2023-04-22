@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { userInfo } from "../../../common/atoms";
+import { useRecoilValue } from "recoil";
 
 const ReplyUserName = styled.li`
   font-family: "Inter";
@@ -50,42 +52,61 @@ const ReplyEditInput = styled.textarea`
 const PostReplyItem = ({ item, onDeleteReply, onEditReply }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [curContent, setCurContent] = useState(item.content);
+  const info = useRecoilValue(userInfo);
 
   const editReplyHandelr = (id, curContent) => {
-    onEditReply(id, curContent);
-    setIsEdit(!isEdit);
+    if (curContent.length === 0) {
+      alert("수정할 내용을 입력해주세요!");
+      return setCurContent(item.content);
+    } else {
+      onEditReply(id, curContent);
+      setIsEdit(!isEdit);
+    }
   };
   return (
     <div>
       <ReplyUserName>{item.author}</ReplyUserName>
       <ReplyTime> {item.createDate}</ReplyTime>
-      {isEdit ? (
+      {info.userId === item.userId ? (
         <>
-          <ReplyEditBtn
-            onClick={() => editReplyHandelr(item.replyId, curContent)}
-          >
-            수정완료
-          </ReplyEditBtn>
-          <ReplyEditBtn onClick={() => setIsEdit(!isEdit)}>취소</ReplyEditBtn>
+          {" "}
+          {isEdit ? (
+            <>
+              <ReplyEditBtn
+                onClick={() => editReplyHandelr(item.replyId, curContent)}
+              >
+                수정완료
+              </ReplyEditBtn>
+              <ReplyEditBtn onClick={() => setIsEdit(!isEdit)}>
+                취소
+              </ReplyEditBtn>
+            </>
+          ) : (
+            <>
+              <ReplyEditBtn onClick={() => setIsEdit(!isEdit)}>
+                수정
+              </ReplyEditBtn>
+              <ReplyEditBtn onClick={() => onDeleteReply(item.replyId)}>
+                삭제
+              </ReplyEditBtn>
+            </>
+          )}
+          {!isEdit ? (
+            <ReplyContent> {item.content} </ReplyContent>
+          ) : (
+            <ReplyContent>
+              <ReplyEditInput
+                value={curContent}
+                onChange={(e) => setCurContent(e.target.value)}
+              />
+            </ReplyContent>
+          )}
         </>
       ) : (
         <>
-          <ReplyEditBtn onClick={() => setIsEdit(!isEdit)}>수정</ReplyEditBtn>
-          <ReplyEditBtn onClick={() => onDeleteReply(item.replyId)}>
-            삭제
-          </ReplyEditBtn>
+          {" "}
+          <ReplyContent> {item.content} </ReplyContent>{" "}
         </>
-      )}
-
-      {!isEdit ? (
-        <ReplyContent> {item.content} </ReplyContent>
-      ) : (
-        <ReplyContent>
-          <ReplyEditInput
-            value={curContent}
-            onChange={(e) => setCurContent(e.target.value)}
-          />
-        </ReplyContent>
       )}
     </div>
   );

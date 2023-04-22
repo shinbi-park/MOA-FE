@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import PostComponent from "../../component/PostComponent";
 
@@ -32,11 +32,35 @@ const HomeTabComponent = ({
   type,
   onClickCategory,
   onClickTag,
-  searchData
+  searchData,
 }) => {
   const [postData, setPostData] = useState([]);
   const [comment, setComment] = useState(null);
-  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(6);
+  const [target, setTarget] = useState("");
+
+  const checkIntersect = useCallback(
+    ([entry], observer) => {
+      if (entry.isIntersecting) {
+        setCount((value) => {
+          if (postData.length >= value + 1) return value + 3;
+          else return value;
+        });
+      }
+    },
+    [postData.length]
+  );
+
+  console.log(count);
+
+  useEffect(() => {
+    let observer;
+    if (target) {
+      observer = new IntersectionObserver(checkIntersect, Option);
+      observer.observe(target);
+    }
+    return () => observer && observer.disconnect();
+  }, [target, checkIntersect]);
 
   useEffect(() => {
     if (searchData) {
@@ -61,7 +85,7 @@ const HomeTabComponent = ({
               새로운 글을 등록해보세요!
             </p>
           );
-          url = `/recruitment/search/slice?page=${page}&size=12&sort=createdDate,desc`;
+          url = `/recruitment/search/slice?size=100&sort=createdDate,desc`;
           break;
         case "recruiting":
           setComment(
@@ -73,15 +97,13 @@ const HomeTabComponent = ({
               </p>
             </>
           );
-          url = `/recruitment/search/page?page=${page}&size=12&stateCode=1`;
+          url = `/recruitment/search/page?&size=100&stateCode=1`;
           break;
         case "recommend":
-          setComment(
-            <p>추천 글은 관심 태그 등록 후 이용할 수 있습니다!</p>
-          );
+          setComment(<p>추천 글은 관심 태그 등록 후 이용할 수 있습니다!</p>);
           headers = {
             Authorization: localStorage.getItem("Authorization"),
-            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
           };
           url = "/home/recruitment/recommend";
           break;
@@ -97,7 +119,7 @@ const HomeTabComponent = ({
         default:
           break;
       }
-    
+
       axios
         .get("http://13.125.111.131:8080" + url, { headers })
         .then((response) => {
@@ -108,14 +130,13 @@ const HomeTabComponent = ({
           console.log(error);
         });
     }
-    
-  }, [type, page, searchData]);
+  }, [type, searchData, count]);
 
   return (
     <>
       {postData.length > 0 ? (
         <PostContainerWrapper>
-          {postData.map((post, index) => (
+          {postData.slice(0, count).map((post, index) => (
             <PostComponent
               key={index}
               type="main"
@@ -131,6 +152,7 @@ const HomeTabComponent = ({
               onClickTag={onClickTag}
             />
           ))}
+          <div ref={setTarget}></div>
         </PostContainerWrapper>
       ) : (
         <EmptyContent>{comment}</EmptyContent>

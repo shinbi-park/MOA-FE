@@ -3,6 +3,8 @@ import styled from "styled-components";
 import MemberListItem from "./MemberListItem";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { userActivity } from "../../../common/atoms";
 
 const MemberListDiv = styled.div`
   margin-bottom: 70px;
@@ -32,7 +34,7 @@ const MemberItemDiv = styled.div`
 
 const MemberList = () => {
   const { postId } = useParams();
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useRecoilState(userActivity);
   const fetchMember = async () => {
     await axios
       .get(
@@ -50,6 +52,7 @@ const MemberList = () => {
       )
       .then((response) => {
         setMembers(response.data);
+        console.log(response.data);
       });
   };
 

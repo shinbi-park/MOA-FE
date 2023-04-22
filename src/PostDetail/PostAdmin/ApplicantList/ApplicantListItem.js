@@ -61,6 +61,30 @@ const ApplicantListItem = ({ item }) => {
     );
   };
 
+  const fetchRefuse = async (e) => {
+    const params = {
+      statusCode: 3,
+    };
+    e.preventDefault();
+    await axios
+      .post(
+        `http://13.125.111.131:8080/recruitment/${postId}/apply/${item.applyId}`,
+        null,
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+          params,
+        }
+      )
+      .then((response) => console.log(response));
+  };
+
   return (
     <>
       <ApplicantItemDiv>
@@ -71,10 +95,10 @@ const ApplicantListItem = ({ item }) => {
           </ApplicantBtn>
 
           <ApplicantBtn onClick={fetchApproved}>수락</ApplicantBtn>
-          <ApplicantBtn>거부</ApplicantBtn>
+          <ApplicantBtn onClick={fetchRefuse}>거부</ApplicantBtn>
         </ApplicantBtnDiv>
       </ApplicantItemDiv>
-      {openInfo && <InfoDetail handlecloseInfo={handlecloseInfo} />}
+      {openInfo && <InfoDetail handlecloseInfo={handlecloseInfo} item={item} />}
     </>
   );
 };
