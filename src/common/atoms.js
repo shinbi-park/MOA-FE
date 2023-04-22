@@ -50,3 +50,8 @@ export const userInfo = atom({
   key: "userInfo",
   default: {},
 });
+
+export const userActivity = atom({
+  key: "userActivity",
+  default: [],
+});

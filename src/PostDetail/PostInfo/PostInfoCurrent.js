@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CurrentPosition from "./CurrentPosition";
-import { useRecoilValue } from "recoil";
-import { myPostData } from "../../common/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { myPostData, userActivity } from "../../common/atoms";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -23,7 +23,7 @@ const HrLine = styled.hr`
 const PostInfoCurrent = () => {
   const data = useRecoilValue(myPostData);
   const [author, setAuthor] = useState(data.postUser);
-  const [userInfo, setUserInfo] = useState([]);
+  const [activity, setActivity] = useRecoilState(userActivity);
 
   const { postId } = useParams();
 
@@ -49,10 +49,12 @@ const PostInfoCurrent = () => {
           },
         }
       )
-      .then((response) => setUserInfo(response.data.etcProjects));
+      .then((response) => {
+        setActivity(response.data.etcProjects);
+      });
   };
 
-  const userInfoArr = userInfo.find(
+  const userInfoArr = activity.find(
     (item) => parseInt(item.recruitmentId) === parseInt(postId)
   );
 

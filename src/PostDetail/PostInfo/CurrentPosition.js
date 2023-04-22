@@ -70,7 +70,7 @@ const CurrentPosition = ({ item, index, userInfoArr, fetchList, author }) => {
 
   useEffect(() => {
     fetchList();
-  }, [fetchList]);
+  }, []);
 
   const fetchApply = async () => {
     const params = {
