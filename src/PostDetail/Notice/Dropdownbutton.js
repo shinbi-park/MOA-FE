@@ -5,6 +5,7 @@ const DropdownDiv = styled.div`
   position: relative;
   width: 120px;
   height: 130px;
+
   background-color: #efefef;
   border: 1px solid #d9d9d9;
   margin: 0 auto;
@@ -47,6 +48,7 @@ const Dropdownbutton = ({
   onNoticeDelete,
   isEditSetting,
   voteFinishHandler,
+  author,
 }) => {
   const [dropOpen, setDropOpen] = useState(false);
   const [editHover, setEditHover] = useState(false);
@@ -76,61 +78,120 @@ const Dropdownbutton = ({
   };
   return (
     <div ref={dropRef}>
-      <button onClick={() => setDropOpen(!dropOpen)}>=</button>
-      {dropOpen &&
-        (newnotice.checkVote ? (
-          <>
-            <DropdownDiv>
-              <DropDownList onClick={isEditDeliver}>수정</DropDownList>
-              <DropDownList
-                onMouseOver={() => setEditHover(true)}
-                onMouseLeave={() => setEditHover(false)}
-              >
-                참여도 수정▶
-              </DropDownList>
+      {author || newnotice.checkVote ? (
+        <button onClick={() => setDropOpen(!dropOpen)}>=</button>
+      ) : (
+        ""
+      )}
 
-              <DropDownList onClick={() => VotingToggle(newnotice.noticeId)}>
-                투표마감
-              </DropDownList>
-              <DropDownList onClick={() => onNoticeDelete(newnotice.noticeId)}>
-                삭제
-              </DropDownList>
-            </DropdownDiv>
-            {editHover ? (
-              <EditParticipantDiv
-                onMouseOver={() => setEditHover(true)}
-                onMouseLeave={() => setEditHover(false)}
-              >
-                <AttendanceDiv>
-                  참여
-                  {newnotice.members?.ATTENDANCE.map((item, index) => (
-                    <ul key={index}>
-                      <ParticipantList>{item}</ParticipantList>
-                    </ul>
-                  ))}
-                </AttendanceDiv>
+      {author ? (
+        <>
+          {dropOpen &&
+            (newnotice.checkVote ? (
+              <>
+                <DropdownDiv>
+                  <DropDownList onClick={isEditDeliver}>수정</DropDownList>
+                  <DropDownList
+                    onMouseOver={() => setEditHover(true)}
+                    onMouseLeave={() => setEditHover(false)}
+                  >
+                    참여도 수정▶
+                  </DropDownList>
 
-                <div>
-                  불참여
-                  {newnotice.members?.NONATTENDANCE.map((item, index) => (
-                    <ul key={index}>
-                      <ParticipantList>{item}</ParticipantList>
-                    </ul>
-                  ))}
-                </div>
-              </EditParticipantDiv>
+                  <DropDownList
+                    onClick={() => VotingToggle(newnotice.noticeId)}
+                  >
+                    투표마감
+                  </DropDownList>
+                  <DropDownList
+                    onClick={() => onNoticeDelete(newnotice.noticeId)}
+                  >
+                    삭제
+                  </DropDownList>
+                </DropdownDiv>
+                {editHover ? (
+                  <EditParticipantDiv
+                    onMouseOver={() => setEditHover(true)}
+                    onMouseLeave={() => setEditHover(false)}
+                  >
+                    <AttendanceDiv>
+                      참여
+                      {newnotice.members?.ATTENDANCE.map((item, index) => (
+                        <ul key={index}>
+                          <ParticipantList>{item}</ParticipantList>
+                        </ul>
+                      ))}
+                    </AttendanceDiv>
+
+                    <div>
+                      불참여
+                      {newnotice.members?.NONATTENDANCE.map((item, index) => (
+                        <ul key={index}>
+                          <ParticipantList>{item}</ParticipantList>
+                        </ul>
+                      ))}
+                    </div>
+                  </EditParticipantDiv>
+                ) : (
+                  ""
+                )}
+              </>
+            ) : (
+              <DropdownDiv className="simple_active">
+                <DropDownList onClick={isEditDeliver}>수정</DropDownList>
+                <DropDownList
+                  onClick={() => onNoticeDelete(newnotice.noticeId)}
+                >
+                  삭제
+                </DropDownList>
+              </DropdownDiv>
+            ))}
+        </>
+      ) : (
+        <>
+          {dropOpen &&
+            (newnotice.checkVote ? (
+              <>
+                <DropdownDiv>
+                  <DropDownList
+                    onMouseOver={() => setEditHover(true)}
+                    onMouseLeave={() => setEditHover(false)}
+                  >
+                    참여 현황 ▶
+                  </DropDownList>
+                </DropdownDiv>
+                {editHover ? (
+                  <EditParticipantDiv
+                    onMouseOver={() => setEditHover(true)}
+                    onMouseLeave={() => setEditHover(false)}
+                  >
+                    <AttendanceDiv>
+                      참여
+                      {newnotice.members?.ATTENDANCE.map((item, index) => (
+                        <ul key={index}>
+                          <ParticipantList>{item}</ParticipantList>
+                        </ul>
+                      ))}
+                    </AttendanceDiv>
+
+                    <div>
+                      불참여
+                      {newnotice.members?.NONATTENDANCE.map((item, index) => (
+                        <ul key={index}>
+                          <ParticipantList>{item}</ParticipantList>
+                        </ul>
+                      ))}
+                    </div>
+                  </EditParticipantDiv>
+                ) : (
+                  ""
+                )}
+              </>
             ) : (
               ""
-            )}
-          </>
-        ) : (
-          <DropdownDiv className="simple_active">
-            <DropDownList onClick={isEditDeliver}>수정</DropDownList>
-            <DropDownList onClick={() => onNoticeDelete(newnotice.noticeId)}>
-              삭제
-            </DropDownList>
-          </DropdownDiv>
-        ))}
+            ))}
+        </>
+      )}
     </div>
   );
 };

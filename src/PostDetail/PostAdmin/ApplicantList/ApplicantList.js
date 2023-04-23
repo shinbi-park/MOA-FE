@@ -54,11 +54,15 @@ const ApplicantList = () => {
   const [toggle, setToggle] = useState(false);
   const { postId } = useParams();
   const [applyMember, setApplyMember] = useState([]);
+  useEffect(() => {
+    fetchApplicant();
+  }, []);
 
   const fetchApplicant = async () => {
     const params = {
       statusCode: 1,
     };
+
     await axios
       .get(`http://13.125.111.131:8080/recruitment/${postId}/apply/members`, {
         headers: {
@@ -77,9 +81,54 @@ const ApplicantList = () => {
       });
   };
 
-  useEffect(() => {
-    fetchApplicant();
-  }, []);
+  const fetchApproved = async (applyId) => {
+    const params = {
+      statusCode: 2,
+    };
+    if (window.confirm("지원요청을 수락하시겠습니까?")) {
+      await axios.post(
+        `http://13.125.111.131:8080/recruitment/${postId}/apply/${applyId}`,
+        null,
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+          params,
+        }
+      );
+      fetchApplicant();
+    }
+  };
+
+  const fetchRefuse = async (applyId) => {
+    const params = {
+      statusCode: 3,
+    };
+    if (window.confirm("지원요청을 거부하시겠습니까?")) {
+      await axios.post(
+        `http://13.125.111.131:8080/recruitment/${postId}/apply/${applyId}`,
+        null,
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+          params,
+        }
+      );
+      fetchApplicant();
+    }
+  };
+
   return (
     <ApplicantListDiv>
       <h1>지원자 현황</h1>
@@ -92,27 +141,21 @@ const ApplicantList = () => {
                 {applyMember.map((item, index) => (
                   <React.Fragment key={index}>
                     {item.recruitField}
+
+                    <ApplycantItemDiv>
+                      <ApplicantListItem
+                        item={item}
+                        fetchApproved={fetchApproved}
+                        fetchRefuse={fetchRefuse}
+                      />
+                    </ApplycantItemDiv>
                   </React.Fragment>
                 ))}
               </ApplycantPosition>
-              <ApplycantItemDiv>
-                {applyMember.map((item, index) => (
-                  <React.Fragment key={index}>
-                    <ApplicantListItem item={item} />
-                  </React.Fragment>
-                ))}
-              </ApplycantItemDiv>{" "}
             </AppliCantWrap>
           ) : (
             <ApplicantNull>현재 지원자가 없습니다</ApplicantNull>
           )}
-
-          {/* <AppliCantWrap>
-              <ApplycantPosition>Position 2</ApplycantPosition>
-              <ApplycantItemDiv>
-                <ApplicantListItem userName={"user1"} />
-              </ApplycantItemDiv>
-            </AppliCantWrap> */}
         </ApplicantDiv>
       </ApplicantListBox>
     </ApplicantListDiv>

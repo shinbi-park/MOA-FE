@@ -1,9 +1,8 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import InfoDetail from "../../UserInfo/InfoDetail";
 import { useState } from "react";
-import axios from "axios";
 
 const ApplicantItemDiv = styled.div`
   display: flex;
@@ -32,57 +31,19 @@ const ApplicantBtn = styled.button`
   font-weight: 600;
 `;
 
-const ApplicantListItem = ({ item }) => {
+const ApplicantListItem = ({ item, fetchApproved, fetchRefuse }) => {
   const [openInfo, setOpenInfo] = useState(false);
   const handlecloseInfo = () => {
     setOpenInfo(false);
   };
   const { postId } = useParams();
 
-  const fetchApproved = async (e) => {
-    const params = {
-      statusCode: 2,
-    };
-    e.preventDefault();
-    await axios.post(
-      `http://13.125.111.131:8080/recruitment/${postId}/apply/${item.applyId}`,
-      null,
-      {
-        headers: {
-          // 로그인 후 받아오는 인증토큰값
-          Authorization: window.localStorage.getItem("Authorization"),
-
-          AuthorizationRefresh: window.localStorage.getItem(
-            "AuthorizationRefresh"
-          ),
-        },
-        params,
-      }
-    );
+  const apporvedHandler = (applyId) => {
+    fetchApproved(applyId);
   };
 
-  const fetchRefuse = async (e) => {
-    const params = {
-      statusCode: 3,
-    };
-    e.preventDefault();
-    await axios
-      .post(
-        `http://13.125.111.131:8080/recruitment/${postId}/apply/${item.applyId}`,
-        null,
-        {
-          headers: {
-            // 로그인 후 받아오는 인증토큰값
-            Authorization: window.localStorage.getItem("Authorization"),
-
-            AuthorizationRefresh: window.localStorage.getItem(
-              "AuthorizationRefresh"
-            ),
-          },
-          params,
-        }
-      )
-      .then((response) => console.log(response));
+  const refuseHandler = (applyId) => {
+    fetchRefuse(applyId);
   };
 
   return (
@@ -94,11 +55,22 @@ const ApplicantListItem = ({ item }) => {
             정보보기
           </ApplicantBtn>
 
-          <ApplicantBtn onClick={fetchApproved}>수락</ApplicantBtn>
-          <ApplicantBtn onClick={fetchRefuse}>거부</ApplicantBtn>
+          <ApplicantBtn onClick={() => apporvedHandler(item.applyId)}>
+            수락
+          </ApplicantBtn>
+          <ApplicantBtn onClick={() => refuseHandler(item.applyId)}>
+            거부
+          </ApplicantBtn>
         </ApplicantBtnDiv>
       </ApplicantItemDiv>
-      {openInfo && <InfoDetail handlecloseInfo={handlecloseInfo} item={item} />}
+      {openInfo && (
+        <InfoDetail
+          handlecloseInfo={handlecloseInfo}
+          item={item}
+          apporvedHandler={apporvedHandler}
+          refuseHandler={refuseHandler}
+        />
+      )}
     </>
   );
 };

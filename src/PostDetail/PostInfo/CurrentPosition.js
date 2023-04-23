@@ -63,43 +63,14 @@ const PartApply = styled.button`
   }
 `;
 
-const CurrentPosition = ({ item, index, userInfoArr, fetchList, author }) => {
+const CurrentPosition = ({ item, index, userInfoArr, author, fetchApply }) => {
   const [applyToggle, setApplyToggle] = useState(false);
   const info = useRecoilValue(userInfo);
   const { postId } = useParams();
 
-  useEffect(() => {
-    fetchList();
-  }, []);
-
-  const fetchApply = async () => {
-    const params = {
-      position: item.recruitField,
-    };
-    if (!applyToggle) {
-      await axios
-        .post(
-          `http://13.125.111.131:8080/recruitment/${postId}/apply`,
-          null,
-
-          {
-            responseType: "json",
-            headers: {
-              Authorization: window.localStorage.getItem("Authorization"),
-
-              AuthorizationRefresh: window.localStorage.getItem(
-                "AuthorizationRefresh"
-              ),
-            },
-
-            params,
-          }
-        )
-        .then((response) => {
-          console.log(response.data);
-        });
-    } else {
-    }
+  const applyHandler = (recruitField) => {
+    setApplyToggle(!applyToggle);
+    fetchApply(recruitField, applyToggle);
   };
 
   return (
@@ -141,8 +112,7 @@ const CurrentPosition = ({ item, index, userInfoArr, fetchList, author }) => {
               </PartSectionCount>
               <PartApply
                 onClick={() => {
-                  setApplyToggle(!applyToggle);
-                  fetchApply();
+                  applyHandler(item.recruitField);
                 }}
                 className={
                   applyToggle

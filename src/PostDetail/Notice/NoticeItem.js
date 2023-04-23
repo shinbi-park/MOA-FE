@@ -84,6 +84,7 @@ const NoticeItem = ({
   onNoticeDelete,
   onEditNotice,
   onVoteFinish,
+  author,
 }) => {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [isEdit, setIsEdit] = useState(false);
@@ -132,6 +133,11 @@ const NoticeItem = ({
   };
 
   const editNoticeHandler = (id, newContent) => {
+    if (newContent.length === 0) {
+      alert("수정할 내용을 입력해주세요!");
+      setCurContent(newnotice.content);
+      return;
+    }
     onEditNotice(id, newContent);
     setIsEdit(!isEdit);
   };
@@ -142,56 +148,108 @@ const NoticeItem = ({
   };
 
   return (
-    <NoticeListWrap className={!isVote ? "vote_done" : ""}>
-      <NoticeListHeader>
-        <div>
-          <NoticeListDate className={!isVote ? "vote_done" : ""}>
-            {date}
-            {!isVote && <span>추천 지역: 서울역??</span>}
-          </NoticeListDate>
-        </div>
-        <NoticeDropdownDiv>
-          <Dropdownbutton
-            newnotice={newnotice}
-            onNoticeDelete={onNoticeDelete}
-            isEditSetting={isEditSetting}
-            voteFinishHandler={voteFinishHandler}
-          />
-        </NoticeDropdownDiv>
-      </NoticeListHeader>
-
-      {!isEdit ? (
+    <>
+      {author ? (
         <>
-          <NoticeListContent>{newnotice.content}</NoticeListContent>
+          <NoticeListWrap className={!isVote ? "vote_done" : ""}>
+            <NoticeListHeader>
+              <div>
+                <NoticeListDate className={!isVote ? "vote_done" : ""}>
+                  {date}
+                  {!isVote && <span>추천 지역: 서울역??</span>}
+                </NoticeListDate>
+              </div>
+              <NoticeDropdownDiv>
+                <Dropdownbutton
+                  author={true}
+                  newnotice={newnotice}
+                  onNoticeDelete={onNoticeDelete}
+                  isEditSetting={isEditSetting}
+                  voteFinishHandler={voteFinishHandler}
+                />
+              </NoticeDropdownDiv>
+            </NoticeListHeader>
+
+            {!isEdit ? (
+              <>
+                <NoticeListContent>{newnotice.content}</NoticeListContent>
+              </>
+            ) : (
+              <NoticeListContent>
+                <NoticeEditInput
+                  value={curContent}
+                  onChange={(e) => setCurContent(e.target.value)}
+                />
+                <button
+                  onClick={() =>
+                    editNoticeHandler(newnotice.noticeId, curContent)
+                  }
+                >
+                  수정완료
+                </button>
+                <button onClick={() => setIsEdit(!isEdit)}>취소</button>
+              </NoticeListContent>
+            )}
+
+            {newnotice.checkVote && !isEdit && (
+              <VotingBtnDiv>
+                <VotingPositive onClick={AttendanceHandler}>
+                  참여 <ImCheckmark />
+                </VotingPositive>
+                <VotingNegative onClick={NoAttendanceHandler}>
+                  불참여 <ImCross />
+                </VotingNegative>
+              </VotingBtnDiv>
+            )}
+
+            {!isVote && (
+              <VoteFinishNotice>투표가 마감되었습니다</VoteFinishNotice>
+            )}
+          </NoticeListWrap>
         </>
       ) : (
-        <NoticeListContent>
-          <NoticeEditInput
-            value={curContent}
-            onChange={(e) => setCurContent(e.target.value)}
-          />
-          <button
-            onClick={() => editNoticeHandler(newnotice.noticeId, curContent)}
-          >
-            수정완료
-          </button>
-          <button onClick={() => setIsEdit(!isEdit)}>취소</button>
-        </NoticeListContent>
-      )}
+        <>
+          <NoticeListWrap className={!isVote ? "vote_done" : ""}>
+            <NoticeListHeader>
+              <div>
+                <NoticeListDate className={!isVote ? "vote_done" : ""}>
+                  {date}
+                  {!isVote && <span>추천 지역: 서울역??</span>}
+                </NoticeListDate>
+              </div>
+              <NoticeDropdownDiv>
+                <Dropdownbutton
+                  author={false}
+                  newnotice={newnotice}
+                  onNoticeDelete={onNoticeDelete}
+                  isEditSetting={isEditSetting}
+                  voteFinishHandler={voteFinishHandler}
+                />
+              </NoticeDropdownDiv>
+            </NoticeListHeader>
 
-      {newnotice.checkVote && !isEdit && (
-        <VotingBtnDiv>
-          <VotingPositive onClick={AttendanceHandler}>
-            참여 <ImCheckmark />
-          </VotingPositive>
-          <VotingNegative onClick={NoAttendanceHandler}>
-            불참여 <ImCross />
-          </VotingNegative>
-        </VotingBtnDiv>
-      )}
+            <>
+              <NoticeListContent>{newnotice.content}</NoticeListContent>
+            </>
 
-      {!isVote && <VoteFinishNotice>투표가 마감되었습니다</VoteFinishNotice>}
-    </NoticeListWrap>
+            {newnotice.checkVote && (
+              <VotingBtnDiv>
+                <VotingPositive onClick={AttendanceHandler}>
+                  참여 <ImCheckmark />
+                </VotingPositive>
+                <VotingNegative onClick={NoAttendanceHandler}>
+                  불참여 <ImCross />
+                </VotingNegative>
+              </VotingBtnDiv>
+            )}
+
+            {!isVote && (
+              <VoteFinishNotice>투표가 마감되었습니다</VoteFinishNotice>
+            )}
+          </NoticeListWrap>
+        </>
+      )}
+    </>
   );
 };
 
