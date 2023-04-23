@@ -3,6 +3,8 @@ import styled from "styled-components";
 import NoticeItem from "./NoticeItem";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { myPostData, userInfo } from "../../common/atoms";
 
 const NoticeWrap = styled.div`
   width: 1025px;
@@ -46,9 +48,11 @@ const NoticeAddBtn = styled.button`
 const AddNotice = () => {
   const [notice, setNotice] = useState("");
   const { postId } = useParams();
-
   const [newNotice, setNewNotice] = useState([]);
   const [isChecked, setisChecked] = useState(false);
+  const info = useRecoilValue(userInfo);
+  const data = useRecoilValue(myPostData);
+  const [user, setUser] = useState(data.postUser);
 
   const fetchNotice = async () => {
     const response = await axios
@@ -73,6 +77,11 @@ const AddNotice = () => {
 
   const onSubmitNotice = async (e) => {
     e.preventDefault();
+    if (notice.length === 0) {
+      alert("공지사항 내용을 입력해주세요!");
+      return;
+    }
+
     await axios.post(
       `http://13.125.111.131:8080/recruitment/${postId}/notice`,
       {
@@ -152,41 +161,62 @@ const AddNotice = () => {
 
   return (
     <div>
-      <h1>공지사항 추가</h1>
-      <div>
-        <form>
-          <NoticeWrap>
-            <NoticeInput
-              placeholder="공지사항을 입력하세요"
-              value={notice}
-              onChange={(e) => setNotice(e.target.value)}
-            />
-            <VotingCheckDiv>
-              <label>
-                투표기능 포함
-                <input
-                  type="checkbox"
-                  checked={isChecked}
-                  onChange={(e) => setisChecked(e.target.checked)}
+      {user.userId === info.userId ? (
+        <>
+          <h1>공지사항 추가</h1>
+          <div>
+            <form>
+              <NoticeWrap>
+                <NoticeInput
+                  placeholder="공지사항을 입력하세요"
+                  value={notice}
+                  onChange={(e) => setNotice(e.target.value)}
                 />
-              </label>
-            </VotingCheckDiv>
-          </NoticeWrap>
-          <NoticeAddBtnDiv>
-            <NoticeAddBtn onClick={onSubmitNotice}> 등록하기</NoticeAddBtn>
-          </NoticeAddBtnDiv>
-        </form>
-      </div>
-      {newNotice.map((newnotice) => (
-        <div key={newnotice.noticeId}>
-          <NoticeItem
-            newnotice={newnotice}
-            onNoticeDelete={onNoticeDelete}
-            onEditNotice={onEditNotice}
-            onVoteFinish={onVoteFinish}
-          />
-        </div>
-      ))}
+                <VotingCheckDiv>
+                  <label>
+                    투표기능 포함
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={(e) => setisChecked(e.target.checked)}
+                    />
+                  </label>
+                </VotingCheckDiv>
+              </NoticeWrap>
+              <NoticeAddBtnDiv>
+                <NoticeAddBtn onClick={onSubmitNotice}> 등록하기</NoticeAddBtn>
+              </NoticeAddBtnDiv>
+            </form>
+          </div>
+          {newNotice.map((newnotice) => (
+            <div key={newnotice.noticeId}>
+              <NoticeItem
+                author={true}
+                newnotice={newnotice}
+                onNoticeDelete={onNoticeDelete}
+                onEditNotice={onEditNotice}
+                onVoteFinish={onVoteFinish}
+              />
+            </div>
+          ))}
+        </>
+      ) : (
+        <>
+          <h1>공지사항</h1>
+
+          {newNotice.map((newnotice) => (
+            <div key={newnotice.noticeId}>
+              <NoticeItem
+                author={false}
+                newnotice={newnotice}
+                onNoticeDelete={onNoticeDelete}
+                onEditNotice={onEditNotice}
+                onVoteFinish={onVoteFinish}
+              />
+            </div>
+          ))}
+        </>
+      )}
     </div>
   );
 };

@@ -79,7 +79,7 @@ const ProjectItem = React.memo(({ title, link, color, className }) => (
     <Button
       style={{
         color: className === "past" ? color : "black",
-        borderColor: className === "past" ? color : "black"
+        borderColor: className === "past" ? color : "black",
       }}
       onClick={() => {
         window.location.href = link;
@@ -106,15 +106,13 @@ const ProjectList = React.memo(({ projects, color, className }) => (
 
 const CancelApply = (e) => {
   e.preventDefault();
-  const result = window.confirm(
-    "지원을 취소하겠습니까?"
-  );
+  const result = window.confirm("지원을 취소하겠습니까?");
   if (result) {
     fetch(`/`, {
       method: "",
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     }).then((response) =>
       response === 200
         ? alert("지원이 취소되었습니다!")
@@ -130,7 +128,7 @@ const ApplyItem = React.memo(
       <span
         style={{
           color:
-            status === "수락" ? "green" : status === "거절" ? "red" : "black"
+            status === "수락" ? "green" : status === "거절" ? "red" : "black",
         }}
       >
         {status}
@@ -180,17 +178,17 @@ const MyActivity = () => {
       headers: {
         Authorization: localStorage.getItem("Authorization"),
         AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
-      }
+      },
     })
-    .then((response) => {
-      if (response.status !== 200) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      setUserActivity(data);
-    })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setUserActivity(data);
+      })
       .catch((error) => {
         console.error("Error:", error);
       });
@@ -202,34 +200,30 @@ const MyActivity = () => {
 
   return (
     <Wrapper>
-        <h3>현재 참여중인 프로젝트</h3>
-        {currentProject?.length > 0 ? (
-          <ProjectList
-            color="#5d5fef"
-            projects={currentProject}
-            className="current"
-          />
-        ) : (
-          <EmptyProject> 현재 참여중인 프로젝트가 없습니다 </EmptyProject>
-        )}
+      <h3>현재 참여중인 프로젝트</h3>
+      {currentProject?.length > 0 ? (
+        <ProjectList
+          color="#5d5fef"
+          projects={currentProject}
+          className="current"
+        />
+      ) : (
+        <EmptyProject> 현재 참여중인 프로젝트가 없습니다 </EmptyProject>
+      )}
 
-        <h3>지원한 프로젝트</h3>
-        {applyProject?.length > 0 ? (
-          <ApplyList projects={applyProject} />
-        ) : (
-          <EmptyProject> 지원한 프로젝트가 없습니다 </EmptyProject>
-        )}
+      <h3>지원한 프로젝트</h3>
+      {applyProject?.length > 0 ? (
+        <ApplyList projects={applyProject} />
+      ) : (
+        <EmptyProject> 지원한 프로젝트가 없습니다 </EmptyProject>
+      )}
 
-        <h3>완료한 프로젝트</h3>
-        {pastProject?.length > 0 ? (
-          <ProjectList
-            color="#707070"
-            projects={pastProject}
-            className="past"
-          />
-        ) : (
-          <EmptyProject> 완료한 프로젝트가 없습니다 </EmptyProject>
-        )}
+      <h3>완료한 프로젝트</h3>
+      {pastProject?.length > 0 ? (
+        <ProjectList color="#707070" projects={pastProject} className="past" />
+      ) : (
+        <EmptyProject> 완료한 프로젝트가 없습니다 </EmptyProject>
+      )}
     </Wrapper>
   );
 };

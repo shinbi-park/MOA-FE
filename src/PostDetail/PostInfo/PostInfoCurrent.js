@@ -58,6 +58,36 @@ const PostInfoCurrent = () => {
     (item) => parseInt(item.recruitmentId) === parseInt(postId)
   );
 
+  const fetchApply = async (id, applyToggle) => {
+    const params = {
+      position: id,
+    };
+    if (!applyToggle) {
+      await axios
+        .post(
+          `http://13.125.111.131:8080/recruitment/${postId}/apply`,
+          null,
+
+          {
+            responseType: "json",
+            headers: {
+              Authorization: window.localStorage.getItem("Authorization"),
+
+              AuthorizationRefresh: window.localStorage.getItem(
+                "AuthorizationRefresh"
+              ),
+            },
+
+            params,
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+        });
+    }
+    fetchList();
+  };
+
   return (
     <div>
       <CurrentPartTitle>모집 현황</CurrentPartTitle>
@@ -69,7 +99,7 @@ const PostInfoCurrent = () => {
             key={index}
             item={item}
             userInfoArr={userInfoArr}
-            fetchList={fetchList}
+            fetchApply={fetchApply}
           />
         );
       })}

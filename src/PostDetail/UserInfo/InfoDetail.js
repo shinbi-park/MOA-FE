@@ -152,7 +152,12 @@ const LinkItem = React.memo(({ link }) => (
   </Container>
 ));
 
-const InfoDetail = ({ handlecloseInfo, item }) => {
+const InfoDetail = ({
+  handlecloseInfo,
+  item,
+  apporvedHandler,
+  refuseHandler,
+}) => {
   const [userInfo, setUserInfo] = useState({});
 
   const [applicant, setApplicant] = useState("");
@@ -234,8 +239,18 @@ const InfoDetail = ({ handlecloseInfo, item }) => {
         <h3>선호지역</h3>
         <Container>{location}</Container>
         <ButtonContaienr>
-          <Button backgroundColor={"#63B730"}>수락하기</Button>
-          <Button backgroundColor={"#FF5E5E"}>거절하기</Button>
+          <Button
+            backgroundColor={"#63B730"}
+            onClick={() => apporvedHandler(item.applyId)}
+          >
+            수락하기
+          </Button>
+          <Button
+            backgroundColor={"#FF5E5E"}
+            onClick={() => refuseHandler(item.applyId)}
+          >
+            거절하기
+          </Button>
         </ButtonContaienr>
       </Wrapper>
     </InfoDetailDiv>

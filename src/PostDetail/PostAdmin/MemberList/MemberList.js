@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import MemberListItem from "./MemberListItem";
 import axios from "axios";
@@ -56,33 +56,70 @@ const MemberList = () => {
       });
   };
 
+  const fetchMemberKick = async (applyId) => {
+    const params = {
+      statusCode: 4,
+    };
+    await axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}/apply/${applyId}`,
+      null,
+      {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+        params,
+      }
+    );
+    fetchMember();
+  };
+
   useEffect(() => {
     fetchMember();
   }, []);
   const memberArr = members.filter((item) => item.recruitField !== "LEADER");
+  const FieldArr = memberArr.reduce((newArr, current) => {
+    if (!newArr.some((item) => item.recruitField === current.recruitField)) {
+      newArr.push(current);
+    }
+    return newArr;
+  }, []);
 
   return (
     <MemberListDiv>
       <h1>멤버 현황</h1>
-      <MemeberDiv>
-        <MemberWrap>
-          {memberArr.map((item) => (
-            <React.Fragment key={item.applyId}>
-              {item.recruitField}
-            </React.Fragment>
-          ))}
-          <MemberItemDiv>
-            <MemberListItem name={"member1"} />
-            <MemberListItem name={"member2"} />
-          </MemberItemDiv>
-        </MemberWrap>
-        <MemberWrap>
-          <h4>Position 2</h4>
-          <MemberItemDiv>
-            <MemberListItem name={"member1"} />
-          </MemberItemDiv>
-        </MemberWrap>
-      </MemeberDiv>
+      {memberArr.length === 0 ? (
+        <MemeberDiv>
+          {" "}
+          <div>현재 멤버가 없습니다</div>
+        </MemeberDiv>
+      ) : (
+        <MemeberDiv>
+          <MemberWrap>
+            {FieldArr.map((item, index) => (
+              <React.Fragment key={index}>
+                <h4>{item.recruitField}</h4>
+                <MemberItemDiv>
+                  {memberArr.map(
+                    (member) =>
+                      item.recruitField === member.recruitField && (
+                        <React.Fragment key={member.applyId}>
+                          <MemberListItem
+                            member={member}
+                            fetchMemberKick={fetchMemberKick}
+                          />
+                        </React.Fragment>
+                      )
+                  )}
+                </MemberItemDiv>
+              </React.Fragment>
+            ))}
+          </MemberWrap>
+        </MemeberDiv>
+      )}
     </MemberListDiv>
   );
 };

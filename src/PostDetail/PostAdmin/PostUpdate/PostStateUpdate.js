@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { titleState } from "../../../common/atoms";
-import { useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
