@@ -54,8 +54,12 @@ const AddNotice = () => {
   const data = useRecoilValue(myPostData);
   const [user, setUser] = useState(data.postUser);
 
+  useEffect(() => {
+    fetchNotice();
+  }, []);
+
   const fetchNotice = async () => {
-    const response = await axios
+    await axios
       .get(`http://13.125.111.131:8080/recruitment/${postId}/notice`, {
         headers: {
           Authorization: window.localStorage.getItem("Authorization"),
@@ -70,10 +74,6 @@ const AddNotice = () => {
         console.log(response.data.notices);
       });
   };
-
-  useEffect(() => {
-    fetchNotice();
-  }, []);
 
   const onSubmitNotice = async (e) => {
     e.preventDefault();
@@ -159,6 +159,42 @@ const AddNotice = () => {
     );
   };
 
+  const fetchAttend = async (noticeId) => {
+    axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}/notice/${noticeId}/vote/ATTENDANCE`,
+      null,
+      {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      }
+    );
+
+    fetchNotice();
+  };
+
+  const fetchNonAttend = async (noticeId) => {
+    axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}/notice/${noticeId}/vote/NONATTENDANCE`,
+      null,
+      {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      }
+    );
+
+    fetchNotice();
+  };
+
   return (
     <div>
       {user.userId === info.userId ? (
@@ -196,6 +232,8 @@ const AddNotice = () => {
                 onNoticeDelete={onNoticeDelete}
                 onEditNotice={onEditNotice}
                 onVoteFinish={onVoteFinish}
+                fetchAttend={fetchAttend}
+                fetchNonAttend={fetchNonAttend}
               />
             </div>
           ))}
@@ -212,6 +250,8 @@ const AddNotice = () => {
                 onNoticeDelete={onNoticeDelete}
                 onEditNotice={onEditNotice}
                 onVoteFinish={onVoteFinish}
+                fetchAttend={fetchAttend}
+                fetchNonAttend={fetchNonAttend}
               />
             </div>
           ))}

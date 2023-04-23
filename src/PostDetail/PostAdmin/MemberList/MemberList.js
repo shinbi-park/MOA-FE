@@ -76,6 +76,22 @@ const MemberList = () => {
     );
     fetchMember();
   };
+  const sendRatingData = async (popularity, applyId) => {
+    await axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}/approved/${applyId}/popularity`,
+      { popularity: popularity },
+      {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      }
+    );
+    fetchMember();
+  };
 
   useEffect(() => {
     fetchMember();
@@ -110,6 +126,7 @@ const MemberList = () => {
                           <MemberListItem
                             member={member}
                             fetchMemberKick={fetchMemberKick}
+                            sendRatingData={sendRatingData}
                           />
                         </React.Fragment>
                       )

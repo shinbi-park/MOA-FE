@@ -84,7 +84,9 @@ const NoticeItem = ({
   onNoticeDelete,
   onEditNotice,
   onVoteFinish,
+  fetchAttend,
   author,
+  fetchNonAttend,
 }) => {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [isEdit, setIsEdit] = useState(false);
@@ -92,40 +94,12 @@ const NoticeItem = ({
   const [curContent, setCurContent] = useState(newnotice.content);
   const { postId } = useParams();
 
-  const AttendanceHandler = () => {
-    axios
-      .post(
-        `http://13.125.111.131:8080/recruitment/${postId}/notice/${newnotice.noticeId}/vote/ATTENDANCE`,
-        null,
-        {
-          headers: {
-            Authorization: window.localStorage.getItem("Authorization"),
-
-            AuthorizationRefresh: window.localStorage.getItem(
-              "AuthorizationRefresh"
-            ),
-          },
-        }
-      )
-      .then((response) => console.log(response.data));
+  const AttendanceHandler = (noticeId) => {
+    fetchAttend(noticeId);
   };
 
-  const NoAttendanceHandler = () => {
-    axios
-      .post(
-        `http://13.125.111.131:8080/recruitment/${postId}/notice/${newnotice.noticeId}/vote/NONATTENDANCE`,
-        null,
-        {
-          headers: {
-            Authorization: window.localStorage.getItem("Authorization"),
-
-            AuthorizationRefresh: window.localStorage.getItem(
-              "AuthorizationRefresh"
-            ),
-          },
-        }
-      )
-      .then((response) => console.log(response.data));
+  const NoAttendanceHandler = (noticeId) => {
+    fetchNonAttend(noticeId);
   };
 
   const isEditSetting = (EditValue) => {
@@ -193,10 +167,14 @@ const NoticeItem = ({
 
             {newnotice.checkVote && !isEdit && (
               <VotingBtnDiv>
-                <VotingPositive onClick={AttendanceHandler}>
+                <VotingPositive
+                  onClick={() => AttendanceHandler(newnotice.noticeId)}
+                >
                   참여 <ImCheckmark />
                 </VotingPositive>
-                <VotingNegative onClick={NoAttendanceHandler}>
+                <VotingNegative
+                  onClick={() => NoAttendanceHandler(newnotice.noticeId)}
+                >
                   불참여 <ImCross />
                 </VotingNegative>
               </VotingBtnDiv>
@@ -234,10 +212,14 @@ const NoticeItem = ({
 
             {newnotice.checkVote && (
               <VotingBtnDiv>
-                <VotingPositive onClick={AttendanceHandler}>
+                <VotingPositive
+                  onClick={() => AttendanceHandler(newnotice.noticeId)}
+                >
                   참여 <ImCheckmark />
                 </VotingPositive>
-                <VotingNegative onClick={NoAttendanceHandler}>
+                <VotingNegative
+                  onClick={() => NoAttendanceHandler(newnotice.noticeId)}
+                >
                   불참여 <ImCross />
                 </VotingNegative>
               </VotingBtnDiv>
