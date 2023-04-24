@@ -94,10 +94,6 @@ const SignInForm = () => {
               "AuthorizationRefresh",
               response.headers.get("AuthorizationRefresh")
             );
-            window.localStorage.setItem(
-              "username",
-              data.userName
-            );
             window.location.href = '/';
           });
         }

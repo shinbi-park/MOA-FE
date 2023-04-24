@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Modal from "../LogIn/Modal";
 import SignInForm from "../LogIn/SignInForm";
+import axios from "axios";
 
 const Nav = styled.nav`
   background-color: white;
@@ -64,8 +65,7 @@ const NavItem = styled.li`
 const Header = () => {
   const [signInModal, setSignInModal] = useState(false);
   const [userLogIn, setUserLogIn] = useState(false);
-  const username = window.localStorage.getItem("username");
-  
+  const [username, setUsername] = useState("");
   useEffect(() => {
     const authorization = window.localStorage.getItem("Authorization");
     const authorizationRefresh = window.localStorage.getItem(
@@ -75,7 +75,18 @@ const Header = () => {
     if (authorization && authorizationRefresh) {
       setUserLogIn(true);
     }
-  }, []);
+
+    axios
+      .get(`http://13.125.111.131:8080/user/info/profile`, {
+        headers: {
+          Authorization: localStorage.getItem("Authorization"),
+          AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+        }
+      })
+      .then((response) => {
+        setUsername(response.data.name);
+      });
+  }, [username]);
 
   const onClickSignout = () => {
     window.localStorage.removeItem("Authorization");
