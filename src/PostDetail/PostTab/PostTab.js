@@ -5,7 +5,12 @@ import Schedule from "../Schedule/Schedule";
 import PostInfo from "../PostInfo/PostInfo";
 import PostAdmin from "../PostAdmin/PostAdmin";
 import { useRecoilValue } from "recoil";
-import { myPostData, userActivity, userInfo } from "../../common/atoms";
+import {
+  FinActivity,
+  myPostData,
+  userActivity,
+  userInfo,
+} from "../../common/atoms";
 import { useParams } from "react-router-dom";
 import { BiLock } from "react-icons/bi";
 
@@ -51,11 +56,16 @@ const PostTab = () => {
   const info = useRecoilValue(userInfo);
   const data = useRecoilValue(myPostData);
   const activity = useRecoilValue(userActivity);
+  const finProject = useRecoilValue(FinActivity);
   const { postId } = useParams();
   const userInfoArr = activity.find(
     (item) => parseInt(item.recruitmentId) === parseInt(postId)
   );
+  const finInfoArr = finProject.find(
+    (item) => parseInt(item.recruitmentId) === parseInt(postId)
+  );
 
+  console.log(userInfoArr);
   const [user, setUser] = useState(data.postUser);
   const tabArr = [
     {
@@ -69,7 +79,8 @@ const PostTab = () => {
     {
       tabTitle: (
         <>
-          {user.userId === info.userId || userInfoArr?.status === "승인" ? (
+          {user.userId === info.userId ||
+          parseInt(userInfoArr?.recruitmentId) === parseInt(postId) ? (
             <div onClick={() => onClickTab(1)}>회의시간 조사</div>
           ) : (
             <div>
@@ -84,7 +95,9 @@ const PostTab = () => {
     {
       tabTitle: (
         <>
-          {user.userId === info.userId || userInfoArr?.status === "승인" ? (
+          {user.userId === info.userId ||
+          parseInt(userInfoArr?.recruitmentId) === parseInt(postId) ||
+          parseInt(finInfoArr?.recruitmentId) === parseInt(postId) ? (
             <div onClick={() => onClickTab(2)}>공지사항</div>
           ) : (
             <div>

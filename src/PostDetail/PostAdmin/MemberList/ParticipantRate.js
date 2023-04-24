@@ -18,13 +18,14 @@ const CurrentRate = styled.div`
 const ParticipantRate = ({ member }) => {
   const [total, setTotal] = useState(member.totalAttend);
   const [attend, setAttend] = useState(member.attend);
-  const rate = attend / total;
+  const rate = parseInt(attend / total);
+
   return (
     <>
       <RateBar>
         <CurrentRate rate={rate}></CurrentRate>
       </RateBar>
-      {rate}%
+      <>{isNaN(rate) ? " 0%" : <>{rate}%</>}</>
     </>
   );
 };

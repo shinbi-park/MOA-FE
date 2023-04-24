@@ -51,8 +51,6 @@ const HomeTabComponent = ({
     [postData.length]
   );
 
-  console.log(count);
-
   useEffect(() => {
     let observer;
     if (target) {
@@ -85,7 +83,7 @@ const HomeTabComponent = ({
               새로운 글을 등록해보세요!
             </p>
           );
-          url = `/recruitment/search/slice?size=100&sort=createdDate,desc`;
+          url = `/recruitment/search/slice?size=200&sort=createdDate,desc`;
           break;
         case "recruiting":
           setComment(
@@ -97,7 +95,7 @@ const HomeTabComponent = ({
               </p>
             </>
           );
-          url = `/recruitment/search/page?&size=100&stateCode=1`;
+          url = `/recruitment/search/page?&size=200&stateCode=1`;
           break;
         case "recommend":
           setComment(<p>추천 글은 관심 태그 등록 후 이용할 수 있습니다!</p>);

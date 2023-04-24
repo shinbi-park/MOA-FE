@@ -42,6 +42,22 @@ const ScheduleTable = () => {
   ]);
 
   useEffect(() => {
+    fetchSchedule();
+  }, []);
+  const fetchSchedule = async () => {
+    await axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}/time/all`, {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => console.log(response.data));
+  };
+  useEffect(() => {
     if (schedule >= 1) {
       const setTime = text.map((item) => item.possibleTimeData);
 
@@ -57,22 +73,24 @@ const ScheduleTable = () => {
     }
   }, [schedule]);
 
-  const fetchSchedule = async (schedule) => {
-    await axios.put(
-      `http://13.125.111.131:8080/recruitment/${postId}/time`,
-      {
-        possibleTimeDataList: schedule,
-      },
-      {
-        headers: {
-          Authorization: window.localStorage.getItem("Authorization"),
-
-          AuthorizationRefresh: window.localStorage.getItem(
-            "AuthorizationRefresh"
-          ),
+  const ScheduleUpdate = async (schedule) => {
+    await axios
+      .put(
+        `http://13.125.111.131:8080/recruitment/${postId}/time`,
+        {
+          possibleTimeDataList: schedule,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then((response) => console.log(response));
   };
 
   const getId = (getTime) => {
@@ -89,7 +107,7 @@ const ScheduleTable = () => {
 
   const scheduleHandler = (newSchedule) => {
     setSchedule(newSchedule);
-    fetchSchedule(newSchedule);
+    ScheduleUpdate(newSchedule);
     console.log(newSchedule);
   };
 

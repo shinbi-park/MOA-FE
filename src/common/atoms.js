@@ -55,3 +55,13 @@ export const userActivity = atom({
   key: "userActivity",
   default: [],
 });
+
+export const FinActivity = atom({
+  key: "FinActivity",
+  default: [],
+});
+
+export const etcActivity = atom({
+  key: "etcActivity",
+  default: [],
+});

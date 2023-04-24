@@ -4,7 +4,7 @@ import MemberListItem from "./MemberListItem";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { userActivity } from "../../../common/atoms";
+import { myPostData, userActivity } from "../../../common/atoms";
 
 const MemberListDiv = styled.div`
   margin-bottom: 70px;
@@ -23,6 +23,18 @@ const MemeberDiv = styled.div`
   gap: 50px 0;
 `;
 
+const MemberNull = styled.div`
+  background-color: #e8e8e8;
+  width: 1000px;
+  margin-top: 30px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+`;
 const MemberWrap = styled.div`
   margin: 0 auto;
   width: 800px;
@@ -35,6 +47,12 @@ const MemberItemDiv = styled.div`
 const MemberList = () => {
   const { postId } = useParams();
   const [members, setMembers] = useRecoilState(userActivity);
+  const [post, setPost] = useRecoilState(myPostData);
+
+  useEffect(() => {
+    fetchMember();
+  }, []);
+
   const fetchMember = async () => {
     await axios
       .get(
@@ -55,15 +73,9 @@ const MemberList = () => {
         console.log(response.data);
       });
   };
-
-  const fetchMemberKick = async (applyId) => {
-    const params = {
-      statusCode: 4,
-    };
-    await axios.post(
-      `http://13.125.111.131:8080/recruitment/${postId}/apply/${applyId}`,
-      null,
-      {
+  const fetchPost = async () => {
+    await axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}`, {
         headers: {
           Authorization: window.localStorage.getItem("Authorization"),
 
@@ -71,11 +83,38 @@ const MemberList = () => {
             "AuthorizationRefresh"
           ),
         },
-        params,
-      }
-    );
-    fetchMember();
+      })
+      .then((response) => {
+        setPost(response.data.recruitInfo);
+
+        console.log(response.data);
+      });
   };
+
+  const fetchMemberKick = async (applyId) => {
+    const params = {
+      statusCode: 4,
+    };
+    if (window.confirm("정말 강퇴처리하시겠습니까?")) {
+      await axios.post(
+        `http://13.125.111.131:8080/recruitment/${postId}/apply/${applyId}`,
+        null,
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+          params,
+        }
+      );
+      fetchMember();
+      fetchPost();
+    }
+  };
+
   const sendRatingData = async (popularity, applyId) => {
     await axios.post(
       `http://13.125.111.131:8080/recruitment/${postId}/approved/${applyId}/popularity`,
@@ -93,9 +132,6 @@ const MemberList = () => {
     fetchMember();
   };
 
-  useEffect(() => {
-    fetchMember();
-  }, []);
   const memberArr = members.filter((item) => item.recruitField !== "LEADER");
   const FieldArr = memberArr.reduce((newArr, current) => {
     if (!newArr.some((item) => item.recruitField === current.recruitField)) {
@@ -109,8 +145,7 @@ const MemberList = () => {
       <h1>멤버 현황</h1>
       {memberArr.length === 0 ? (
         <MemeberDiv>
-          {" "}
-          <div>현재 멤버가 없습니다</div>
+          <MemberNull>현재 멤버가 없습니다</MemberNull>
         </MemeberDiv>
       ) : (
         <MemeberDiv>
