@@ -254,6 +254,7 @@ function Setting() {
         setIsEditing(false);
         setUsernameInput(usernameInput);
         setUserData({ ...userData });
+        window.location.reload();
       } 
       else if(response.status === 400){
         alert("현재 비밀번호를 다시 확인해주세요!")
