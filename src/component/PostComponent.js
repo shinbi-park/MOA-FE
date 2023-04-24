@@ -265,7 +265,9 @@ const PostComponent = ({
               AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
             }
           }
-        )};
+        )
+        .catch(error => (console.log(error)))
+      }
   };
 
   const handleMenuClick = () => {
