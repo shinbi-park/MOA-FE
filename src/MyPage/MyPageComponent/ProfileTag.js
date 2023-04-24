@@ -99,7 +99,8 @@ const ProfileTag = ({ data, handleUserTags }) => {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      intertTag(input.trim());
+      const tag = input.replace(/\s/g, '');
+      intertTag(tag);
       setInput("");
     },
     [input, intertTag]
