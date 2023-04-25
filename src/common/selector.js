@@ -4,6 +4,7 @@ import {
   FinActivity,
   etcActivity,
   myPostData,
+  scheduleTime,
   userActivity,
   userInfo,
 } from "./atoms";
@@ -44,6 +45,14 @@ export const getEtcActivity = selector({
   key: "getEtcActivity",
   get: ({ get }) => {
     const data = get(etcActivity);
+    return data;
+  },
+});
+
+export const getMySchedule = selector({
+  key: "getMySchedule",
+  get: ({ get }) => {
+    const data = get(scheduleTime);
     return data;
   },
 });

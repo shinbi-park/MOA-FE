@@ -36,10 +36,10 @@ export const ScheduleSelect = atom({
   default: { date: "", time: "", value: false },
 });
 
-// export const scheduleTime = atom({
-//   key: "scheduleData",
-//   default: {},
-// });
+export const scheduleTime = atom({
+  key: "scheduleTime",
+  default: [],
+});
 
 export const myPostData = atom({
   key: "myPostData",

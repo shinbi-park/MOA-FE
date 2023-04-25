@@ -180,7 +180,7 @@ const InfoDetail = ({
 
   const fetchInfo = async () => {
     const params = { userId: item.userId };
-    const response = await axios
+    await axios
       .get(
         "http://13.125.111.131:8080/user/info/profile",
 

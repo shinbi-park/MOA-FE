@@ -110,7 +110,7 @@ const ScheduleInfo = () => {
         <div>
           <AvailableTableUl>
             <AvailableTableTitle>Available</AvailableTableTitle>
-            {isHover && select.value && (
+            {isHover && select && (
               <>
                 {user.map((item, index) => (
                   <li key={index}>{item.nickname}</li>

@@ -80,7 +80,7 @@ const PostTitle = () => {
         <PostTitleHeader>{data.title}</PostTitleHeader>
       </PostTitlewrap>
       <PostRecruitwrap>
-        <RecruitPart>{user.userName}</RecruitPart>
+        <RecruitPart>{user.nickname}</RecruitPart>
         <RecruitState
           className={
             (titles === 1 && "recruiting") ||

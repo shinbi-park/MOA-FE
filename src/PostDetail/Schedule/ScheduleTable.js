@@ -26,7 +26,7 @@ const ScheduleDateCell = styled.div`
   border: 1px solid black;
 `;
 
-const ScheduleTable = () => {
+const ScheduleTable = ({ isEdit }) => {
   const [schedule, setSchedule] = useState([]);
   const [state, setState] = useState();
   const { postId } = useParams();
@@ -34,16 +34,33 @@ const ScheduleTable = () => {
   const [leftUser, setLeftUser] = useRecoilState(ScheduleLeftUser);
   const [isHover, setIsHover] = useRecoilState(ScheduleHover);
   const [select, setSelect] = useRecoilState(ScheduleSelect);
-  const [text, setText] = useState([
-    {
-      nickname: "nickname1",
-      possibleTimeData: [],
-    },
-  ]);
+  const [scheduleData, setScheduleData] = useRecoilState(scheduleTime);
+  const [mySchedule, setMySchedule] = useState([]);
 
   useEffect(() => {
-    fetchSchedule();
-  }, []);
+    if (!isEdit) {
+      fetchSchedule();
+    } else {
+      fetchMySchedule();
+    }
+  }, [isEdit]);
+
+  const fetchMySchedule = async () => {
+    await axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}/time`, {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => {
+        setMySchedule(response.data);
+        console.log(response);
+      });
+  };
   const fetchSchedule = async () => {
     await axios
       .get(`http://13.125.111.131:8080/recruitment/${postId}/time/all`, {
@@ -55,62 +72,72 @@ const ScheduleTable = () => {
           ),
         },
       })
-      .then((response) => console.log(response.data));
+      .then((response) => {
+        setScheduleData(response.data);
+        console.log(response.data);
+      });
   };
   useEffect(() => {
-    if (schedule >= 1) {
-      const setTime = text.map((item) => item.possibleTimeData);
+    if (scheduleData?.length !== 0) {
+      const setTime = scheduleData.map((item) => item.possibleTimeData);
 
       let combinedTime = [];
       for (let i = 0; i < setTime.length; i++) {
         const arr = setTime[i];
-        if (arr.length > 0) {
+        if (arr?.length > 0) {
           combinedTime = combinedTime.concat(arr);
         }
         setSchedule(combinedTime);
         setState(setTime);
       }
     }
-  }, [schedule]);
+  }, [scheduleData]);
 
   const ScheduleUpdate = async (schedule) => {
-    await axios
-      .put(
-        `http://13.125.111.131:8080/recruitment/${postId}/time`,
-        {
-          possibleTimeDataList: schedule,
-        },
-        {
-          headers: {
-            Authorization: window.localStorage.getItem("Authorization"),
+    await axios.put(
+      `http://13.125.111.131:8080/recruitment/${postId}/time`,
+      {
+        possibleTimeDataList: schedule,
+      },
+      {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
 
-            AuthorizationRefresh: window.localStorage.getItem(
-              "AuthorizationRefresh"
-            ),
-          },
-        }
-      )
-      .then((response) => console.log(response));
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      }
+    );
+
+    fetchMySchedule();
+    fetchSchedule();
   };
 
   const getId = (getTime) => {
-    const getUser = text.filter((item) =>
-      item.possibleTimeData.some((it) => it === getTime)
-    );
-    setUser(getUser);
+    if (scheduleData?.length !== 0) {
+      const getUser = scheduleData.filter((item) =>
+        item.possibleTimeData.some((it) => it === getTime)
+      );
+      setUser(getUser);
 
-    const getLeftUser = text.filter(
-      (item) => !item.possibleTimeData.includes(getTime)
-    );
-    setLeftUser(getLeftUser);
+      const getLeftUser = scheduleData.filter(
+        (item) => !item.possibleTimeData.includes(getTime)
+      );
+      setLeftUser(getLeftUser);
+    } else {
+      setLeftUser(scheduleData);
+    }
   };
 
   const scheduleHandler = (newSchedule) => {
-    setSchedule(newSchedule);
+    setMySchedule(newSchedule);
     ScheduleUpdate(newSchedule);
-    console.log(newSchedule);
   };
 
+  const ResetSchedule = () => {
+    setMySchedule([]);
+  };
   const startDate = new Date("2023-03-26T09:00:00.000Z");
   const renderCustomDateCell = (datetime, selected, innerRef) => {
     return (
@@ -139,22 +166,42 @@ const ScheduleTable = () => {
   };
   return (
     <div>
-      <ScheduleTableDiv>
-        <ScheduleSelector
-          selection={schedule}
-          numDays={7}
-          minTime={9}
-          maxTime={24}
-          hourlyChunks={2}
-          timeFormat={"hh:mm A"}
-          dateFormat={"ddd"}
-          startDate={startDate}
-          onChange={scheduleHandler}
-          rowGap="0"
-          columnGap="0"
-          renderDateCell={renderCustomDateCell}
-        />
-      </ScheduleTableDiv>
+      {isEdit ? (
+        <ScheduleTableDiv>
+          <p>시간을 선택해주세요</p>
+          <button onClick={ResetSchedule}>리셋하기</button>
+          <ScheduleSelector
+            selection={mySchedule}
+            numDays={7}
+            minTime={9}
+            maxTime={24}
+            hourlyChunks={2}
+            timeFormat={"hh:mm A"}
+            dateFormat={"ddd"}
+            startDate={startDate}
+            onChange={scheduleHandler}
+            rowGap="0"
+            columnGap="0"
+            renderDateCell={renderCustomDateCell}
+          />
+        </ScheduleTableDiv>
+      ) : (
+        <ScheduleTableDiv>
+          <ScheduleSelector
+            selection={schedule}
+            numDays={7}
+            minTime={9}
+            maxTime={24}
+            hourlyChunks={2}
+            timeFormat={"hh:mm A"}
+            dateFormat={"ddd"}
+            startDate={startDate}
+            rowGap="0"
+            columnGap="0"
+            renderDateCell={renderCustomDateCell}
+          />
+        </ScheduleTableDiv>
+      )}
     </div>
   );
 };

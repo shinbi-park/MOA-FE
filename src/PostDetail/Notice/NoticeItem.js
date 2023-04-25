@@ -87,6 +87,8 @@ const NoticeItem = ({
   fetchAttend,
   author,
   fetchNonAttend,
+  fetchUpdateAttend,
+  fetchFinishVote,
 }) => {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [isEdit, setIsEdit] = useState(false);
@@ -135,11 +137,14 @@ const NoticeItem = ({
               </div>
               <NoticeDropdownDiv>
                 <Dropdownbutton
+                  isVote={isVote}
                   author={true}
                   newnotice={newnotice}
                   onNoticeDelete={onNoticeDelete}
                   isEditSetting={isEditSetting}
                   voteFinishHandler={voteFinishHandler}
+                  fetchUpdateAttend={fetchUpdateAttend}
+                  fetchFinishVote={fetchFinishVote}
                 />
               </NoticeDropdownDiv>
             </NoticeListHeader>
@@ -165,7 +170,7 @@ const NoticeItem = ({
               </NoticeListContent>
             )}
 
-            {newnotice.checkVote && !isEdit && (
+            {newnotice.checkVote && !isEdit && isVote && (
               <VotingBtnDiv>
                 <VotingPositive
                   onClick={() => AttendanceHandler(newnotice.noticeId)}

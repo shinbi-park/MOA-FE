@@ -160,39 +160,88 @@ const AddNotice = () => {
   };
 
   const fetchAttend = async (noticeId) => {
-    axios.post(
-      `http://13.125.111.131:8080/recruitment/${postId}/notice/${noticeId}/vote/ATTENDANCE`,
-      null,
-      {
-        headers: {
-          Authorization: window.localStorage.getItem("Authorization"),
+    axios
+      .post(
+        `http://13.125.111.131:8080/recruitment/${postId}/notice/${noticeId}/vote/ATTENDANCE`,
+        null,
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
 
-          AuthorizationRefresh: window.localStorage.getItem(
-            "AuthorizationRefresh"
-          ),
-        },
-      }
-    );
-
-    fetchNotice();
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then(() => {
+        fetchNotice();
+      });
   };
 
   const fetchNonAttend = async (noticeId) => {
-    axios.post(
-      `http://13.125.111.131:8080/recruitment/${postId}/notice/${noticeId}/vote/NONATTENDANCE`,
-      null,
-      {
-        headers: {
-          Authorization: window.localStorage.getItem("Authorization"),
+    await axios
+      .post(
+        `http://13.125.111.131:8080/recruitment/${postId}/notice/${noticeId}/vote/NONATTENDANCE`,
+        null,
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
 
-          AuthorizationRefresh: window.localStorage.getItem(
-            "AuthorizationRefresh"
-          ),
-        },
-      }
-    );
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then(() => {
+        fetchNotice();
+      });
+  };
 
-    fetchNotice();
+  const fetchUpdateAttend = async (attendMemberId, status) => {
+    const params = {
+      attendName: status,
+    };
+    await axios
+      .put(
+        `http://13.125.111.131:8080/recruitment/${postId}/attend/${attendMemberId}`,
+        null,
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+          params,
+        }
+      )
+      .then(() => {
+        fetchNotice();
+      });
+  };
+
+  const fetchFinishVote = async (noticeId) => {
+    await axios
+      .post(
+        `http://13.125.111.131:8080/recruitment/${postId}/notice/${noticeId}/vote`,
+        null,
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        fetchNotice();
+      });
   };
 
   return (
@@ -234,6 +283,8 @@ const AddNotice = () => {
                 onVoteFinish={onVoteFinish}
                 fetchAttend={fetchAttend}
                 fetchNonAttend={fetchNonAttend}
+                fetchUpdateAttend={fetchUpdateAttend}
+                fetchFinishVote={fetchFinishVote}
               />
             </div>
           ))}

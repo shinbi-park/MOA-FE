@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { ImCheckmark, ImCross } from "react-icons/im";
 
 const DropdownDiv = styled.div`
   position: relative;
   width: 120px;
-  height: 130px;
 
   background-color: #efefef;
   border: 1px solid #d9d9d9;
@@ -31,7 +31,7 @@ const EditParticipantDiv = styled.div`
   background-color: #efefef;
   left: 121px;
   width: 120px;
-  top: 20px;
+  top: -80px;
   min-height: 130px;
 `;
 const AttendanceDiv = styled.div`
@@ -49,6 +49,9 @@ const Dropdownbutton = ({
   isEditSetting,
   voteFinishHandler,
   author,
+  fetchUpdateAttend,
+  isVote,
+  fetchFinishVote,
 }) => {
   const [dropOpen, setDropOpen] = useState(false);
   const [editHover, setEditHover] = useState(false);
@@ -75,7 +78,13 @@ const Dropdownbutton = ({
   const VotingToggle = (id) => {
     setDropOpen(false);
     voteFinishHandler(id, false);
+    fetchFinishVote(id);
   };
+
+  const UpdateAttendHandler = (id, status) => {
+    fetchUpdateAttend(id, status);
+  };
+
   return (
     <div ref={dropRef}>
       {author || newnotice.checkVote ? (
@@ -97,12 +106,17 @@ const Dropdownbutton = ({
                   >
                     참여도 수정▶
                   </DropDownList>
-
-                  <DropDownList
-                    onClick={() => VotingToggle(newnotice.noticeId)}
-                  >
-                    투표마감
-                  </DropDownList>
+                  <>
+                    {isVote ? (
+                      <DropDownList
+                        onClick={() => VotingToggle(newnotice.noticeId)}
+                      >
+                        투표마감
+                      </DropDownList>
+                    ) : (
+                      <></>
+                    )}
+                  </>
                   <DropDownList
                     onClick={() => onNoticeDelete(newnotice.noticeId)}
                   >
@@ -116,18 +130,46 @@ const Dropdownbutton = ({
                   >
                     <AttendanceDiv>
                       참여
-                      {newnotice.members?.ATTENDANCE.map((item, index) => (
-                        <ul key={index}>
-                          <ParticipantList>{item}</ParticipantList>
+                      {newnotice.members?.ATTENDANCE.map((item) => (
+                        <ul key={item.applimentMemberId}>
+                          <ParticipantList>{item.memberName}</ParticipantList>
+                          <button
+                            onClick={() =>
+                              UpdateAttendHandler(
+                                item.applimentMemberId,
+                                "NONATTENDANCE"
+                              )
+                            }
+                          >
+                            <ImCross />
+                          </button>
                         </ul>
                       ))}
                     </AttendanceDiv>
 
                     <div>
                       불참여
-                      {newnotice.members?.NONATTENDANCE.map((item, index) => (
-                        <ul key={index}>
-                          <ParticipantList>{item}</ParticipantList>
+                      {newnotice.members?.NONATTENDANCE.map((item) => (
+                        <ul key={item.applimentMemberId}>
+                          <ParticipantList>{item.memberName}</ParticipantList>
+                          <button
+                            onClick={() =>
+                              UpdateAttendHandler(
+                                item.applimentMemberId,
+                                "ATTENDANCE"
+                              )
+                            }
+                          >
+                            <ImCheckmark />
+                          </button>
+                        </ul>
+                      ))}
+                    </div>
+                    <div>
+                      미투표
+                      {newnotice.members?.NONE.map((item) => (
+                        <ul key={item.applimentMemberId}>
+                          <ParticipantList>{item.memberName}</ParticipantList>
                         </ul>
                       ))}
                     </div>
@@ -167,18 +209,26 @@ const Dropdownbutton = ({
                   >
                     <AttendanceDiv>
                       참여
-                      {newnotice.members?.ATTENDANCE.map((item, index) => (
-                        <ul key={index}>
-                          <ParticipantList>{item}</ParticipantList>
+                      {newnotice.members?.ATTENDANCE.map((item) => (
+                        <ul key={item.applimentMemberId}>
+                          <ParticipantList>{item.memberName}</ParticipantList>
                         </ul>
                       ))}
                     </AttendanceDiv>
 
                     <div>
                       불참여
-                      {newnotice.members?.NONATTENDANCE.map((item, index) => (
-                        <ul key={index}>
-                          <ParticipantList>{item}</ParticipantList>
+                      {newnotice.members?.NONATTENDANCE.map((item) => (
+                        <ul key={item.applimentMemberId}>
+                          <ParticipantList>{item.memberName}</ParticipantList>
+                        </ul>
+                      ))}
+                    </div>
+                    <div>
+                      미투표
+                      {newnotice.members?.NONE.map((item) => (
+                        <ul key={item.applimentMemberId}>
+                          <ParticipantList>{item.memberName}</ParticipantList>
                         </ul>
                       ))}
                     </div>
