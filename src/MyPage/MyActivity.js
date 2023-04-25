@@ -24,7 +24,8 @@ const Project = styled.div`
   padding: 10px;
   display: flex;
   flex-direction: row;
-  width: 600px;
+  min-width: 600px;
+  margin-right: 150px;
   font-weight: 650;
   justify-content: space-between;
   padding-left: 30px;
@@ -33,27 +34,18 @@ const Project = styled.div`
   box-shadow: 2px 1px 2px #bdbdbd;
   .Apply {
     font-size: 16px;
-    .title{
-      width: 200px;
-    }
-    &.status{
-      width: 50px;
-    }
-    &.positoin{
-      width: 50px;
-    }
   }
 `;
 
 const Title = styled.div`
-  width: 200px;
+  min-width: 200px;
 `;
 const Position = styled.div`
-  width: 100px;
+  min-width: 100px;
 `;
 
 const Status = styled.div`
-  width: 50px;
+  min-width: 50px;
 `;
 
 const ProjectListBlock = styled.div`
@@ -139,7 +131,7 @@ const CancelApply = (recruitmentId) => {
     }).then((response) =>
       {
         console.log(response);
-        response === 200
+        response.status === 200
         ? alert("지원이 취소되었습니다!")
         : alert("지원 취소에 실패하였습니다")}
     );
@@ -147,7 +139,7 @@ const CancelApply = (recruitmentId) => {
 };
 
 const ApplyItem = React.memo(
-  ({ recruitmentId,title, position, status, detailsUri }) => (
+  ({ recruitmentId, title, position, status, detailsUri }) => (
     <Project className="Apply">
       <Title><span className="title">{title}</span> </Title>
       <Position><span className="position">{position}</span></Position>
@@ -155,7 +147,7 @@ const ApplyItem = React.memo(
       <span className="status"
         style={{
           color:
-            status === "수락" ? "green" : status === "거절" ? "red" : "black"
+            status === "승인" ? "green" : status === "거절" || "강퇴"? "red" : "black"
         }}
       >
         {status}
@@ -170,7 +162,7 @@ const ApplyItem = React.memo(
         </Button>
         <Button
           onClick={() => {
-            window.location.href = detailsUri;
+            window.open(`/detail/${recruitmentId}`);
           }}
         >
           상세보기
