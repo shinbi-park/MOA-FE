@@ -53,8 +53,8 @@ const Position = ({ handleFieldsChange, isEdit, Editdata }) => {
   const [positions, setPosition] = useState([
     {
       recruitMemberId: 1,
-      total: 1,
-      field: "",
+      totalCount: 1,
+      recruitField: "",
     },
   ]);
   const lastPosition = positions[positions?.length - 1];
@@ -72,8 +72,8 @@ const Position = ({ handleFieldsChange, isEdit, Editdata }) => {
   const onInsert = useCallback(() => {
     const position = {
       recruitMemberId: nextId.current,
-      total: 1,
-      field: "",
+      totalCount: 1,
+      recruitField: "",
     };
     const newPosition = (positions) => positions.concat(position);
     setPosition(newPosition);
@@ -98,8 +98,8 @@ const Position = ({ handleFieldsChange, isEdit, Editdata }) => {
       const positionArr = positions.find(
         (position) => position.recruitMemberId === id
       );
-      positionArr.field = value;
-      positionArr.total = num;
+      positionArr.recruitField = value;
+      positionArr.totalCount = num;
       const updatedPositions = [...positions];
       handleFieldsChange(updatedPositions);
     },
@@ -120,7 +120,7 @@ const Position = ({ handleFieldsChange, isEdit, Editdata }) => {
   };
 
   return (
-  <Wrapper>
+    <Wrapper>
     <Label> 모집 포지션 </Label>
     <PositionBlock>
       {!isEdit ? (
@@ -188,7 +188,7 @@ const Position = ({ handleFieldsChange, isEdit, Editdata }) => {
         </>
       )}
     </PositionBlock>
-  </Wrapper>
+      </Wrapper>
   );
 };
 

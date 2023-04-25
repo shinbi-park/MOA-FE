@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect} from "react";
 import styled from "styled-components";
 import BasicInfo from "./BasicInfo/BasicInfo";
 import Editor from "./Editor/Editor";
@@ -12,14 +12,37 @@ const Wrapper = styled.div`
   padding: 2rem;
 `;
 
-const Post = ({ isEdit, Editdata }) => {
-  const [categoryName, setCategoryName] = useState("programming");
+const Post = ({ isEdit }) => {
+  const [categoryName, setCategoryName] = useState("PROGRAMMING");
   const [memberFields, setMemberFields] = useState([]);
   const [tags, setTags] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [editData, setEdit] = useState(null);
   const { postId } = useParams();
   const navigate = useNavigate();
+
+  useEffect(()=>{
+    if(isEdit){
+      axios
+      .get(
+        `http://13.125.111.131:8080/recruitment/${postId}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data.recruitInfo.members);
+        setEdit(response.data.recruitInfo);
+      });
+    }
+    else{
+      setEdit("not Edit Mode");
+    }
+  },[postId, isEdit])
 
   const handleCategoriesChange = (event) => {
     setCategoryName(event.target.value);
@@ -27,14 +50,21 @@ const Post = ({ isEdit, Editdata }) => {
 
   const handleFieldsChange = useCallback((updatedFields) => {
     setMemberFields(updatedFields.map(({ id, ...rest }) => rest));
+    console.log(updatedFields.map(({ id, ...rest }) => rest));
   }, []);
 
   const handleTagsChange = (tagslist) => {
     setTags(tagslist);
   };
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
+  const handleTitleChange = (title) => {
+    console.log(title);
+    if(isEdit){
+      setTitle(title);
+    }
+    else{
+      setTitle(title.target.value);
+    }
   };
 
   const handleContentChange = (event) => {
@@ -52,12 +82,19 @@ const Post = ({ isEdit, Editdata }) => {
       alert("태그를 적어도 하나 추가해주세요!");
       return;
     }
-
     if (!isEdit) {
+      console.log(
+        {
+          title: title,
+          content: content,
+          memberFields: memberFields,
+          categoryName: categoryName,
+          tags: tags,
+        }
+      )
       axios
         .post(
           "http://13.125.111.131:8080/recruitment",
-
           {
             title: title,
             content: content,
@@ -65,14 +102,10 @@ const Post = ({ isEdit, Editdata }) => {
             categoryName: categoryName,
             tags: tags,
           },
-
           {
             headers: {
-              // 로그인 후 받아오는 인증토큰값
-              Authorization:
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE4NzQ5MTh9.Lnb2wzq73ahOQaZV25u9XGpnwrEbapd7kSuAXI9dGM3ffEwawmWORVY9ehpV6suBj3sEuVsUBHNdvAq_DNfcgw",
-
-              
+              Authorization: localStorage.getItem("Authorization"),
+              AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
             },
           }
         )
@@ -81,50 +114,71 @@ const Post = ({ isEdit, Editdata }) => {
           navigate(`/detail/${response.data.value}`);
         });
     } else {
-      //   axios
-      //     .patch(
-      //       `http://13.125.111.131:8080/recruitment/${postId}`,
-      //       {
-      //         title: title,
-      //         content: content,
-      //         memberFields: memberFields,
-      //         categoryName: categoryName,
-      //         tags: tags,
-      //       },
-      //       {
-      //         headers: {
-      //           Authorization:
-      //             "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInJvbGUiOlsiUk9MRV9VU0VSIl0sImlkIjoxLCJleHAiOjE2ODE3MTUyNzV9.362KsyL9_yL4_iGS2yOYykyhvqhXpcmYlgMceC1dz-QitdRV0kKGABNIjXIGh6a8CvCEjlRfEqNvNuqgZQQRMw",
-      //           AuthorizationRefresh:
-      //             "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODI5MTM0NzV9.WPvt3vEN59SmSIesqLav_rdYErS_axBIuzQpOzm5E3l1YHafElctLjqT920H6ETRlEnnmimSOzWqF3Q3jMT1EQ",
-      //         },
-      //       }
-      //     )
-      //     .then((response) => {
-      //       console.log(response.data.value);
-      //       console.log("수정완료;;");
-      //       // navigate(`/detail/${response.data.value}`);
-      // });
+      console.log(memberFields);
+      
+      let members = [];
+      memberFields.map((member) => {
+        members.push({
+          "field": member.recruitField,
+          "total": member.totalCount
+        })
+      });
+      console.log(members);
+      console.log({
+        title: title,
+        content: content,
+        state: 1,
+        memberFields: members,
+        categoryName: categoryName,
+        tags: tags,
+      });
+         axios
+           .patch(
+             `http://13.125.111.131:8080/recruitment/${postId}`,
+             {
+              title: title,
+              content: content,
+              state: 1,
+              memberFields: members,
+              categoryName: categoryName,
+              tags: tags,
+            },
+            {
+              headers: {
+                Authorization: localStorage.getItem("Authorization"),
+                AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+              },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            console.log("수정완료;;");
+            // navigate(`/detail/${response.data.value}`);
+      });
     }
   };
 
   return (
     <Wrapper>
       <form onSubmit={handleSubmit}>
+        {editData && (
+        <>
         <BasicInfo
           handleCategoriesChange={handleCategoriesChange}
           handleFieldsChange={handleFieldsChange}
           handleTagsChange={handleTagsChange}
           isEdit={isEdit}
-          Editdata={Editdata}
+          Editdata={editData}
         />
 
         <Editor
           handleTitleChange={handleTitleChange}
           handleContentChange={handleContentChange}
           isEdit={isEdit}
-          Editdata={Editdata}
+          Editdata={editData}
         />
+        </>)
+        }
         <WriteActionButton isEdit={isEdit} />
       </form>
     </Wrapper>
