@@ -52,6 +52,13 @@ const NoticeEditInput = styled.textarea`
   height: 50px;
 `;
 
+const NoticeEditBtn = styled.button`
+  border: none;
+  background-color: #fff;
+  color: #707070;
+  font-size: 12px;
+`;
+
 const VotingBtnDiv = styled.div`
   display: flex;
   justify-content: end;
@@ -159,14 +166,16 @@ const NoticeItem = ({
                   value={curContent}
                   onChange={(e) => setCurContent(e.target.value)}
                 />
-                <button
+                <NoticeEditBtn
                   onClick={() =>
                     editNoticeHandler(newnotice.noticeId, curContent)
                   }
                 >
                   수정완료
-                </button>
-                <button onClick={() => setIsEdit(!isEdit)}>취소</button>
+                </NoticeEditBtn>
+                <NoticeEditBtn onClick={() => setIsEdit(!isEdit)}>
+                  취소
+                </NoticeEditBtn>
               </NoticeListContent>
             )}
 

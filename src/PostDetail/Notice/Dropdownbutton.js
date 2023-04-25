@@ -6,7 +6,7 @@ const DropdownDiv = styled.div`
   position: relative;
   width: 120px;
 
-  background-color: #efefef;
+  background-color: #fff;
   border: 1px solid #d9d9d9;
   margin: 0 auto;
   line-height: 2;
@@ -21,14 +21,14 @@ const DropDownList = styled.div`
   text-align: center;
   cursor: default;
   :hover {
-    background-color: #ddd;
+    background-color: #e5d0ff;
   }
 `;
 
 const EditParticipantDiv = styled.div`
   position: absolute;
   border: 1px solid black;
-  background-color: #efefef;
+  background-color: #fff;
   left: 121px;
   width: 120px;
   top: -80px;
@@ -38,9 +38,37 @@ const AttendanceDiv = styled.div`
   margin-bottom: 30px;
 `;
 
+const AttendTitle = styled.div`
+  background-color: #e5d0ff;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+`;
+
+const ParticipantUl = styled.ul`
+  display: flex;
+`;
+
 const ParticipantList = styled.li`
   list-style: none;
   margin-left: -30px;
+`;
+
+const VotingNegative = styled.button`
+  border: none;
+  background: none;
+  color: #ff4242;
+  cursor: pointer;
+  margin-left: 20px;
+`;
+
+const VotingPositive = styled.button`
+  border: none;
+  background: none;
+  color: #63b730;
+  cursor: pointer;
+  margin-right: 5px;
+  margin-left: 20px;
 `;
 
 const Dropdownbutton = ({
@@ -129,11 +157,11 @@ const Dropdownbutton = ({
                     onMouseLeave={() => setEditHover(false)}
                   >
                     <AttendanceDiv>
-                      참여
+                      <AttendTitle>참여</AttendTitle>
                       {newnotice.members?.ATTENDANCE.map((item) => (
-                        <ul key={item.applimentMemberId}>
+                        <ParticipantUl key={item.applimentMemberId}>
                           <ParticipantList>{item.memberName}</ParticipantList>
-                          <button
+                          <VotingNegative
                             onClick={() =>
                               UpdateAttendHandler(
                                 item.applimentMemberId,
@@ -142,17 +170,18 @@ const Dropdownbutton = ({
                             }
                           >
                             <ImCross />
-                          </button>
-                        </ul>
+                          </VotingNegative>
+                        </ParticipantUl>
                       ))}
                     </AttendanceDiv>
 
-                    <div>
-                      불참여
+                    <AttendanceDiv>
+                      <AttendTitle>불참여</AttendTitle>
+
                       {newnotice.members?.NONATTENDANCE.map((item) => (
-                        <ul key={item.applimentMemberId}>
+                        <ParticipantUl key={item.applimentMemberId}>
                           <ParticipantList>{item.memberName}</ParticipantList>
-                          <button
+                          <VotingPositive
                             onClick={() =>
                               UpdateAttendHandler(
                                 item.applimentMemberId,
@@ -161,18 +190,29 @@ const Dropdownbutton = ({
                             }
                           >
                             <ImCheckmark />
-                          </button>
-                        </ul>
+                          </VotingPositive>
+                        </ParticipantUl>
                       ))}
-                    </div>
-                    <div>
-                      미투표
+                    </AttendanceDiv>
+                    <AttendanceDiv>
+                      <AttendTitle>미투표 </AttendTitle>
+
                       {newnotice.members?.NONE.map((item) => (
-                        <ul key={item.applimentMemberId}>
+                        <ParticipantUl key={item.applimentMemberId}>
                           <ParticipantList>{item.memberName}</ParticipantList>
-                        </ul>
+                          <VotingNegative
+                            onClick={() =>
+                              UpdateAttendHandler(
+                                item.applimentMemberId,
+                                "NONATTENDANCE"
+                              )
+                            }
+                          >
+                            <ImCross />
+                          </VotingNegative>
+                        </ParticipantUl>
                       ))}
-                    </div>
+                    </AttendanceDiv>
                   </EditParticipantDiv>
                 ) : (
                   ""
@@ -208,30 +248,30 @@ const Dropdownbutton = ({
                     onMouseLeave={() => setEditHover(false)}
                   >
                     <AttendanceDiv>
-                      참여
+                      <AttendTitle>참여</AttendTitle>
                       {newnotice.members?.ATTENDANCE.map((item) => (
-                        <ul key={item.applimentMemberId}>
+                        <ParticipantUl key={item.applimentMemberId}>
                           <ParticipantList>{item.memberName}</ParticipantList>
-                        </ul>
+                        </ParticipantUl>
                       ))}
                     </AttendanceDiv>
 
-                    <div>
-                      불참여
+                    <diAttendanceDivv>
+                      <AttendTitle>불참여</AttendTitle>
                       {newnotice.members?.NONATTENDANCE.map((item) => (
-                        <ul key={item.applimentMemberId}>
+                        <ParticipantUl key={item.applimentMemberId}>
                           <ParticipantList>{item.memberName}</ParticipantList>
-                        </ul>
+                        </ParticipantUl>
                       ))}
-                    </div>
-                    <div>
-                      미투표
+                    </diAttendanceDivv>
+                    <AttendanceDiv>
+                      <AttendTitle>미투표</AttendTitle>
                       {newnotice.members?.NONE.map((item) => (
-                        <ul key={item.applimentMemberId}>
+                        <ParticipantUl key={item.applimentMemberId}>
                           <ParticipantList>{item.memberName}</ParticipantList>
-                        </ul>
+                        </ParticipantUl>
                       ))}
-                    </div>
+                    </AttendanceDiv>
                   </EditParticipantDiv>
                 ) : (
                   ""

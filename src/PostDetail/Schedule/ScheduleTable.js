@@ -9,7 +9,6 @@ import {
   ScheduleUser,
   scheduleTime,
 } from "../../common/atoms";
-import { scheduleDummy } from "../../common/DummyData";
 import { useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -19,15 +18,32 @@ const ScheduleTableDiv = styled.div`
   padding-left: 30px;
 `;
 
+const SetSchduleTimeDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SetSchduleTimeTitle = styled.p`
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+`;
+
+const SetScheduleTimeBtn = styled.button`
+  border: none;
+  background-color: #bd8ffa;
+  margin-left: 15px;
+  padding: 3px 8px;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 6px;
+`;
+
 const ScheduleDateCell = styled.div`
   width: 100%;
   height: 100%;
   background-color: ${({ selected }) => (selected ? "#e5d0ff" : "#fff")};
-
-  /* background-color: ${({ state }) =>
-    (state >= 0.1 ? "#BD8FFA" : "#fff") ||
-    (state >= 0.3 ? "#d7b3fd" : "#BD8FFA") ||
-    (state >= 0.5 ? "#bd8ffa" : "d7b3fd")} */
   border: 1px solid black;
 
   &.middle {
@@ -215,8 +231,12 @@ const ScheduleTable = ({ isEdit }) => {
     <div>
       {isEdit ? (
         <ScheduleTableDiv>
-          <p>시간을 선택해주세요</p>
-          <button onClick={ResetSchedule}>리셋하기</button>
+          <SetSchduleTimeDiv>
+            <SetSchduleTimeTitle>시간을 선택해주세요</SetSchduleTimeTitle>
+            <SetScheduleTimeBtn onClick={ResetSchedule}>
+              리셋
+            </SetScheduleTimeBtn>
+          </SetSchduleTimeDiv>
           <ScheduleSelector
             selection={mySchedule}
             numDays={7}
