@@ -213,7 +213,9 @@ const SignupPage = () => {
         </div>
         <div>
           <Label htmlFor="username">선호 위치</Label>
-          <KakaoMap handleUserLocation={handleUserLocation} />
+          <KakaoMap 
+            data={{lat : null, lng: null}}
+            handleUserLocation={handleUserLocation} />
         </div>
         <SubmitButton type="submit">가입하기</SubmitButton>
       </Form>
