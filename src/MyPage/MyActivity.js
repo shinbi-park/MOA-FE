@@ -147,7 +147,7 @@ const ApplyItem = React.memo(
       <span className="status"
         style={{
           color:
-            status === "승인" ? "green" : status === "거절" || "강퇴"? "red" : "black"
+            status === "승인" ? "green" : status === "거절" ? "red" : status === "강퇴" ? "red" : "black"
         }}
       >
         {status}
