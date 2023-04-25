@@ -285,22 +285,21 @@ const PostComponent = ({
   const handleDeleteClick = async () => {
     const result = window.confirm("글을 정말 삭제할까요?");
     if (result) {
-      try {
-        const response = await fetch(
-          `http://13.125.111.131:8080/recruitment/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json"
-            }
-          }
-        );
+      axios
+      .delete(
+        `http://13.125.111.131:8080/recruitment/${id}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+          },
+        }
+      )
+      .then((response) => {
         response.status === 200
           ? alert("글이 삭제되었습니다!")
           : alert("글 삭제에 실패하였습니다");
-      } catch (error) {
-        console.error(error);
-      }
+      });
     }
   };
 
