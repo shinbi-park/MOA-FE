@@ -121,7 +121,7 @@ const Profile = () => {
     (e) => {
       e.preventDefault();
 
-      setUserProfileData({
+      console.log({
         locationLatitude: location.lat,
         locationLongitude: location.lng,
         links: UpdateLinkss,
@@ -166,14 +166,16 @@ const Profile = () => {
     <Wrapper>
         <h3>선호 지역</h3>
         <MapWrapper>
-          <KakaoMap
-            handleUserLocation={handleUserLocation}
-            data={{
-              lat: data.locationLatitude,
-              lng: data.locationLongitude
-            }}
-          />
-        </MapWrapper>
+          {data.locationLatitude && (
+            <KakaoMap
+              handleUserLocation={handleUserLocation}
+              data={{
+                lat: data.locationLatitude,
+                lng: data.locationLongitude
+              }}
+            />
+          )}
+      </MapWrapper>
 
         <h3>링크</h3>
         <ProfileLink data={links} handleUserLinks={handleUserLinks} />

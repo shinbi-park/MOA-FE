@@ -49,7 +49,7 @@ const PositionListItem = ({
       setCurNum(total);
       setCurPositon(field);
     }
-  }, [isEdit]);
+  }, [isEdit, total, field]);
 
   const onChange = useCallback(
     (e) => {
@@ -61,7 +61,7 @@ const PositionListItem = ({
         onPositionChange(position.recruitMemberId, curNum, curPositon);
       }
     },
-    [position.recruitMemberId, num, onPositionChange, positionName]
+    [isEdit, position.recruitMemberId, num, curNum, onPositionChange, curPositon, positionName]
   );
 
   const addPeople = (event) => {
@@ -85,8 +85,7 @@ const PositionListItem = ({
   const removePeople = (event) => {
     event.preventDefault();
 
-    if (num > 1) {
-      //최소 1명
+    if (num > 1) { //최소 1명
       const newNum = num - 1;
       onPositionChange(position.recruitMemberId, newNum, positionName);
       setNum(newNum);
@@ -96,7 +95,6 @@ const PositionListItem = ({
   return (
     <>
       {!isEdit ? (
-        <>
           <Block>
             <InputText
               placeholder="예시) 프론트엔드"
@@ -107,9 +105,7 @@ const PositionListItem = ({
             <Button onClick={removePeople}> - </Button> {num}
             <Button onClick={addPeople}> + </Button>{" "}
           </Block>
-        </>
       ) : (
-        <>
           <Block>
             <InputText
               placeholder="예시) 프론트엔드"
@@ -120,7 +116,6 @@ const PositionListItem = ({
             <Button onClick={removePeople}> - </Button> {curNum}
             <Button onClick={addPeople}> + </Button>{" "}
           </Block>
-        </>
       )}
     </>
   );

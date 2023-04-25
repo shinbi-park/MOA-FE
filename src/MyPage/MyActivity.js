@@ -24,7 +24,8 @@ const Project = styled.div`
   padding: 10px;
   display: flex;
   flex-direction: row;
-  width: 600px;
+  min-width: 600px;
+  margin-right: 150px;
   font-weight: 650;
   justify-content: space-between;
   padding-left: 30px;
@@ -34,6 +35,17 @@ const Project = styled.div`
   .Apply {
     font-size: 16px;
   }
+`;
+
+const Title = styled.div`
+  min-width: 200px;
+`;
+const Position = styled.div`
+  min-width: 100px;
+`;
+
+const Status = styled.div`
+  min-width: 50px;
 `;
 
 const ProjectListBlock = styled.div`
@@ -79,7 +91,7 @@ const ProjectItem = React.memo(({ title, link, color, className }) => (
     <Button
       style={{
         color: className === "past" ? color : "black",
-        borderColor: className === "past" ? color : "black",
+        borderColor: className === "past" ? color : "black"
       }}
       onClick={() => {
         window.location.href = link;
@@ -104,50 +116,56 @@ const ProjectList = React.memo(({ projects, color, className }) => (
   </ProjectListBlock>
 ));
 
-const CancelApply = (e) => {
-  e.preventDefault();
-  const result = window.confirm("지원을 취소하겠습니까?");
+const CancelApply = (recruitmentId) => {
+  const result = window.confirm(
+    "지원을 취소하겠습니까?"
+  );
   if (result) {
-    fetch(`/`, {
-      method: "",
+    fetch(`http://13.125.111.131:8080/recruitment/${recruitmentId}/cancel`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-      },
+        Authorization: localStorage.getItem("Authorization"),
+        AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+      }
     }).then((response) =>
-      response === 200
+      {
+        console.log(response);
+        response.status === 200
         ? alert("지원이 취소되었습니다!")
-        : alert("지원 취소에 실패하였습니다")
+        : alert("지원 취소에 실패하였습니다")}
     );
   }
 };
 
 const ApplyItem = React.memo(
-  ({ title, position, status, cancelUri, detailsUri }) => (
+  ({ recruitmentId, title, position, status, detailsUri }) => (
     <Project className="Apply">
-      <span className="title">{title}</span> <span>{position}</span>
-      <span
+      <Title><span className="title">{title}</span> </Title>
+      <Position><span className="position">{position}</span></Position>
+      <Status>
+      <span className="status"
         style={{
           color:
-            status === "수락" ? "green" : status === "거절" ? "red" : "black",
+            status === "승인" ? "green" : status === "거절" || "강퇴"? "red" : "black"
         }}
       >
         {status}
       </span>
+      </Status>
       <ButtonContainer>
         <Button
           style={{ visibility: status === "대기중" ? "visible" : "hidden" }}
-          onClick={CancelApply}
+          onClick={() => CancelApply(recruitmentId)}
         >
-          {" "}
-          지원취소{" "}
-        </Button>{" "}
+          지원취소
+        </Button>
         <Button
           onClick={() => {
-            window.location.href = detailsUri;
+            window.open(`/detail/${recruitmentId}`);
           }}
         >
-          {" "}
-          상세보기{" "}
+          상세보기
         </Button>
       </ButtonContainer>
     </Project>
@@ -159,10 +177,10 @@ const ApplyList = React.memo(({ projects }) => (
     {projects.map((project) => (
       <ApplyItem
         key={project.title}
+        recruitmentId= {project.recruitmentId}
         title={project.title}
         position={project.field}
         status={project.status}
-        cancelUri={project.cancelUri}
         detailsUri={project.detailsUri}
       />
     ))}
@@ -178,17 +196,18 @@ const MyActivity = () => {
       headers: {
         Authorization: localStorage.getItem("Authorization"),
         AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
-      },
+      }
     })
-      .then((response) => {
-        if (response.status !== 200) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setUserActivity(data);
-      })
+    .then((response) => {
+      if (response.status !== 200) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      setUserActivity(data);
+    })
       .catch((error) => {
         console.error("Error:", error);
       });
@@ -200,30 +219,34 @@ const MyActivity = () => {
 
   return (
     <Wrapper>
-      <h3>현재 참여중인 프로젝트</h3>
-      {currentProject?.length > 0 ? (
-        <ProjectList
-          color="#5d5fef"
-          projects={currentProject}
-          className="current"
-        />
-      ) : (
-        <EmptyProject> 현재 참여중인 프로젝트가 없습니다 </EmptyProject>
-      )}
+        <h3>현재 참여중인 프로젝트</h3>
+        {currentProject?.length > 0 ? (
+          <ProjectList
+            color="#5d5fef"
+            projects={currentProject}
+            className="current"
+          />
+        ) : (
+          <EmptyProject> 현재 참여중인 프로젝트가 없습니다 </EmptyProject>
+        )}
 
-      <h3>지원한 프로젝트</h3>
-      {applyProject?.length > 0 ? (
-        <ApplyList projects={applyProject} />
-      ) : (
-        <EmptyProject> 지원한 프로젝트가 없습니다 </EmptyProject>
-      )}
+        <h3>지원한 프로젝트</h3>
+        {applyProject?.length > 0 ? (
+          <ApplyList projects={applyProject} />
+        ) : (
+          <EmptyProject> 지원한 프로젝트가 없습니다 </EmptyProject>
+        )}
 
-      <h3>완료한 프로젝트</h3>
-      {pastProject?.length > 0 ? (
-        <ProjectList color="#707070" projects={pastProject} className="past" />
-      ) : (
-        <EmptyProject> 완료한 프로젝트가 없습니다 </EmptyProject>
-      )}
+        <h3>완료한 프로젝트</h3>
+        {pastProject?.length > 0 ? (
+          <ProjectList
+            color="#707070"
+            projects={pastProject}
+            className="past"
+          />
+        ) : (
+          <EmptyProject> 완료한 프로젝트가 없습니다 </EmptyProject>
+        )}
     </Wrapper>
   );
 };

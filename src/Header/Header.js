@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Modal from "../LogIn/Modal";
 import SignInForm from "../LogIn/SignInForm";
+import axios from "axios";
 
 const Nav = styled.nav`
   background-color: white;
@@ -40,21 +41,23 @@ const NavList = styled.ul`
   margin-right: 50px;
   font-weight: 600;
   font-size: 17px;
+  height: 50px;
+  align-items: center;
+ 
+  .name{
+    color: #5d5fef;
+  }
 `;
 
 const NavItem = styled.li`
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 15px;
   font-weight: 600px;
-  &:first-child {
-    margin-left: 0;
-  }
   a {
     color: inherit;
     text-decoration: none;
   }
-
-  &:hover {
+  &:hover{
     border-bottom: 2px solid #5d5fef;
   }
 `;
@@ -62,9 +65,8 @@ const NavItem = styled.li`
 const Header = () => {
   const [signInModal, setSignInModal] = useState(false);
   const [userLogIn, setUserLogIn] = useState(false);
-
+  const [username, setUsername] = useState("");
   useEffect(() => {
-    //로그인 확인
     const authorization = window.localStorage.getItem("Authorization");
     const authorizationRefresh = window.localStorage.getItem(
       "AuthorizationRefresh"
@@ -73,7 +75,18 @@ const Header = () => {
     if (authorization && authorizationRefresh) {
       setUserLogIn(true);
     }
-  }, []);
+
+    axios
+      .get(`http://13.125.111.131:8080/user/info/profile`, {
+        headers: {
+          Authorization: localStorage.getItem("Authorization"),
+          AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+        }
+      })
+      .then((response) => {
+        setUsername(response.data.name);
+      });
+  }, [username]);
 
   const onClickSignout = () => {
     window.localStorage.removeItem("Authorization");
@@ -90,6 +103,7 @@ const Header = () => {
         </Logo>
         {userLogIn ? (
           <NavList>
+            <span className="name">{username}</span><span>님</span>
             <NavItem>
               <Link to="/post">새 글쓰기</Link>
             </NavItem>

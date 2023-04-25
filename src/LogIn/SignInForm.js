@@ -58,7 +58,6 @@ const SubmitButton = styled.button`
 const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -85,16 +84,17 @@ const SignInForm = () => {
         }
 
         if (response.headers.get("Authorization")) {
-          window.localStorage.setItem(
-            "Authorization",
-            response.headers.get("Authorization")
-          );
-          window.localStorage.setItem(
-            "AuthorizationRefresh",
-            response.headers.get("AuthorizationRefresh")
-          );
-          console.log(response);
-          window.location.href = "/";
+          response.json().then((data) => {
+            window.localStorage.setItem(
+              "Authorization",
+              response.headers.get("Authorization")
+            );
+            window.localStorage.setItem(
+              "AuthorizationRefresh",
+              response.headers.get("AuthorizationRefresh")
+            );
+            window.location.href = "/";
+          });
         }
       })
 

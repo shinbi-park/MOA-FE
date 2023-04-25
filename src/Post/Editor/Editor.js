@@ -6,7 +6,6 @@ import { useEffect } from "react";
 
 const EditorWrapper = styled.div`
   margin-top: 40px;
-
   h2 {
     text-align: left;
     margin-left: 15px;
@@ -47,7 +46,7 @@ const Editor = ({
       setCurTitle(Editdata.title);
       setCurContent(Editdata.content);
     }
-  }, [isEdit]);
+  }, [isEdit, Editdata]);
 
   const curTitleHandle = (e) => {
     setCurTitle(e.target.value);
