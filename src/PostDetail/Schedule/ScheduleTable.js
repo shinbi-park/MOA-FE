@@ -22,13 +22,26 @@ const ScheduleTableDiv = styled.div`
 const ScheduleDateCell = styled.div`
   width: 100%;
   height: 100%;
-  background-color: ${({ selected }) => (selected ? "#BD8FFA" : "#fff")};
+  background-color: ${({ selected }) => (selected ? "#e5d0ff" : "#fff")};
+
+  /* background-color: ${({ state }) =>
+    (state >= 0.1 ? "#BD8FFA" : "#fff") ||
+    (state >= 0.3 ? "#d7b3fd" : "#BD8FFA") ||
+    (state >= 0.5 ? "#bd8ffa" : "d7b3fd")} */
   border: 1px solid black;
+
+  &.middle {
+    background-color: #bd8ffa;
+  }
+
+  &.high {
+    background-color: #bd8ffa;
+  }
 `;
 
 const ScheduleTable = ({ isEdit }) => {
   const [schedule, setSchedule] = useState([]);
-  const [state, setState] = useState();
+  const [state, setState] = useState(0);
   const { postId } = useParams();
   const [user, setUser] = useRecoilState(ScheduleUser);
   const [leftUser, setLeftUser] = useRecoilState(ScheduleLeftUser);
@@ -88,7 +101,6 @@ const ScheduleTable = ({ isEdit }) => {
           combinedTime = combinedTime.concat(arr);
         }
         setSchedule(combinedTime);
-        setState(setTime);
       }
     }
   }, [scheduleData]);
@@ -140,28 +152,63 @@ const ScheduleTable = ({ isEdit }) => {
   };
   const startDate = new Date("2023-03-26T09:00:00.000Z");
   const renderCustomDateCell = (datetime, selected, innerRef) => {
-    return (
-      <ScheduleDateCell
-        selected={selected}
-        ref={innerRef}
-        onMouseOver={() => {
-          setIsHover(true);
-          getId(JSON.stringify(datetime).replaceAll('"', ""));
+    const value = JSON.stringify(datetime).replaceAll('"', "");
+    const ValueArr = schedule.filter((item) => item === value).length;
+    const ValueRate = ValueArr / 10;
 
-          setSelect({
-            value: selected,
-            date: JSON.stringify(datetime).substr(1, 10),
-            time: JSON.stringify(datetime.toLocaleTimeString()).replaceAll(
-              '"',
-              ""
-            ),
-          });
-        }}
-        onMouseLeave={() => {
-          setIsHover(false);
-          setSelect({ time: "" });
-        }}
-      />
+    return (
+      <>
+        {isEdit ? (
+          <>
+            <ScheduleDateCell
+              selected={selected}
+              ref={innerRef}
+              onMouseOver={() => {
+                setIsHover(true);
+                setLeftUser([]);
+                // getId(JSON.stringify(datetime).replaceAll('"', ""));
+                setSelect({
+                  value: selected,
+                  date: JSON.stringify(datetime).substr(1, 10),
+                  time: JSON.stringify(
+                    datetime.toLocaleTimeString()
+                  ).replaceAll('"', ""),
+                });
+              }}
+              onMouseLeave={() => {
+                setIsHover(false);
+                setSelect({ time: "" });
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <ScheduleDateCell
+              className={
+                (ValueRate === 0.2 && "middle") || (ValueRate >= 0.5 && "high")
+              }
+              state={state}
+              selected={selected}
+              ref={innerRef}
+              onMouseOver={() => {
+                setIsHover(true);
+                getId(JSON.stringify(datetime).replaceAll('"', ""));
+                setSelect({
+                  value: selected,
+                  date: JSON.stringify(datetime).substr(1, 10),
+                  time: JSON.stringify(
+                    datetime.toLocaleTimeString()
+                  ).replaceAll('"', ""),
+                });
+              }}
+              onMouseLeave={() => {
+                setIsHover(false);
+                setSelect({ time: "" });
+              }}
+            />
+          </>
+        )}
+      </>
     );
   };
   return (
