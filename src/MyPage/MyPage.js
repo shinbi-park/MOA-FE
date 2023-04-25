@@ -119,12 +119,14 @@ const MyPage = () => {
         return response.json();
       })
       .then((data) => {
+        //console.log(data);
         setPopularity(data.popularity.rate);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }, []);
+  //console.log(data);
   const [activeTab, setActiveTab] = useState(0);
   const onClickTab = (tabId) => {
     setActiveTab(tabId);

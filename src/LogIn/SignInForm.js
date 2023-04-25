@@ -58,7 +58,6 @@ const SubmitButton = styled.button`
 const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -85,18 +84,20 @@ const SignInForm = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        if(response.headers.get("Authorization")){
-          window.localStorage.setItem(
-            "Authorization",
-            response.headers.get("Authorization")
-          );
-          window.localStorage.setItem(
-            "AuthorizationRefresh",
-            response.headers.get("AuthorizationRefresh")
-          );
-          console.log(response);
-          window.location.href = '/';
+        if(response.headers.get("Authorization")) {
+          response.json().then(data => {
+            window.localStorage.setItem(
+              "Authorization",
+              response.headers.get("Authorization")
+            );
+            window.localStorage.setItem(
+              "AuthorizationRefresh",
+              response.headers.get("AuthorizationRefresh")
+            );
+            window.location.href = '/';
+          });
         }
+        
         
       })
 

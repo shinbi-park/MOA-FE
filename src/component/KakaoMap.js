@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import styled from "styled-components";
 
@@ -54,38 +54,47 @@ function KakaoMap({ handleUserLocation, data }) {
   const initial = { lat: 37.5662952, lng: 126.9779451 };
   const [state, setState] = useState({
     center: { 
-      lat: data ===undefined ? initial.lat :  data.lat, 
-      lng: data ===undefined ?  initial.lng : data.lng },
+      lat: initial.lat,
+      lng: initial.lng
+    },
     isPanto: true
   });
+
   const [searchAddress, setSearchAddress] = useState("");
   const [markerPosition, setMarkerPosition] = useState({
-    lat: data?.lat,
-    lng: data?.lng || null
+    lat: null,
+    lng: null
   });
   const [userAddress, setUserAddress] = useState(null);
   const geocoder = useRef(new window.kakao.maps.services.Geocoder()).current;
 
-  useEffect(() => {
-    setState({
-      center: { 
-        lat: data ===undefined ? initial.lat :  data.lat, 
-        lng: data ===undefined ?  initial.lng : data.lng },
-      isPanto: true
-    });
-
-    setMarkerPosition({
-      lat: data === undefined ? null :  data.lat,
-      lng: data === undefined ?  null : data.lng
-    });
-    geocoder.coord2Address(data?.lng, data?.lat, (result, status) => {
+  const geoFunction = useCallback((lat, lng) => {
+    geocoder.coord2Address(lat, lng, (result, status) => {
       if (status === window.kakao.maps.services.Status.OK) {
         setUserAddress(result[0].address.address_name);
       } else {
         console.log("error");
       }
     });
-  }, [data, geocoder]);
+  },[geocoder]);
+
+  useEffect(() => {
+    if(data.lat !== null && data.lng !== null){
+      setState({
+        center: { 
+          lat: data.lat, 
+          lng: data.lng 
+        },
+        isPanto: true
+      });
+      setMarkerPosition({
+        lat: data.lat, 
+        lng: data.lng 
+      });
+      geoFunction(data.lng, data.lng);
+    }
+  }, []);
+
   const handleMapClick = useCallback(
     (map, mouseEvent) => {
       const latlng = mouseEvent.latLng;
@@ -97,21 +106,8 @@ function KakaoMap({ handleUserLocation, data }) {
         lat: latlng.getLat(),
         lng: latlng.getLng()
       });
-      const latLng = new window.kakao.maps.LatLng(
-        latlng.getLat(),
-        latlng.getLng()
-      );
-      geocoder.coord2Address(
-        latLng.getLng(),
-        latLng.getLat(),
-        (result, status) => {
-          if (status === window.kakao.maps.services.Status.OK) {
-            setUserAddress(result[0].address.address_name);
-          } else {
-            console.log("error");
-          }
-        }
-      );
+      const latLng = new window.kakao.maps.LatLng(latlng.getLat(), latlng.getLng());
+      geoFunction(latLng.getLng(), latLng.getLat());
     },
     [geocoder, handleUserLocation]
   );
@@ -136,17 +132,13 @@ function KakaoMap({ handleUserLocation, data }) {
 
   useEffect(() => {
     if (markerPosition.lng && markerPosition.lat) {
-      geocoder.coord2Address(
-        markerPosition.lng,
-        markerPosition.lat,
-        (result, status) => {
-          if (status === window.kakao.maps.services.Status.OK) {
-            setUserAddress(result[0].address.address_name);
-          } else {
-            console.log("error");
-          }
+      geocoder.coord2Address(markerPosition.lng, markerPosition.lat, (result, status) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          setUserAddress(result[0].address.address_name);
+        } else {
+          console.log("error");
         }
-      );
+      });
     }
   }, [geocoder, markerPosition]);
 
