@@ -2,20 +2,14 @@ import styled from "styled-components";
 import React, {useState, useEffect} from "react";
 
 const StarWrapper = styled.div`
-        display: flex;
-        align-items: center;
-        width: 100%;
-        flex-direction: row;
-        .star_icon {
-          display: inline-flex;
-          margin-right: 5px;
-        }
-        
-`
-const Comment = styled.div`
     display: flex;
-    flex-direction: column;
-    font-size: 15px;
+    align-items: center;
+    width: 100%;
+    flex-direction: row;
+    .star_icon {
+        display: inline-flex;
+        margin-right: 5px;
+    }
 `;
 function UserPopularity( {rate}) {
     const popularity = rate;

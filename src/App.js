@@ -7,10 +7,14 @@ import Home from "./Home/Home";
 import PostDetail from "./PostDetail/PostDetail";
 import PostEdit from "./PostDetail/PostAdmin/PostUpdate/PostEdit";
 import MyPage from "./MyPage/MyPage";
+import styled from "styled-components";
 
+const Wrapper = styled.div`
+  font-family : 'Noto Sans KR';
+`;
 function App() {
   return (
-    <>
+    <Wrapper>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -21,7 +25,7 @@ function App() {
         <Route path="/detail/:postId" element={<PostDetail />} />
         <Route path="/edit/:postId" element={<PostEdit />} />
       </Routes>
-    </>
+    </Wrapper>
   );
 }
 

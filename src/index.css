@@ -1,12 +1,7 @@
 @font-face {
-    margin: 0;
-    font-family: "GowunDodum";
-    src: url(./Common/GowunDodum.ttf);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
+  font-family: 'Noto Sans KR';
+  font-weight: 400;
+  font-style: normal;
+  src: url('./Common/NotoSansKR-Medium.otf') format('opentype'),
+    url('./Common/NotoSansKR-Bold.otf') format('opentype');
 }
