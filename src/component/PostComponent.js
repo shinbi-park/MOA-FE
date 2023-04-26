@@ -175,6 +175,7 @@ const MenuList = styled.ul`
 const MenuItem = styled.li`
   cursor: pointer;
   margin-bottom: 10px;
+  font-size: 16px;
   display: inline-block;
   &:hover {
     background-color: #f5f5f5;
@@ -213,7 +214,7 @@ const PostComponent = ({
     else {
       setIsMain(true);
     }
-    if (localStorage.getItem("Authorization")) {
+    if ((isMyLiked || isMain ) && localStorage.getItem("Authorization")) {
       axios
         .get(`http://13.125.111.131:8080/user/info/concern`, {
           headers: {
