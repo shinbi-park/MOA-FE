@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import PostComponent from "../component/PostComponent";
+import PostComponent from "../Common/PostComponent";
 import axios from "axios";
 
 const Wrapper = styled.div`

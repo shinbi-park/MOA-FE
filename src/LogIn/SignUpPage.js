@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import KakaoMap from "../component/KakaoMap";
+import KakaoMap from "../Common/KakaoMap";
 
 const Wrapper = styled.div`
   display: flex;

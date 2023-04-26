@@ -21,7 +21,6 @@ const Post = ({ isEdit }) => {
   const [editData, setEdit] = useState(null);
   const { postId } = useParams();
   const navigate = useNavigate();
-
   useEffect(()=>{
     if(isEdit){
       axios
@@ -35,22 +34,44 @@ const Post = ({ isEdit }) => {
         }
       )
       .then((response) => {
-        console.log(response.data.recruitInfo.members);
+        console.log(response.data.recruitInfo);
         setEdit(response.data.recruitInfo);
+        setCategoryName(response.data.recruitInfo?.category);
+        setMemberFields(response.data.recruitInfo.members);
+        setTags(response.data.recruitInfo.tags)
+        setTitle(response.data.recruitInfo.title)
+        setContent(response.data.recruitInfo.content);
       });
     }
     else{
       setEdit("not Edit Mode");
     }
-  },[postId, isEdit])
+  },[postId, isEdit]);
 
-  const handleCategoriesChange = (event) => {
-    setCategoryName(event.target.value);
+  useEffect(() => {
+    if (editData !== null) {
+      const editDataMap = {
+        어학: "LANGUAGE",
+        프로그래밍: "PROGRAMMING",
+        취업: "EMPLOYMENT",
+        취미: "HOBBY",
+        자격증: "CERTIFICATE",
+        고시: "EXAMINATION",
+        면접: "INTERVIEW",
+        자율: "AUTONOMY",
+        기타: "ETC"
+      };
+      setCategoryName(editDataMap[editData.category]);
+    }
+  }, [editData]);
+  
+  const handleCategoriesChange = (category) => {
+    console.log("c", category);
+    setCategoryName(category);
   };
 
   const handleFieldsChange = useCallback((updatedFields) => {
     setMemberFields(updatedFields.map(({ id, ...rest }) => rest));
-    console.log(updatedFields.map(({ id, ...rest }) => rest));
   }, []);
 
   const handleTagsChange = (tagslist) => {
@@ -58,7 +79,6 @@ const Post = ({ isEdit }) => {
   };
 
   const handleTitleChange = (title) => {
-    console.log(title);
     if(isEdit){
       setTitle(title);
     }
@@ -83,24 +103,24 @@ const Post = ({ isEdit }) => {
       return;
     }
     if (!isEdit) {
-      console.log(
-        {
-          title: title,
-          content: content,
-          memberFields: memberFields,
-          categoryName: categoryName,
-          tags: tags,
-        }
-      )
+      let members = [];
+      memberFields.map((member) => {
+        members.push({
+          "field": member.recruitField,
+          "total": member.totalCount
+        })
+      });
+      if(categoryName === undefined) setCategoryName("PROGRAMMING");
+      console.log(categoryName);
       axios
         .post(
           "http://13.125.111.131:8080/recruitment",
           {
-            title: title,
-            content: content,
-            memberFields: memberFields,
-            categoryName: categoryName,
-            tags: tags,
+            "title": title,
+            "content": content,
+            "memberFields": members,
+            "categoryName": categoryName,
+            "tags": tags,
           },
           {
             headers: {
@@ -114,23 +134,12 @@ const Post = ({ isEdit }) => {
           navigate(`/detail/${response.data.value}`);
         });
     } else {
-      console.log(memberFields);
-      
       let members = [];
       memberFields.map((member) => {
         members.push({
           "field": member.recruitField,
           "total": member.totalCount
         })
-      });
-      console.log(members);
-      console.log({
-        title: title,
-        content: content,
-        state: 1,
-        memberFields: members,
-        categoryName: categoryName,
-        tags: tags,
       });
          axios
            .patch(
@@ -151,10 +160,9 @@ const Post = ({ isEdit }) => {
             }
           )
           .then((response) => {
-            console.log(response);
-            console.log("수정완료;;");
-            // navigate(`/detail/${response.data.value}`);
-      });
+            response.status === 200 ? navigate(`/detail/${response.data.value}`): alert("글 수정에 실패하였습니다");
+          }
+      );
     }
   };
 

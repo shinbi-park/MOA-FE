@@ -37,12 +37,12 @@ const BasicInfo = ({
       <Category
         handleCategoriesChange={handleCategoriesChange}
         isEdit={isEdit}
-        Editdata={Editdata}
+        Editdata={Editdata.category}
       />
       <Postion
         handleFieldsChange={handleFieldsChange}
         isEdit={isEdit}
-        Editdata={Editdata}
+        Editdata={Editdata.members}
       />
       <TagBox
         handleTagsChange={handleTagsChange}

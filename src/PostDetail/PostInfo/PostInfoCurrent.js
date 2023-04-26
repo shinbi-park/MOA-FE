@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CurrentPosition from "./CurrentPosition";
 import { useRecoilState, useRecoilValue } from "recoil";
+<<<<<<< HEAD
 import {
   FinActivity,
   etcActivity,
   myPostData,
   userActivity,
 } from "../../Recoil/atoms";
+=======
+import { myPostData, userActivity } from "../../Recoil/atoms";
+>>>>>>> ef599e5fdfdaf863e0de1af6979c394d31f38689
 import axios from "axios";
 import { useParams } from "react-router-dom";
 

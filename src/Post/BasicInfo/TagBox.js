@@ -110,42 +110,21 @@ const TagBox = ({ handleTagsChange, isEdit, Editdata }) => {
   );
   return (
     <TagBoxBlock>
-      {!isEdit ? (
-        <>
-          {" "}
-          <h4> 태그 </h4>
-          <TagForm>
-            <input
-              placeholder="태그를 입력하세요!"
-              value={input}
-              onChange={onChange}
-            />
-            <button type="submit" onClick={onSubmit}>
-              {" "}
-              추가{" "}
-            </button>
-          </TagForm>
-          <TagList tags={localTags} onRemove={onRemove} />
-        </>
-      ) : (
-        <>
-          <h4> 태그 </h4>
-          <TagForm>
-            <input
-              placeholder="태그를 입력하세요!"
-              value={input}
-              onChange={onChange}
-            />
-            <button type="submit" onClick={onSubmit}>
-              {" "}
-              추가{" "}
-            </button>
-          </TagForm>
-          <TagList tags={localTags} onRemove={onRemove} />
-        </>
-      )}
+      <h4> 태그 </h4>
+      <TagForm>
+        <input
+          placeholder="태그를 입력하세요!"
+          value={input}
+          onChange={onChange}
+        />
+        <button type="submit" onClick={onSubmit}>
+          추가
+        </button>
+      </TagForm>
+      <TagList tags={localTags} onRemove={onRemove} />
     </TagBoxBlock>
   );
+  
 };
 
 export default TagBox;
