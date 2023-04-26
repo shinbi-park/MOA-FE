@@ -33,7 +33,7 @@ export const Select = styled.select`
 `;
 
 export default function Category({ handleCategoriesChange, isEdit, Editdata }) {
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState("PROGRAMMING");
   const categoryOptions = [
     { value: "PROGRAMMING", label: "프로그래밍" },
     { value: "EXAMINATION", label: "고시" },
@@ -64,8 +64,11 @@ export default function Category({ handleCategoriesChange, isEdit, Editdata }) {
   }, []);
 
   const handleCategory = (event) => {
-    setSelected(event.target.value);
-    handleCategoriesChange(event.target.value);
+    if (event.target.value !== undefined )
+    {
+      setSelected(event.target.value);
+      handleCategoriesChange(event.target.value);
+  }
   }
 
   return (
