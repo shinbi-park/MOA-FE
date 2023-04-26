@@ -62,7 +62,7 @@ const Position = ({ handleFieldsChange, isEdit, Editdata }) => {
 
   useEffect(() => {
     if (isEdit) {
-      const member = Editdata.members?.filter(
+      const member = Editdata.filter(
         (item) => item.recruitField !== "LEADER"
       );
       setPosition(member);
@@ -123,16 +123,19 @@ const Position = ({ handleFieldsChange, isEdit, Editdata }) => {
     <Wrapper>
     <Label> 모집 포지션 </Label>
     <PositionBlock>
-      {!isEdit ? (
+
         <>
           {positions.map((position) => (
             <PositionListItem
-              position={position}
-              key={position.recruitMemberId}
-              onRemove={onRemove}
-              onInsert={onInsert}
-              onPositionChange={handlePositionChange}
-            />
+            position={position}
+            key={position.recruitMemberId}
+            onRemove={onRemove}
+            onInsert={onInsert}
+            onPositionChange={handlePositionChange}
+            isEdit={isEdit}
+            field={isEdit ? position.recruitField : undefined}
+            total={isEdit ? position.totalCount : undefined}
+          />
           ))}
           <div>
             <Button
@@ -140,53 +143,18 @@ const Position = ({ handleFieldsChange, isEdit, Editdata }) => {
               border={"1px solid black"}
               onClick={onClickInsert}
             >
-              {" "}
-              추가{" "}
+              추가
             </Button>
             <Button
               backgroundColor={"#D9D9D9"}
               border={"none"}
               onClick={onClickRemove}
             >
-              {" "}
-              삭제{" "}
+              삭제
             </Button>
           </div>
         </>
-      ) : (
-        <>
-          {positions.map((position) => (
-            <PositionListItem
-              isEdit={isEdit}
-              position={position}
-              key={position.recruitMemberId}
-              onRemove={onRemove}
-              onInsert={onInsert}
-              onPositionChange={handlePositionChange}
-              field={position.recruitField}
-              total={position.totalCount}
-            />
-          ))}
-          <div>
-            <Button
-              backgroundColor={"white"}
-              border={"1px solid black"}
-              onClick={onClickInsert}
-            >
-              {" "}
-              추가{" "}
-            </Button>
-            <Button
-              backgroundColor={"#D9D9D9"}
-              border={"none"}
-              onClick={onClickRemove}
-            >
-              {" "}
-              삭제{" "}
-            </Button>
-          </div>
-        </>
-      )}
+     
     </PositionBlock>
       </Wrapper>
   );
