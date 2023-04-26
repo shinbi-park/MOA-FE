@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { IoClose } from "react-icons/io5";
 
 import styled from "styled-components";
-import UserPopularity from "../../component/UserPopularity";
+import UserPopularity from "../../Common/UserPopularity";
 
 const InfoDetailDiv = styled.div`
   width: 700px;

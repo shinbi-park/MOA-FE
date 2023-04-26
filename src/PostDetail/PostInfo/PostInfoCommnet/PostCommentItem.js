@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { userInfo } from "../../../common/atoms";
+import { userInfo } from "../../../Recoil/atoms";
 
 const CommentUserName = styled.li`
   font-family: "Inter";

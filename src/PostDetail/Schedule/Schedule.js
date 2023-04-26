@@ -7,7 +7,7 @@ import {
   ScheduleHover,
   ScheduleSelect,
   ScheduleUser,
-} from "../../common/atoms";
+} from "../../Recoil/atoms";
 
 const SchduleDiv = styled.div`
   display: flex;

@@ -50,12 +50,12 @@ const Editor = ({
 
   const curTitleHandle = (e) => {
     setCurTitle(e.target.value);
-    handleTitleChange(curTitle);
+    handleTitleChange(e.target.value);
   };
 
   const curContentHandle = (e) => {
     setCurContent(e);
-    handleContentChange(curContent);
+    handleContentChange(e);
   };
 
   const modules = {

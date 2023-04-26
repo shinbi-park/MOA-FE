@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { titleState } from "../../../common/atoms";
+import { titleState } from "../../../Recoil/atoms";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 

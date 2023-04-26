@@ -1,7 +1,7 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { myPostData } from "../../common/atoms";
+import { myPostData } from "../../Recoil/atoms";
 
 const IntroductionDiv = styled.div`
   white-space: pre-wrap;

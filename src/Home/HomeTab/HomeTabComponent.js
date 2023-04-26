@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import PostComponent from "../../component/PostComponent";
+import PostComponent from "../../Common/PostComponent";
 
 const PostContainerWrapper = styled.div`
   display: grid;

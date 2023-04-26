@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { userInfo } from "../../../common/atoms";
+import { userInfo } from "../../../Recoil/atoms";
 import { useRecoilValue } from "recoil";
 
 const ReplyUserName = styled.li`
