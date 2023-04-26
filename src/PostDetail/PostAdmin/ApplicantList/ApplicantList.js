@@ -81,7 +81,6 @@ const ApplicantList = () => {
         params,
       })
       .then((response) => {
-        console.log(response.data.value);
         setApplyMember(response.data.value);
       });
   };

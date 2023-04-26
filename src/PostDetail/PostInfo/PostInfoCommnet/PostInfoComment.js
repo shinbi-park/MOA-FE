@@ -40,7 +40,6 @@ const PostInfoComment = () => {
       .then((response) => {
         setNewComment(response.data.repliesInfo.info);
         setComment_count(response.data.repliesInfo.count);
-        console.log(response.data.repliesInfo);
       })
 
       .catch((error) => {

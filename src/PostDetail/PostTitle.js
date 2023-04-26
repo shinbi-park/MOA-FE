@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import { myPostData, titleState, userInfo } from "../Recoil/atoms";
+import { myPostData, titleState } from "../Recoil/atoms";
 import { useState } from "react";
 import TransAddress from "./UserInfo/TransAddress";
 import axios from "axios";
