@@ -4,6 +4,8 @@ import Dropdownbutton from "./Dropdownbutton";
 import { ImCheckmark, ImCross } from "react-icons/im";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { userStation } from "../../Recoil/atoms";
 
 const NoticeListWrap = styled.div`
   width: 1045px;
@@ -30,6 +32,10 @@ const NoticeListDate = styled.span`
   font-style: normal;
   font-size: 16px;
   display: flex;
+`;
+
+const RecommendLoc = styled.span`
+  margin-left: 5px;
 `;
 
 const NoticeDropdownDiv = styled.div`
@@ -102,6 +108,7 @@ const NoticeItem = ({
   const [isVote, setIsVote] = useState(true);
   const [curContent, setCurContent] = useState(newnotice.content);
   const { postId } = useParams();
+  const station = useRecoilValue(userStation);
 
   const AttendanceHandler = (noticeId) => {
     fetchAttend(noticeId);
@@ -134,12 +141,16 @@ const NoticeItem = ({
     <>
       {author ? (
         <>
-          <NoticeListWrap className={!isVote ? "vote_done" : ""}>
+          <NoticeListWrap
+            className={!isVote || newnotice.finishVote ? "vote_done" : ""}
+          >
             <NoticeListHeader>
               <div>
-                <NoticeListDate className={!isVote ? "vote_done" : ""}>
+                <NoticeListDate>
                   {date}
-                  {!isVote && <span>추천 지역: 서울역??</span>}
+                  {(!isVote || newnotice.finishVote) && (
+                    <RecommendLoc>추천 지역: {station}</RecommendLoc>
+                  )}
                 </NoticeListDate>
               </div>
               <NoticeDropdownDiv>
@@ -179,34 +190,41 @@ const NoticeItem = ({
               </NoticeListContent>
             )}
 
-            {newnotice.checkVote && !isEdit && isVote && (
-              <VotingBtnDiv>
-                <VotingPositive
-                  onClick={() => AttendanceHandler(newnotice.noticeId)}
-                >
-                  참여 <ImCheckmark />
-                </VotingPositive>
-                <VotingNegative
-                  onClick={() => NoAttendanceHandler(newnotice.noticeId)}
-                >
-                  불참여 <ImCross />
-                </VotingNegative>
-              </VotingBtnDiv>
-            )}
+            {newnotice.checkVote &&
+              !isEdit &&
+              isVote &&
+              !newnotice.finishVote && (
+                <VotingBtnDiv>
+                  <VotingPositive
+                    onClick={() => AttendanceHandler(newnotice.noticeId)}
+                  >
+                    참여 <ImCheckmark />
+                  </VotingPositive>
+                  <VotingNegative
+                    onClick={() => NoAttendanceHandler(newnotice.noticeId)}
+                  >
+                    불참여 <ImCross />
+                  </VotingNegative>
+                </VotingBtnDiv>
+              )}
 
-            {!isVote && (
+            {(!isVote || newnotice.finishVote) && (
               <VoteFinishNotice>투표가 마감되었습니다</VoteFinishNotice>
             )}
           </NoticeListWrap>
         </>
       ) : (
         <>
-          <NoticeListWrap className={!isVote ? "vote_done" : ""}>
+          <NoticeListWrap
+            className={!isVote || newnotice.finishVote ? "vote_done" : ""}
+          >
             <NoticeListHeader>
               <div>
-                <NoticeListDate className={!isVote ? "vote_done" : ""}>
+                <NoticeListDate>
                   {date}
-                  {!isVote && <span>추천 지역: 서울역??</span>}
+                  {(!isVote || newnotice.finishVote) && (
+                    <RecommendLoc>추천 지역: </RecommendLoc>
+                  )}
                 </NoticeListDate>
               </div>
               <NoticeDropdownDiv>
@@ -224,7 +242,7 @@ const NoticeItem = ({
               <NoticeListContent>{newnotice.content}</NoticeListContent>
             </>
 
-            {newnotice.checkVote && (
+            {newnotice.checkVote && !newnotice.finishVote && (
               <VotingBtnDiv>
                 <VotingPositive
                   onClick={() => AttendanceHandler(newnotice.noticeId)}
@@ -239,7 +257,7 @@ const NoticeItem = ({
               </VotingBtnDiv>
             )}
 
-            {!isVote && (
+            {(!isVote || newnotice.finishVote) && (
               <VoteFinishNotice>투표가 마감되었습니다</VoteFinishNotice>
             )}
           </NoticeListWrap>

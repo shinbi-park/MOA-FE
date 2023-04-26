@@ -7,7 +7,7 @@ import {
   etcActivity,
   myPostData,
   userActivity,
-} from "../../common/atoms";
+} from "../../Recoil/atoms";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 

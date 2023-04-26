@@ -5,7 +5,6 @@ import { ImCheckmark, ImCross } from "react-icons/im";
 const DropdownDiv = styled.div`
   position: relative;
   width: 120px;
-
   background-color: #fff;
   border: 1px solid #d9d9d9;
   margin: 0 auto;
@@ -28,9 +27,9 @@ const DropDownList = styled.div`
 const EditParticipantDiv = styled.div`
   position: absolute;
   border: 1px solid black;
-  background-color: #fff;
+  background-color: #fcfbfe;
   left: 121px;
-  width: 120px;
+  width: 140px;
   top: -80px;
   min-height: 130px;
 `;
@@ -39,10 +38,12 @@ const AttendanceDiv = styled.div`
 `;
 
 const AttendTitle = styled.div`
-  background-color: #e5d0ff;
-  padding-top: 10px;
-  padding-left: 10px;
-  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  border: none;
+  background-color: #ffd700;
+  text-align: center;
+  margin-bottom: 10px;
 `;
 
 const ParticipantUl = styled.ul`
@@ -51,7 +52,7 @@ const ParticipantUl = styled.ul`
 
 const ParticipantList = styled.li`
   list-style: none;
-  margin-left: -30px;
+  margin-left: -10px;
 `;
 
 const VotingNegative = styled.button`
@@ -60,6 +61,11 @@ const VotingNegative = styled.button`
   color: #ff4242;
   cursor: pointer;
   margin-left: 20px;
+
+  &.normal {
+    margin-left: 0;
+    cursor: default;
+  }
 `;
 
 const VotingPositive = styled.button`
@@ -69,6 +75,12 @@ const VotingPositive = styled.button`
   cursor: pointer;
   margin-right: 5px;
   margin-left: 20px;
+
+  &.normal {
+    margin-left: 0;
+    margin-right: 0;
+    cursor: default;
+  }
 `;
 
 const Dropdownbutton = ({
@@ -106,7 +118,6 @@ const Dropdownbutton = ({
   const VotingToggle = (id) => {
     setDropOpen(false);
     voteFinishHandler(id, false);
-    fetchFinishVote(id);
   };
 
   const UpdateAttendHandler = (id, status) => {
@@ -157,7 +168,12 @@ const Dropdownbutton = ({
                     onMouseLeave={() => setEditHover(false)}
                   >
                     <AttendanceDiv>
-                      <AttendTitle>참여</AttendTitle>
+                      <AttendTitle>
+                        참여{" "}
+                        <VotingPositive className="normal">
+                          <ImCheckmark />
+                        </VotingPositive>
+                      </AttendTitle>
                       {newnotice.members?.ATTENDANCE.map((item) => (
                         <ParticipantUl key={item.applimentMemberId}>
                           <ParticipantList>{item.memberName}</ParticipantList>
@@ -176,7 +192,12 @@ const Dropdownbutton = ({
                     </AttendanceDiv>
 
                     <AttendanceDiv>
-                      <AttendTitle>불참여</AttendTitle>
+                      <AttendTitle>
+                        불참여
+                        <VotingNegative className="normal">
+                          <ImCross />
+                        </VotingNegative>
+                      </AttendTitle>
 
                       {newnotice.members?.NONATTENDANCE.map((item) => (
                         <ParticipantUl key={item.applimentMemberId}>
@@ -248,7 +269,12 @@ const Dropdownbutton = ({
                     onMouseLeave={() => setEditHover(false)}
                   >
                     <AttendanceDiv>
-                      <AttendTitle>참여</AttendTitle>
+                      <AttendTitle>
+                        참여{" "}
+                        <VotingPositive className="normal">
+                          <ImCheckmark />
+                        </VotingPositive>
+                      </AttendTitle>
                       {newnotice.members?.ATTENDANCE.map((item) => (
                         <ParticipantUl key={item.applimentMemberId}>
                           <ParticipantList>{item.memberName}</ParticipantList>
@@ -256,14 +282,19 @@ const Dropdownbutton = ({
                       ))}
                     </AttendanceDiv>
 
-                    <diAttendanceDivv>
-                      <AttendTitle>불참여</AttendTitle>
+                    <AttendanceDiv>
+                      <AttendTitle>
+                        불참여
+                        <VotingNegative className="normal">
+                          <ImCross />
+                        </VotingNegative>
+                      </AttendTitle>
                       {newnotice.members?.NONATTENDANCE.map((item) => (
                         <ParticipantUl key={item.applimentMemberId}>
                           <ParticipantList>{item.memberName}</ParticipantList>
                         </ParticipantUl>
                       ))}
-                    </diAttendanceDivv>
+                    </AttendanceDiv>
                     <AttendanceDiv>
                       <AttendTitle>미투표</AttendTitle>
                       {newnotice.members?.NONE.map((item) => (

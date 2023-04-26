@@ -1,10 +1,8 @@
-import axios from "axios";
-import React, { useEffect } from "react";
+import React from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { etcActivity, titleState, userInfo } from "../../common/atoms";
+import { titleState, userInfo } from "../../Recoil/atoms";
 const CurrentPartWrap = styled.div`
   padding-left: 3%;
   display: flex;
@@ -73,7 +71,6 @@ const CurrentPosition = ({
 }) => {
   const [applyToggle, setApplyToggle] = useState(false);
   const info = useRecoilValue(userInfo);
-  const { postId } = useParams();
   const title = useRecoilValue(titleState);
 
   const applyHandler = (recruitField) => {

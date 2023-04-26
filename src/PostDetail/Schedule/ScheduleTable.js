@@ -8,7 +8,7 @@ import {
   ScheduleSelect,
   ScheduleUser,
   scheduleTime,
-} from "../../common/atoms";
+} from "../../Recoil/atoms";
 import { useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -47,11 +47,11 @@ const ScheduleDateCell = styled.div`
   border: 1px solid black;
 
   &.middle {
-    background-color: #bd8ffa;
+    background-color: #cca7fd;
   }
 
   &.high {
-    background-color: #bd8ffa;
+    background-color: #9f56ff;
   }
 `;
 
@@ -65,6 +65,31 @@ const ScheduleTable = ({ isEdit }) => {
   const [select, setSelect] = useRecoilState(ScheduleSelect);
   const [scheduleData, setScheduleData] = useRecoilState(scheduleTime);
   const [mySchedule, setMySchedule] = useState([]);
+  const [memberCnt, setMemberCnt] = useState([]);
+
+  useEffect(() => {
+    fetchMember();
+  }, []);
+  const fetchMember = async () => {
+    await axios
+      .get(
+        `http://13.125.111.131:8080/recruitment/${postId}/approved/members`,
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then((response) => {
+        setMemberCnt(response.data);
+        console.log(response.data);
+      });
+  };
 
   useEffect(() => {
     if (!isEdit) {
@@ -170,7 +195,7 @@ const ScheduleTable = ({ isEdit }) => {
   const renderCustomDateCell = (datetime, selected, innerRef) => {
     const value = JSON.stringify(datetime).replaceAll('"', "");
     const ValueArr = schedule.filter((item) => item === value).length;
-    const ValueRate = ValueArr / 10;
+    const ValueRate = ValueArr;
 
     return (
       <>
@@ -182,7 +207,6 @@ const ScheduleTable = ({ isEdit }) => {
               onMouseOver={() => {
                 setIsHover(true);
                 setLeftUser([]);
-                // getId(JSON.stringify(datetime).replaceAll('"', ""));
                 setSelect({
                   value: selected,
                   date: JSON.stringify(datetime).substr(1, 10),
@@ -201,7 +225,8 @@ const ScheduleTable = ({ isEdit }) => {
           <>
             <ScheduleDateCell
               className={
-                (ValueRate === 0.2 && "middle") || (ValueRate >= 0.5 && "high")
+                (2 <= ValueRate && ValueRate < 3 && "middle") ||
+                (ValueRate >= 3 && "high")
               }
               state={state}
               selected={selected}

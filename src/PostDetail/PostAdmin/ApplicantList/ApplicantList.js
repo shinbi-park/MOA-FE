@@ -4,7 +4,7 @@ import ApplicantListItem from "./ApplicantListItem";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useRecoilState } from "recoil";
-import { myPostData, userActivity } from "../../../common/atoms";
+import { myPostData, userActivity } from "../../../Recoil/atoms";
 
 const ApplicantListDiv = styled.div`
   margin-bottom: 70px;

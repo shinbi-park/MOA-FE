@@ -3,8 +3,8 @@ import styled from "styled-components";
 import NoticeItem from "./NoticeItem";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { myPostData, userInfo } from "../../common/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { myPostData, userInfo, userStation } from "../../Recoil/atoms";
 
 const NoticeWrap = styled.div`
   width: 1025px;
@@ -53,6 +53,7 @@ const AddNotice = () => {
   const info = useRecoilValue(userInfo);
   const data = useRecoilValue(myPostData);
   const [user, setUser] = useState(data.postUser);
+  const [station, setStation] = useRecoilState(userStation);
 
   useEffect(() => {
     fetchNotice();
@@ -157,6 +158,7 @@ const AddNotice = () => {
         item.noticeId === id ? { ...item, check: isChecked } : item
       )
     );
+    fetchFinishVote(id);
   };
 
   const fetchAttend = async (noticeId) => {
@@ -239,7 +241,7 @@ const AddNotice = () => {
         }
       )
       .then((response) => {
-        console.log(response);
+        setStation(response.data.value);
         fetchNotice();
       });
   };

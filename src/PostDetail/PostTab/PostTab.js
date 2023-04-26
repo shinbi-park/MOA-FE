@@ -10,7 +10,7 @@ import {
   myPostData,
   userActivity,
   userInfo,
-} from "../../common/atoms";
+} from "../../Recoil/atoms";
 import { useParams } from "react-router-dom";
 import { BiLock } from "react-icons/bi";
 

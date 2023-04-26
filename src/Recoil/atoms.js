@@ -1,5 +1,4 @@
 import { atom } from "recoil";
-import { recruitDummy } from "./DummyData";
 
 export const postData = atom({
   key: "postData",
@@ -64,4 +63,9 @@ export const FinActivity = atom({
 export const etcActivity = atom({
   key: "etcActivity",
   default: [],
+});
+
+export const userStation = atom({
+  key: "userStation",
+  default: "",
 });

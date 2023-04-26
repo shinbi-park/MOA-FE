@@ -7,6 +7,7 @@ import {
   scheduleTime,
   userActivity,
   userInfo,
+  userStation,
 } from "./atoms";
 
 export const getPostData = selector({
@@ -53,6 +54,14 @@ export const getMySchedule = selector({
   key: "getMySchedule",
   get: ({ get }) => {
     const data = get(scheduleTime);
+    return data;
+  },
+});
+
+export const getUserStation = selector({
+  key: "getUserStation",
+  get: ({ get }) => {
+    const data = get(userStation);
     return data;
   },
 });

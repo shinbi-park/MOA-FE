@@ -3,7 +3,7 @@ import styled from "styled-components";
 import PostTab from "./PostTab/PostTab";
 import PostTitle from "./PostTitle";
 import { useRecoilState } from "recoil";
-import { myPostData, titleState, userInfo } from "../common/atoms";
+import { myPostData, titleState, userInfo } from "../Recoil/atoms";
 import { useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";

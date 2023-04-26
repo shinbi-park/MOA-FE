@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { TiStar } from "react-icons/ti";
 import styled from "styled-components";
-// import UserPopularity from "../../component/UserPopularity";
+import TransAddress from "./TransAddress";
 
 const InfoDetailDiv = styled.div`
   width: 700px;
@@ -171,7 +171,8 @@ const InfoDetail = ({
   const [applyPosition, setApplyPosition] = useState(item.recruitField);
   const [introDetail, setIntroDetail] = useState("");
   const [links, setLinks] = useState([]);
-  const [location, setLocation] = useState("지하철역");
+  const [lat, setLat] = useState("");
+  const [lng, setLng] = useState("");
   const starArray = [1, 2, 3, 4, 5];
 
   useEffect(() => {
@@ -200,6 +201,8 @@ const InfoDetail = ({
         setPopularityCnt(response.data.popularity);
         setIntroDetail(response.data.details);
         setLinks(response.data.link);
+        setLat(response.data.locationLatitude);
+        setLng(response.data.locationLongitude);
       });
   };
 
@@ -260,7 +263,9 @@ const InfoDetail = ({
         <h3>링크</h3>
         <LinkList links={links} />
         <h3>선호지역</h3>
-        <Container>{location}</Container>
+        <Container>
+          <TransAddress lat={lat} lng={lng} />
+        </Container>
         <ButtonContaienr>
           <Button
             backgroundColor={"#63B730"}
