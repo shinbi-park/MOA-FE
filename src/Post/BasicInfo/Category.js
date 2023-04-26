@@ -91,9 +91,7 @@ export default function Category({ handleCategoriesChange, isEdit, Editdata }) {
             </option>
           ))}
         </Select>
-
-          }
-          
+    }
     </CategoryBlock>
   );
 }
