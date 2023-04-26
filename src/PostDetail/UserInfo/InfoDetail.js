@@ -254,7 +254,9 @@ const InfoDetail = ({
           </span>
         </StarContaienr>
         <h3>지원자 상세 소개</h3>
-        <IntroContainer>{introDetail}</IntroContainer>
+        <IntroContainer
+          dangerouslySetInnerHTML={{ __html: introDetail }}
+        ></IntroContainer>
         <h3>링크</h3>
         <LinkList links={links} />
         <h3>선호지역</h3>

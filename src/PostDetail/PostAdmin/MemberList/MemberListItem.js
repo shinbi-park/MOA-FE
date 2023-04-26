@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { TiStar } from "react-icons/ti";
 import styled from "styled-components";
 import ParticipantRate from "./ParticipantRate";
-import axios from "axios";
-import { useParams } from "react-router-dom";
 
 const RatingStar = styled(TiStar)`
   cursor: pointer;
@@ -36,14 +34,11 @@ const MemberKickOut = styled.button`
 const MemberListItem = ({ member, fetchMemberKick, sendRatingData }) => {
   const starArray = [1, 2, 3, 4, 5];
   const [rating, setRating] = useState(member.popularity);
-  const { postId } = useParams();
 
   const onClickRate = (array, applyId) => {
     setRating(array);
     sendRatingData(array, applyId);
   };
-
-  const applyId = 2;
 
   const memberKickHandler = (applyId) => {
     fetchMemberKick(applyId);

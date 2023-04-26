@@ -193,7 +193,7 @@ const PostComponent = ({
   profileImg,
   replyCount,
   onClickCategory,
-  onClickTag
+  onClickTag,
 }) => {
   const [isMypost, setIsMypost] = useState(false);
   const [isMyLiked, setIsMyLiked] = useState(false);
@@ -218,8 +218,8 @@ const PostComponent = ({
         .get(`http://13.125.111.131:8080/user/info/concern`, {
           headers: {
             Authorization: localStorage.getItem("Authorization"),
-            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
-          }
+            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+          },
         })
         .then((response) => {
           response.data.writing.map((post) => {
@@ -239,35 +239,31 @@ const PostComponent = ({
         .post(
           `http://13.125.111.131:8080/recruitment/${id}/concern`,
           {
-            value: id
+            value: id,
           },
           {
             headers: {
               Authorization: localStorage.getItem("Authorization"),
-              AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
-            }
+              AuthorizationRefresh: localStorage.getItem(
+                "AuthorizationRefresh"
+              ),
+            },
           }
         )
-        .catch(error => {
-          if(error.response.status === 403){
+        .catch((error) => {
+          if (error.response.status === 403) {
             alert("관심글은 로그인 후 등록할 수 있습니다!");
             setIsMyLiked(false);
           }
-
         });
     } else if (isMyLiked === true) {
-      axios
-        .delete(
-          `http://13.125.111.131:8080/recruitment/${id}/concern`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("Authorization"),
-              AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
-            }
-          }
-        )
-        .catch(error => (console.log(error)))
-      }
+      axios.delete(`http://13.125.111.131:8080/recruitment/${id}/concern`, {
+        headers: {
+          Authorization: localStorage.getItem("Authorization"),
+          AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+        },
+      });
+    }
   };
 
   const handleMenuClick = () => {
@@ -291,8 +287,8 @@ const PostComponent = ({
           {
             method: "DELETE",
             headers: {
-              "Content-Type": "application/json"
-            }
+              "Content-Type": "application/json",
+            },
           }
         );
         response.status === 200

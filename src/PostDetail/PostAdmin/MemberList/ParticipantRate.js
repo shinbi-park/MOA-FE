@@ -18,7 +18,7 @@ const CurrentRate = styled.div`
 const ParticipantRate = ({ member }) => {
   const [total, setTotal] = useState(member.totalAttend);
   const [attend, setAttend] = useState(member.attend);
-  const rate = parseInt(attend / total);
+  const rate = parseInt((attend / total) * 100);
 
   return (
     <>
