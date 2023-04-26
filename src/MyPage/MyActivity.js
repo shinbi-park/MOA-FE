@@ -85,7 +85,7 @@ const EmptyProject = styled.div`
   box-shadow: 2px 1px 2px #bdbdbd;
 `;
 
-const ProjectItem = React.memo(({ title, link, color, className }) => (
+const ProjectItem = React.memo(({ title, link, color, className, recruitmentId }) => (
   <Project color={color}>
     {title}
     <Button
@@ -94,7 +94,7 @@ const ProjectItem = React.memo(({ title, link, color, className }) => (
         borderColor: className === "past" ? color : "black"
       }}
       onClick={() => {
-        window.location.href = link;
+        window.open(`/detail/${recruitmentId}`);
       }}
     >
       상세보기
@@ -107,8 +107,8 @@ const ProjectList = React.memo(({ projects, color, className }) => (
     {projects.map((project, index) => (
       <ProjectItem
         key={index}
+        recruitmentId= {project.recruitmentId}
         title={project.title}
-        link={project.detailsUri}
         color={color}
         className={className}
       />
@@ -139,7 +139,7 @@ const CancelApply = (recruitmentId) => {
 };
 
 const ApplyItem = React.memo(
-  ({ recruitmentId, title, position, status, detailsUri }) => (
+  ({ recruitmentId, title, position, status }) => (
     <Project className="Apply">
       <Title><span className="title">{title}</span> </Title>
       <Position><span className="position">{position}</span></Position>
@@ -147,7 +147,7 @@ const ApplyItem = React.memo(
       <span className="status"
         style={{
           color:
-            status === "승인" ? "green" : status === "거절" || "강퇴"? "red" : "black"
+            status === "승인" ? "green" : status === "거절" ? "red" : status === "강퇴" ? "red" : "black"
         }}
       >
         {status}
@@ -205,7 +205,6 @@ const MyActivity = () => {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
       setUserActivity(data);
     })
       .catch((error) => {
