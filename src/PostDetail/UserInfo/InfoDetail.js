@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { IoClose } from "react-icons/io5";
-
+import { TiStar } from "react-icons/ti";
 import styled from "styled-components";
-import UserPopularity from "../../Common/UserPopularity";
+import TransAddress from "./TransAddress";
 
 const InfoDetailDiv = styled.div`
   width: 700px;
@@ -66,17 +66,16 @@ const Table = styled.table`
 `;
 
 const StarContaienr = styled.div`
+  width: 450px;
   display: flex;
-  flex-direction: row;
+
   margin-bottom: 10px;
   align-items: center;
   h3 {
     margin-right: 10px;
-    width: 120px;
   }
   span {
-    width: 140px;
-    margin-right: 5px;
+    width: 250px;
     font-size: 17px;
     font-weight: 500;
   }
@@ -152,20 +151,29 @@ const LinkItem = React.memo(({ link }) => (
   </Container>
 ));
 
+const RatingStar = styled(TiStar)`
+  cursor: pointer;
+  &.inactive_rating {
+    color: gray;
+  }
+  &.active_rating {
+    color: #f8a400;
+  }
+`;
 const InfoDetail = ({
   handlecloseInfo,
   item,
   apporvedHandler,
   refuseHandler,
 }) => {
-  const [userInfo, setUserInfo] = useState({});
-
   const [applicant, setApplicant] = useState("");
   const [popularityCnt, setPopularityCnt] = useState({}); //평가 받은 프로젝트 수
   const [applyPosition, setApplyPosition] = useState(item.recruitField);
   const [introDetail, setIntroDetail] = useState("");
   const [links, setLinks] = useState([]);
-  const [location, setLocation] = useState("지하철역");
+  const [lat, setLat] = useState("");
+  const [lng, setLng] = useState("");
+  const starArray = [1, 2, 3, 4, 5];
 
   useEffect(() => {
     fetchInfo();
@@ -173,7 +181,7 @@ const InfoDetail = ({
 
   const fetchInfo = async () => {
     const params = { userId: item.userId };
-    const response = await axios
+    await axios
       .get(
         "http://13.125.111.131:8080/user/info/profile",
 
@@ -193,6 +201,8 @@ const InfoDetail = ({
         setPopularityCnt(response.data.popularity);
         setIntroDetail(response.data.details);
         setLinks(response.data.link);
+        setLat(response.data.locationLatitude);
+        setLng(response.data.locationLongitude);
       });
   };
 
@@ -229,15 +239,33 @@ const InfoDetail = ({
           </tbody>
         </Table>
         <StarContaienr>
-          <h3>지원자 별점</h3> <span>총 {popularityCnt.count}개의 평가 중</span>
-          <UserPopularity />
+          <h3>지원자 별점</h3>{" "}
+          <span>
+            총 {popularityCnt.count}개의 평가 중
+            {starArray.map((array, index) => (
+              <RatingStar
+                size={20}
+                key={index}
+                value={popularityCnt.rate}
+                className={
+                  array <= popularityCnt.rate
+                    ? "active_rating"
+                    : "inactive_rating"
+                }
+              />
+            ))}
+          </span>
         </StarContaienr>
         <h3>지원자 상세 소개</h3>
-        <IntroContainer>{introDetail}</IntroContainer>
+        <IntroContainer
+          dangerouslySetInnerHTML={{ __html: introDetail }}
+        ></IntroContainer>
         <h3>링크</h3>
         <LinkList links={links} />
         <h3>선호지역</h3>
-        <Container>{location}</Container>
+        <Container>
+          <TransAddress lat={lat} lng={lng} />
+        </Container>
         <ButtonContaienr>
           <Button
             backgroundColor={"#63B730"}

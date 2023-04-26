@@ -3,8 +3,8 @@ import styled from "styled-components";
 import NoticeItem from "./NoticeItem";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { myPostData, userInfo } from "../../Recoil/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { myPostData, userInfo, userStation } from "../../Recoil/atoms";
 
 const NoticeWrap = styled.div`
   width: 1025px;
@@ -53,9 +53,14 @@ const AddNotice = () => {
   const info = useRecoilValue(userInfo);
   const data = useRecoilValue(myPostData);
   const [user, setUser] = useState(data.postUser);
+  const [station, setStation] = useRecoilState(userStation);
+
+  useEffect(() => {
+    fetchNotice();
+  }, []);
 
   const fetchNotice = async () => {
-    const response = await axios
+    await axios
       .get(`http://13.125.111.131:8080/recruitment/${postId}/notice`, {
         headers: {
           Authorization: window.localStorage.getItem("Authorization"),
@@ -70,10 +75,6 @@ const AddNotice = () => {
         console.log(response.data.notices);
       });
   };
-
-  useEffect(() => {
-    fetchNotice();
-  }, []);
 
   const onSubmitNotice = async (e) => {
     e.preventDefault();
@@ -157,6 +158,92 @@ const AddNotice = () => {
         item.noticeId === id ? { ...item, check: isChecked } : item
       )
     );
+    fetchFinishVote(id);
+  };
+
+  const fetchAttend = async (noticeId) => {
+    axios
+      .post(
+        `http://13.125.111.131:8080/recruitment/${postId}/notice/${noticeId}/vote/ATTENDANCE`,
+        null,
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then(() => {
+        fetchNotice();
+      });
+  };
+
+  const fetchNonAttend = async (noticeId) => {
+    await axios
+      .post(
+        `http://13.125.111.131:8080/recruitment/${postId}/notice/${noticeId}/vote/NONATTENDANCE`,
+        null,
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then(() => {
+        fetchNotice();
+      });
+  };
+
+  const fetchUpdateAttend = async (attendMemberId, status) => {
+    const params = {
+      attendName: status,
+    };
+    await axios
+      .put(
+        `http://13.125.111.131:8080/recruitment/${postId}/attend/${attendMemberId}`,
+        null,
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+          params,
+        }
+      )
+      .then(() => {
+        fetchNotice();
+      });
+  };
+
+  const fetchFinishVote = async (noticeId) => {
+    await axios
+      .post(
+        `http://13.125.111.131:8080/recruitment/${postId}/notice/${noticeId}/vote`,
+        null,
+        {
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then((response) => {
+        setStation(response.data.value);
+        fetchNotice();
+      });
   };
 
   return (
@@ -196,6 +283,10 @@ const AddNotice = () => {
                 onNoticeDelete={onNoticeDelete}
                 onEditNotice={onEditNotice}
                 onVoteFinish={onVoteFinish}
+                fetchAttend={fetchAttend}
+                fetchNonAttend={fetchNonAttend}
+                fetchUpdateAttend={fetchUpdateAttend}
+                fetchFinishVote={fetchFinishVote}
               />
             </div>
           ))}
@@ -212,6 +303,8 @@ const AddNotice = () => {
                 onNoticeDelete={onNoticeDelete}
                 onEditNotice={onEditNotice}
                 onVoteFinish={onVoteFinish}
+                fetchAttend={fetchAttend}
+                fetchNonAttend={fetchNonAttend}
               />
             </div>
           ))}

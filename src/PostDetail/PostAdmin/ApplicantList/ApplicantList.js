@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import ApplicantListItem from "./ApplicantListItem";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { myPostData, userActivity } from "../../../Recoil/atoms";
 
 const ApplicantListDiv = styled.div`
   margin-bottom: 70px;
@@ -42,7 +44,7 @@ const AppliCantWrap = styled.div`
   width: 800px;
 `;
 const ApplycantPosition = styled.h4`
-  padding-left: 20px;
+  padding-left: 40px;
 `;
 
 const ApplycantItemDiv = styled.div`
@@ -54,6 +56,9 @@ const ApplicantList = () => {
   const [toggle, setToggle] = useState(false);
   const { postId } = useParams();
   const [applyMember, setApplyMember] = useState([]);
+  const [members, setMembers] = useRecoilState(userActivity);
+  const [post, setPost] = useRecoilState(myPostData);
+
   useEffect(() => {
     fetchApplicant();
   }, []);
@@ -81,6 +86,45 @@ const ApplicantList = () => {
       });
   };
 
+  const fetchMember = async () => {
+    await axios
+      .get(
+        `http://13.125.111.131:8080/recruitment/${postId}/approved/members`,
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then((response) => {
+        setMembers(response.data);
+        console.log(response.data);
+      });
+  };
+
+  const fetchPost = async () => {
+    await axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}`, {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => {
+        setPost(response.data.recruitInfo);
+
+        console.log(response.data);
+      });
+  };
+
   const fetchApproved = async (applyId) => {
     const params = {
       statusCode: 2,
@@ -102,6 +146,8 @@ const ApplicantList = () => {
         }
       );
       fetchApplicant();
+      fetchMember();
+      fetchPost();
     }
   };
 
@@ -140,7 +186,7 @@ const ApplicantList = () => {
               <ApplycantPosition>
                 {applyMember.map((item, index) => (
                   <React.Fragment key={index}>
-                    {item.recruitField}
+                    <ApplycantPosition> {item.recruitField}</ApplycantPosition>
 
                     <ApplycantItemDiv>
                       <ApplicantListItem

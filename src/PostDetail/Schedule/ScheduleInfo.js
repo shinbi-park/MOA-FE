@@ -30,10 +30,10 @@ const SchduleColorBar = styled.div`
     background-color: #e5d0ff;
   }
   &.third_range {
-    background-color: #d7b3fd;
+    background-color: #cca7fd;
   }
   &.last_range {
-    background-color: #bd8ffa;
+    background-color: #9f56ff;
   }
 `;
 
@@ -110,7 +110,7 @@ const ScheduleInfo = () => {
         <div>
           <AvailableTableUl>
             <AvailableTableTitle>Available</AvailableTableTitle>
-            {isHover && select.value && (
+            {isHover && select && (
               <>
                 {user.map((item, index) => (
                   <li key={index}>{item.nickname}</li>

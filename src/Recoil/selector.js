@@ -1,6 +1,14 @@
 import axios from "axios";
 import { selector } from "recoil";
-import { myPostData, userActivity, userInfo } from "./atoms";
+import {
+  FinActivity,
+  etcActivity,
+  myPostData,
+  scheduleTime,
+  userActivity,
+  userInfo,
+  userStation,
+} from "./atoms";
 
 export const getPostData = selector({
   key: "getPostData",
@@ -22,6 +30,38 @@ export const getUserActivity = selector({
   key: "getUserActivity",
   get: ({ get }) => {
     const data = get(userActivity);
+    return data;
+  },
+});
+
+export const getFinActivity = selector({
+  key: "getFinActivity",
+  get: ({ get }) => {
+    const data = get(FinActivity);
+    return data;
+  },
+});
+
+export const getEtcActivity = selector({
+  key: "getEtcActivity",
+  get: ({ get }) => {
+    const data = get(etcActivity);
+    return data;
+  },
+});
+
+export const getMySchedule = selector({
+  key: "getMySchedule",
+  get: ({ get }) => {
+    const data = get(scheduleTime);
+    return data;
+  },
+});
+
+export const getUserStation = selector({
+  key: "getUserStation",
+  get: ({ get }) => {
+    const data = get(userStation);
     return data;
   },
 });

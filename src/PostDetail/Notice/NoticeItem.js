@@ -4,6 +4,8 @@ import Dropdownbutton from "./Dropdownbutton";
 import { ImCheckmark, ImCross } from "react-icons/im";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { userStation } from "../../Recoil/atoms";
 
 const NoticeListWrap = styled.div`
   width: 1045px;
@@ -32,6 +34,10 @@ const NoticeListDate = styled.span`
   display: flex;
 `;
 
+const RecommendLoc = styled.span`
+  margin-left: 5px;
+`;
+
 const NoticeDropdownDiv = styled.div`
   position: absolute;
   left: 1080px;
@@ -50,6 +56,13 @@ const NoticeEditInput = styled.textarea`
   resize: none;
   width: 1000px;
   height: 50px;
+`;
+
+const NoticeEditBtn = styled.button`
+  border: none;
+  background-color: #fff;
+  color: #707070;
+  font-size: 12px;
 `;
 
 const VotingBtnDiv = styled.div`
@@ -84,48 +97,25 @@ const NoticeItem = ({
   onNoticeDelete,
   onEditNotice,
   onVoteFinish,
+  fetchAttend,
   author,
+  fetchNonAttend,
+  fetchUpdateAttend,
+  fetchFinishVote,
 }) => {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [isEdit, setIsEdit] = useState(false);
   const [isVote, setIsVote] = useState(true);
   const [curContent, setCurContent] = useState(newnotice.content);
   const { postId } = useParams();
+  const station = useRecoilValue(userStation);
 
-  const AttendanceHandler = () => {
-    axios
-      .post(
-        `http://13.125.111.131:8080/recruitment/${postId}/notice/${newnotice.noticeId}/vote/ATTENDANCE`,
-        null,
-        {
-          headers: {
-            Authorization: window.localStorage.getItem("Authorization"),
-
-            AuthorizationRefresh: window.localStorage.getItem(
-              "AuthorizationRefresh"
-            ),
-          },
-        }
-      )
-      .then((response) => console.log(response.data));
+  const AttendanceHandler = (noticeId) => {
+    fetchAttend(noticeId);
   };
 
-  const NoAttendanceHandler = () => {
-    axios
-      .post(
-        `http://13.125.111.131:8080/recruitment/${postId}/notice/${newnotice.noticeId}/vote/NONATTENDANCE`,
-        null,
-        {
-          headers: {
-            Authorization: window.localStorage.getItem("Authorization"),
-
-            AuthorizationRefresh: window.localStorage.getItem(
-              "AuthorizationRefresh"
-            ),
-          },
-        }
-      )
-      .then((response) => console.log(response.data));
+  const NoAttendanceHandler = (noticeId) => {
+    fetchNonAttend(noticeId);
   };
 
   const isEditSetting = (EditValue) => {
@@ -151,21 +141,30 @@ const NoticeItem = ({
     <>
       {author ? (
         <>
-          <NoticeListWrap className={!isVote ? "vote_done" : ""}>
+          <NoticeListWrap
+            className={!isVote || newnotice.finishVote ? "vote_done" : ""}
+          >
             <NoticeListHeader>
               <div>
-                <NoticeListDate className={!isVote ? "vote_done" : ""}>
+                <NoticeListDate>
                   {date}
-                  {!isVote && <span>추천 지역: 서울역??</span>}
+                  {(!isVote || newnotice.finishVote) && (
+                    <RecommendLoc>
+                      추천 지역: {newnotice.recommendLocation}
+                    </RecommendLoc>
+                  )}
                 </NoticeListDate>
               </div>
               <NoticeDropdownDiv>
                 <Dropdownbutton
+                  isVote={isVote}
                   author={true}
                   newnotice={newnotice}
                   onNoticeDelete={onNoticeDelete}
                   isEditSetting={isEditSetting}
                   voteFinishHandler={voteFinishHandler}
+                  fetchUpdateAttend={fetchUpdateAttend}
+                  fetchFinishVote={fetchFinishVote}
                 />
               </NoticeDropdownDiv>
             </NoticeListHeader>
@@ -180,41 +179,56 @@ const NoticeItem = ({
                   value={curContent}
                   onChange={(e) => setCurContent(e.target.value)}
                 />
-                <button
+                <NoticeEditBtn
                   onClick={() =>
                     editNoticeHandler(newnotice.noticeId, curContent)
                   }
                 >
                   수정완료
-                </button>
-                <button onClick={() => setIsEdit(!isEdit)}>취소</button>
+                </NoticeEditBtn>
+                <NoticeEditBtn onClick={() => setIsEdit(!isEdit)}>
+                  취소
+                </NoticeEditBtn>
               </NoticeListContent>
             )}
 
-            {newnotice.checkVote && !isEdit && (
-              <VotingBtnDiv>
-                <VotingPositive onClick={AttendanceHandler}>
-                  참여 <ImCheckmark />
-                </VotingPositive>
-                <VotingNegative onClick={NoAttendanceHandler}>
-                  불참여 <ImCross />
-                </VotingNegative>
-              </VotingBtnDiv>
-            )}
+            {newnotice.checkVote &&
+              !isEdit &&
+              isVote &&
+              !newnotice.finishVote && (
+                <VotingBtnDiv>
+                  <VotingPositive
+                    onClick={() => AttendanceHandler(newnotice.noticeId)}
+                  >
+                    참여 <ImCheckmark />
+                  </VotingPositive>
+                  <VotingNegative
+                    onClick={() => NoAttendanceHandler(newnotice.noticeId)}
+                  >
+                    불참여 <ImCross />
+                  </VotingNegative>
+                </VotingBtnDiv>
+              )}
 
-            {!isVote && (
+            {(!isVote || newnotice.finishVote) && (
               <VoteFinishNotice>투표가 마감되었습니다</VoteFinishNotice>
             )}
           </NoticeListWrap>
         </>
       ) : (
         <>
-          <NoticeListWrap className={!isVote ? "vote_done" : ""}>
+          <NoticeListWrap
+            className={!isVote || newnotice.finishVote ? "vote_done" : ""}
+          >
             <NoticeListHeader>
               <div>
-                <NoticeListDate className={!isVote ? "vote_done" : ""}>
+                <NoticeListDate>
                   {date}
-                  {!isVote && <span>추천 지역: 서울역??</span>}
+                  {(!isVote || newnotice.finishVote) && (
+                    <RecommendLoc>
+                      추천 지역: {newnotice.recommendLocation}
+                    </RecommendLoc>
+                  )}
                 </NoticeListDate>
               </div>
               <NoticeDropdownDiv>
@@ -232,18 +246,22 @@ const NoticeItem = ({
               <NoticeListContent>{newnotice.content}</NoticeListContent>
             </>
 
-            {newnotice.checkVote && (
+            {newnotice.checkVote && !newnotice.finishVote && (
               <VotingBtnDiv>
-                <VotingPositive onClick={AttendanceHandler}>
+                <VotingPositive
+                  onClick={() => AttendanceHandler(newnotice.noticeId)}
+                >
                   참여 <ImCheckmark />
                 </VotingPositive>
-                <VotingNegative onClick={NoAttendanceHandler}>
+                <VotingNegative
+                  onClick={() => NoAttendanceHandler(newnotice.noticeId)}
+                >
                   불참여 <ImCross />
                 </VotingNegative>
               </VotingBtnDiv>
             )}
 
-            {!isVote && (
+            {(!isVote || newnotice.finishVote) && (
               <VoteFinishNotice>투표가 마감되었습니다</VoteFinishNotice>
             )}
           </NoticeListWrap>

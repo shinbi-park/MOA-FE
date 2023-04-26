@@ -1,5 +1,4 @@
 import { atom } from "recoil";
-import { recruitDummy } from "./DummyData";
 
 export const postData = atom({
   key: "postData",
@@ -36,10 +35,10 @@ export const ScheduleSelect = atom({
   default: { date: "", time: "", value: false },
 });
 
-// export const scheduleTime = atom({
-//   key: "scheduleData",
-//   default: {},
-// });
+export const scheduleTime = atom({
+  key: "scheduleTime",
+  default: [],
+});
 
 export const myPostData = atom({
   key: "myPostData",
@@ -54,4 +53,19 @@ export const userInfo = atom({
 export const userActivity = atom({
   key: "userActivity",
   default: [],
+});
+
+export const FinActivity = atom({
+  key: "FinActivity",
+  default: [],
+});
+
+export const etcActivity = atom({
+  key: "etcActivity",
+  default: [],
+});
+
+export const userStation = atom({
+  key: "userStation",
+  default: "",
 });

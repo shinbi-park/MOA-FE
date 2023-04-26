@@ -2,7 +2,16 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CurrentPosition from "./CurrentPosition";
 import { useRecoilState, useRecoilValue } from "recoil";
+<<<<<<< HEAD
+import {
+  FinActivity,
+  etcActivity,
+  myPostData,
+  userActivity,
+} from "../../Recoil/atoms";
+=======
 import { myPostData, userActivity } from "../../Recoil/atoms";
+>>>>>>> ef599e5fdfdaf863e0de1af6979c394d31f38689
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -13,6 +22,7 @@ const CurrentPartTitle = styled.div`
   font-style: normal;
   font-weight: 700;
   font-size: 30px;
+  display: flex;
 `;
 
 const HrLine = styled.hr`
@@ -20,10 +30,25 @@ const HrLine = styled.hr`
   margin-top: 25px;
 `;
 
+const ApplyComment = styled.p`
+  margin-left: 30px;
+  font-size: 13px;
+  color: blue;
+`;
+
+const NonApplyComment = styled.p`
+  margin-left: 30px;
+  font-size: 13px;
+  color: red;
+`;
+
 const PostInfoCurrent = () => {
   const data = useRecoilValue(myPostData);
   const [author, setAuthor] = useState(data.postUser);
   const [activity, setActivity] = useRecoilState(userActivity);
+  const [finProject, setFinProject] = useRecoilState(FinActivity);
+  const [etcProject, setEtcProject] = useRecoilState(etcActivity);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { postId } = useParams();
 
@@ -50,11 +75,18 @@ const PostInfoCurrent = () => {
         }
       )
       .then((response) => {
-        setActivity(response.data.etcProjects);
+        setActivity(response.data.approvedProjects.CONCURRENT);
+        setFinProject(response.data.approvedProjects.FINISH);
+        setEtcProject(response.data.etcProjects);
+        setIsLoading(false);
       });
   };
 
   const userInfoArr = activity.find(
+    (item) => parseInt(item.recruitmentId) === parseInt(postId)
+  );
+
+  const etcArr = etcProject.find(
     (item) => parseInt(item.recruitmentId) === parseInt(postId)
   );
 
@@ -87,24 +119,40 @@ const PostInfoCurrent = () => {
     }
     fetchList();
   };
+  console.log(etcArr);
 
   return (
     <div>
-      <CurrentPartTitle>모집 현황</CurrentPartTitle>
+      {isLoading ? (
+        ""
+      ) : (
+        <>
+          <CurrentPartTitle>
+            모집 현황
+            {(etcArr?.status === "대기중" || etcArr?.status === "승인") && (
+              <ApplyComment>* 지원완료된 프로젝트입니다</ApplyComment>
+            )}
+            {(etcArr?.status === "거절" || etcArr?.status === "강퇴") && (
+              <NonApplyComment>* 지원할 수 없는 프로젝트입니다</NonApplyComment>
+            )}
+          </CurrentPartTitle>
 
-      {member.map((item, index) => {
-        return (
-          <CurrentPosition
-            author={author}
-            key={index}
-            item={item}
-            userInfoArr={userInfoArr}
-            fetchApply={fetchApply}
-          />
-        );
-      })}
+          {member.map((item, index) => {
+            return (
+              <CurrentPosition
+                author={author}
+                key={index}
+                item={item}
+                userInfoArr={userInfoArr}
+                fetchApply={fetchApply}
+                etcArr={etcArr}
+              />
+            );
+          })}
 
-      <HrLine />
+          <HrLine />
+        </>
+      )}
     </div>
   );
 };

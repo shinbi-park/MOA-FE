@@ -194,7 +194,7 @@ const PostComponent = ({
   profileImg,
   replyCount,
   onClickCategory,
-  onClickTag
+  onClickTag,
 }) => {
   const [isMypost, setIsMypost] = useState(false);
   const [isMyLiked, setIsMyLiked] = useState(false);
@@ -219,8 +219,8 @@ const PostComponent = ({
         .get(`http://13.125.111.131:8080/user/info/concern`, {
           headers: {
             Authorization: localStorage.getItem("Authorization"),
-            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
-          }
+            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+          },
         })
         .then((response) => {
           response.data.writing.map((post) => {
@@ -240,35 +240,31 @@ const PostComponent = ({
         .post(
           `http://13.125.111.131:8080/recruitment/${id}/concern`,
           {
-            value: id
+            value: id,
           },
           {
             headers: {
               Authorization: localStorage.getItem("Authorization"),
-              AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
-            }
+              AuthorizationRefresh: localStorage.getItem(
+                "AuthorizationRefresh"
+              ),
+            },
           }
         )
-        .catch(error => {
-          if(error.response.status === 403){
+        .catch((error) => {
+          if (error.response.status === 403) {
             alert("관심글은 로그인 후 등록할 수 있습니다!");
             setIsMyLiked(false);
           }
-
         });
     } else if (isMyLiked === true) {
-      axios
-        .delete(
-          `http://13.125.111.131:8080/recruitment/${id}/concern`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("Authorization"),
-              AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
-            }
-          }
-        )
-        .catch(error => (console.log(error)))
-      }
+      axios.delete(`http://13.125.111.131:8080/recruitment/${id}/concern`, {
+        headers: {
+          Authorization: localStorage.getItem("Authorization"),
+          AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+        },
+      });
+    }
   };
 
   const handleMenuClick = () => {
@@ -287,20 +283,17 @@ const PostComponent = ({
     const result = window.confirm("글을 정말 삭제할까요?");
     if (result) {
       axios
-      .delete(
-        `http://13.125.111.131:8080/recruitment/${id}`,
-        {
+        .delete(`http://13.125.111.131:8080/recruitment/${id}`, {
           headers: {
             Authorization: localStorage.getItem("Authorization"),
-            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+            AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
           },
-        }
-      )
-      .then((response) => {
-        response.status === 200
-          ? alert("글이 삭제되었습니다!")
-          : alert("글 삭제에 실패하였습니다");
-      });
+        })
+        .then((response) => {
+          response.status === 200
+            ? alert("글이 삭제되었습니다!")
+            : alert("글 삭제에 실패하였습니다");
+        });
     }
   };
 

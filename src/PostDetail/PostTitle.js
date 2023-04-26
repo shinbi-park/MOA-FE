@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import { myPostData, titleState } from "../Recoil/atoms";
+import { myPostData, titleState, userInfo } from "../Recoil/atoms";
 import { useState } from "react";
 
 const PostTitlewrap = styled.div`
-  margin-top: 34px; ;
+  margin-top: 34px;
 `;
 
 const PostTitleHeader = styled.div`
@@ -72,6 +72,7 @@ const PostTitle = () => {
   const data = useRecoilValue(myPostData);
   const titles = useRecoilValue(titleState);
   const [user, setUser] = useState(data.postUser);
+  const info = useRecoilValue(userInfo);
 
   return (
     <div>
@@ -79,7 +80,7 @@ const PostTitle = () => {
         <PostTitleHeader>{data.title}</PostTitleHeader>
       </PostTitlewrap>
       <PostRecruitwrap>
-        <RecruitPart>{user.userName}</RecruitPart>
+        <RecruitPart>{user.nickname}</RecruitPart>
         <RecruitState
           className={
             (titles === 1 && "recruiting") ||
