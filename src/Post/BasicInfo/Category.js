@@ -34,6 +34,7 @@ export const Select = styled.select`
 
 export default function Category({ handleCategoriesChange, isEdit, Editdata }) {
   const [selected, setSelected] = useState("PROGRAMMING");
+  console.log(selected);
   const categoryOptions = [
     { value: "PROGRAMMING", label: "프로그래밍" },
     { value: "EXAMINATION", label: "고시" },
@@ -43,7 +44,7 @@ export default function Category({ handleCategoriesChange, isEdit, Editdata }) {
     { value: "AUTONOMY", label: "자율" },
     { value: "HOBBY", label: "취미" },
     { value: "EMPLOYMENT", label: "취업" },
-    { value: "ETC", label: "기타" }
+    { value: "ETC", label: "기타" },
   ];
 
   useEffect(() => {
@@ -57,36 +58,34 @@ export default function Category({ handleCategoriesChange, isEdit, Editdata }) {
         고시: "EXAMINATION",
         면접: "INTERVIEW",
         자율: "AUTONOMY",
-        기타: "ETC"
+        기타: "ETC",
       };
       setSelected(editDataMap[Editdata]);
     }
   }, []);
 
   const handleCategory = (event) => {
-    if (event.target.value !== undefined )
-    {
+    if (event.target.value !== undefined) {
       setSelected(event.target.value);
       handleCategoriesChange(event.target.value);
-  }
-  }
+    }
+  };
 
   return (
     <CategoryBlock>
-  
-          <Label htmlFor="category"> 카테고리 </Label>
-          <Select
-            name="select-category"
-            id="category"
-            defaultValue={isEdit ? selected : "PROGRAMMING"}
-            onChange={handleCategory}
-          >
-            {categoryOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
+      <Label htmlFor="category"> 카테고리 </Label>
+      <Select
+        name="select-category"
+        id="category"
+        defaultValue={isEdit ? selected : "PROGRAMMING"}
+        onChange={handleCategory}
+      >
+        {categoryOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </Select>
     </CategoryBlock>
   );
 }
