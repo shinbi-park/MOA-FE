@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import profile from "../component/profileImg.png";
 import { AiOutlineEdit } from "react-icons/ai";
+import axios from "axios";
 
 const Wrapper = styled.div`
   display: flex;
@@ -139,7 +140,6 @@ function Setting() {
   const [currentPwd, setCurrentPwd] = useState("");
   const [newPwd, setNewPwd] = useState("");
   const [newPwdConfirm, setPwdConfirm] = useState("");
-  const [newUsername, setNewUsername] = useState("");
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
@@ -227,43 +227,41 @@ function Setting() {
       alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다!");
       return;
     }
-   setUserData  ({
+   const userData =  ({
       "name": usernameInput,
       "nickname": nicknameInput,
       "currentPassword": currentPwd,
       "newPassword" : newPwd
     })
-    fetch("http://13.125.111.131:8080/user/info/basic", {
-      method: "PATCH",
-      body: JSON.stringify({
-        "name": usernameInput,
-        "nickname": nicknameInput,
-        "currentPassword": currentPwd,
-        "newPassword" : newPwd
-    }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("Authorization"),
-        AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
-      },
-    })
-    .then((response) => {
-      console.log(response);
-      if (response.status === 200) {
-        alert("프로필을 성공적으로 변경하였습니다");
-        setIsEditing(false);
-        setUsernameInput(usernameInput);
-        setUserData({ ...userData });
-        window.location.reload();
-      } 
-      else if(response.status === 400){
-        alert("현재 비밀번호를 다시 확인해주세요!")
-      }
-      else {
-        alert("프로필 변경에 실패하였습니다");
-      }
-    })
+
+    formData.append("data", new Blob([JSON.stringify(userData)], {type: "application/json"}))
+    
+   // axios.post("/create/list", formData)
+   axios.patch("http://13.125.111.131:8080/user/info/basic", formData, {
+    headers: {
+      "Authorization": localStorage.getItem("Authorization"),
+      "AuthorizationRefresh": localStorage.getItem("AuthorizationRefresh")
+    }
+  })
+  .then((response) => {
+    // 요청 성공 시 실행할 코드 작성
+    console.log(response.data);
+    if (response.status === 200) {
+      alert("프로필을 성공적으로 변경하였습니다");
+      setIsEditing(false);
+      setUsernameInput(usernameInput);
+      setUserData({ ...userData });
+      window.location.reload();
+    } 
+    else if(response.status === 400){
+      alert("현재 비밀번호를 다시 확인해주세요!")
+    }
+    else {
+      alert("프로필 변경에 실패하였습니다");
+    }
+  })
     .catch((error) => {
+      // 요청 실패 시 실행할 코드 작성
       console.log(error);
     });
   };
