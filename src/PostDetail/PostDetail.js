@@ -32,7 +32,6 @@ const PostDetail = () => {
       })
       .then((response) => {
         setInfo(response.data);
-        console.log(response.data);
       });
   };
 
@@ -51,11 +50,6 @@ const PostDetail = () => {
         setPost(response.data.recruitInfo);
         setIsLoading(false);
         setTitles(response.data.recruitInfo.state);
-        console.log(response.data);
-      })
-
-      .catch((error) => {
-        console.error("Error:", error);
       });
 
     fetchInfo();
