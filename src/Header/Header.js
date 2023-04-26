@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Modal from "../LogIn/Modal";
 import SignInForm from "../LogIn/SignInForm";
+import axios from "axios";
 
 const Nav = styled.nav`
   background-color: white;
@@ -11,7 +12,8 @@ const Nav = styled.nav`
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  height: 40px;
+  height: 50px;
+  margin-bottom: 10px;
 `;
 
 const Logo = styled.h1`
@@ -22,7 +24,8 @@ const Logo = styled.h1`
   a {
     text-decoration: none;
     border-bottom: none;
-    &.visited, &:visited {
+    &.visited,
+    &:visited {
       text-decoration: none;
       border-bottom: none;
       color: #5d5fef;
@@ -38,20 +41,22 @@ const NavList = styled.ul`
   margin-right: 50px;
   font-weight: 600;
   font-size: 17px;
+  height: 50px;
+  align-items: center;
+ 
+  .name{
+    color: #5d5fef;
+  }
 `;
 
 const NavItem = styled.li`
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 15px;
   font-weight: 600px;
-  &:first-child {
-    margin-left: 0;
-  }
   a {
     color: inherit;
     text-decoration: none;
   }
-
   &:hover{
     border-bottom: 2px solid #5d5fef;
   }
@@ -60,30 +65,61 @@ const NavItem = styled.li`
 const Header = () => {
   const [signInModal, setSignInModal] = useState(false);
   const [userLogIn, setUserLogIn] = useState(false);
-
-  useEffect(() => { //로그인 확인
+  const [username, setUsername] = useState("");
+  useEffect(() => {
     const authorization = window.localStorage.getItem("Authorization");
-    const authorizationRefresh = window.localStorage.getItem("AuthorizationRefresh");
-    
+    const authorizationRefresh = window.localStorage.getItem(
+      "AuthorizationRefresh"
+    );
+
     if (authorization && authorizationRefresh) {
       setUserLogIn(true);
     }
-  }, []);
+
+    axios
+      .get(`http://13.125.111.131:8080/user/info/profile`, {
+        headers: {
+          Authorization: localStorage.getItem("Authorization"),
+          AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+        }
+      })
+      .then((response) => {
+        setUsername(response.data.name);
+      });
+  }, [username]);
+
+  const onClickSignout = () => {
+    window.localStorage.removeItem("Authorization");
+    window.localStorage.removeItem("AuthorizationRefresh");
+    setUserLogIn(false);
+    window.location.href = "/";
+  };
 
   return (
     <>
       <Nav>
-        <Logo><Link to="/">MO:A</Link></Logo>
-        {userLogIn ? <NavList>
-          <NavItem><Link to="/post">새 글쓰기</Link></NavItem>
-          <NavItem><Link to="/mypage">마이페이지</Link></NavItem>
-          <NavItem><Link to="/signout">로그아웃</Link></NavItem>          
-        </NavList> 
-        : 
-        <NavList>
-          <NavItem onClick={() => setSignInModal(true)}>로그인</NavItem>
-          <NavItem><Link to="/signup">회원가입</Link></NavItem>
-        </NavList>}
+        <Logo>
+          <Link to="/">MO:A</Link>
+        </Logo>
+        {userLogIn ? (
+          <NavList>
+            <span className="name">{username}</span><span>님</span>
+            <NavItem>
+              <Link to="/post">새 글쓰기</Link>
+            </NavItem>
+            <NavItem>
+              <Link to="/mypage">마이페이지</Link>
+            </NavItem>
+            <NavItem onClick={onClickSignout}>로그아웃</NavItem>
+          </NavList>
+        ) : (
+          <NavList>
+            <NavItem onClick={() => setSignInModal(true)}>로그인</NavItem>
+            <NavItem>
+              <Link to="/signup">회원가입</Link>
+            </NavItem>
+          </NavList>
+        )}
       </Nav>
       {signInModal && (
         <Modal onClose={() => setSignInModal(false)}>

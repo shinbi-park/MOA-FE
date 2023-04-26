@@ -31,30 +31,41 @@ const MemberKickOut = styled.button`
   cursor: pointer;
 `;
 
-const MemberListItem = ({ name }) => {
+const MemberListItem = ({ member, fetchMemberKick, sendRatingData }) => {
   const starArray = [1, 2, 3, 4, 5];
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(member.popularity);
 
+  const onClickRate = (array, applyId) => {
+    setRating(array);
+    sendRatingData(array, applyId);
+  };
+
+  const memberKickHandler = (applyId) => {
+    fetchMemberKick(applyId);
+  };
   return (
     <div>
       <MemberListItemDiv>
-        <div>{name}</div>
+        <div>{member.nickname}</div>
         <div>
           {starArray.map((array, index) => (
             <RatingStar
               size={20}
               key={index}
               className={array <= rating ? "active_rating" : "inactive_rating"}
-              onClick={() => setRating(array)}
+              onClick={() => onClickRate(array, member.applyId)}
+              value={rating}
             />
           ))}
         </div>
 
         <div style={{ display: "flex" }}>
-          현재 참여도 <ParticipantRate />
+          현재 참여도 <ParticipantRate member={member} />
         </div>
 
-        <MemberKickOut>강퇴하기</MemberKickOut>
+        <MemberKickOut onClick={() => memberKickHandler(member.applyId)}>
+          강퇴하기
+        </MemberKickOut>
       </MemberListItemDiv>
     </div>
   );

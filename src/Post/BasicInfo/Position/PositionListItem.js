@@ -32,57 +32,63 @@ const Button = styled.button`
   }
 `;
 
-const PositionListItem = ({ position, onPositionChange }) => {
+const PositionListItem = ({
+  position,
+  onPositionChange,
+  field,
+  total,
+  isEdit,
+}) => {
   const [num, setNum] = useState(1);
   const [positionName, setPositionName] = useState("");
+
+  useEffect(() => {
+    if (isEdit) {
+      setPositionName(field);
+      setNum(total);
+    }
+  }, [isEdit, total, field]);
 
   const onChange = useCallback(
     (e) => {
       setPositionName(e.target.value);
-      onPositionChange(position.id, num, e.target.value);
+      onPositionChange(position.recruitMemberId, num, e.target.value);
     },
-    [position.id, num, onPositionChange]
+    [position.recruitMemberId, num, onPositionChange]
   );
 
   const addPeople = (event) => {
     event.preventDefault();
-    setNum((prevNum) => {
-      if (prevNum < 8) {
+      if (num < 8) {
         // 최대 8명까지
-        const newNum = prevNum + 1;
-        onPositionChange(position.id, newNum, positionName);
-        return newNum;
+        const newNum = num + 1;
+        onPositionChange(position.recruitMemberId, newNum, positionName);
+        setNum(newNum);
       } else return 8;
-    });
   };
 
   const removePeople = (event) => {
     event.preventDefault();
-
-    setNum((prevNum) => {
-      if (prevNum > 1) {
-        //최소 1명
-        const newNum = prevNum - 1;
-        onPositionChange(position.id, newNum, positionName);
-        return newNum;
-      } else return 1;
-    });
+    if (num > 1) { //최소 1명
+      const newNum = num - 1;
+      onPositionChange(position.recruitMemberId, newNum, positionName);
+      setNum(newNum);
+    } else return 1;
   };
 
   return (
-    <>
-      <Block>
-        <InputText
-          placeholder="예시) 프론트엔드"
-          value={positionName}
-          onChange={onChange}
-          required
-        />
-        <Button onClick={removePeople}> - </Button> {num}
-        <Button onClick={addPeople}> + </Button>
-      </Block>
-    </>
+    <Block>
+      <InputText
+        placeholder="예시) 프론트엔드"
+        value={positionName}
+        onChange={onChange}
+        required
+      />
+      <Button onClick={removePeople}> - </Button> {num}
+      <Button onClick={addPeople}> + </Button>{" "}
+    </Block>
   );
+  
 };
 
 export default PositionListItem;

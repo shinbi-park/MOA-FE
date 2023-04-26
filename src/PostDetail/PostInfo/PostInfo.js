@@ -1,13 +1,11 @@
 import React from "react";
-
 import PostInfoAbout from "./PostInfoAbout";
 import PostInfoComment from "./PostInfoCommnet/PostInfoComment";
 import PostInfoCurrent from "./PostInfoCurrent";
 import { useEffect } from "react";
 import { useState } from "react";
-import { recruitDummy } from "../../common/DummyData";
 import { useRecoilValue } from "recoil";
-import { getPostData } from "../../common/selector";
+import { getPostData } from "../../Recoil/selector";
 
 const PostInfo = () => {
   const [curPost, setCurPost] = useState("");

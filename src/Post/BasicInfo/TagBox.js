@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 
 const TagBoxBlock = styled.div`
@@ -9,7 +9,6 @@ const TagBoxBlock = styled.div`
     margin-bottom: 0.5rem;
     font-size: 19px;
   }
-  
 `;
 
 const TagForm = styled.div`
@@ -19,7 +18,7 @@ const TagForm = styled.div`
   border: 1px solid;
   font-size: inherit;
   width: 550px;
-  box-shadow: 2px 1px 5px #BDBDBD;
+  box-shadow: 2px 1px 5px #bdbdbd;
   input,
   button {
     outline: none;
@@ -30,7 +29,7 @@ const TagForm = styled.div`
   input {
     padding: 0.5rem;
     flex: 1;
-    
+
     height: 20px;
     font-size: inherit;
   }
@@ -40,7 +39,6 @@ const TagForm = styled.div`
     font-weight: bold;
     align-content: right;
   }
-  
 `;
 
 const Tag = styled.div`
@@ -67,9 +65,15 @@ const TagList = React.memo(({ tags, onRemove }) => (
   </TagListBlock>
 ));
 
-const TagBox = ({handleTagsChange}) => {
+const TagBox = ({ handleTagsChange, isEdit, Editdata }) => {
   const [input, setInput] = useState("");
   const [localTags, setLocalTags] = useState(["태그를 입력하세요"]);
+
+  useEffect(() => {
+    if (isEdit && Editdata.tags) {
+      setLocalTags(Editdata.tags);
+    }
+  }, [isEdit]);
 
   const intertTag = useCallback(
     (tag) => {
@@ -98,26 +102,29 @@ const TagBox = ({handleTagsChange}) => {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      intertTag(input.trim());
+      const tag = input.replace(/\s/g, '');
+      intertTag(tag);
       setInput("");
     },
     [input, intertTag]
   );
   return (
     <TagBoxBlock>
-    <h4> 태그 </h4>
-    <TagForm>
-      <input
-        placeholder="태그를 입력하세요!"
-        value={input}
-        onChange={onChange}
-      />
-      <button type="submit" onClick={onSubmit}> 추가 </button>
-    </TagForm>
-    <TagList tags={localTags} onRemove={onRemove} />
-  </TagBoxBlock>
-
+      <h4> 태그 </h4>
+      <TagForm>
+        <input
+          placeholder="태그를 입력하세요!"
+          value={input}
+          onChange={onChange}
+        />
+        <button type="submit" onClick={onSubmit}>
+          추가
+        </button>
+      </TagForm>
+      <TagList tags={localTags} onRemove={onRemove} />
+    </TagBoxBlock>
   );
+  
 };
 
 export default TagBox;

@@ -1,33 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import profile from "../component/profileImg.png";
+import profile from "../Common/profileImg.png";
 import { AiOutlineEdit } from "react-icons/ai";
-import { MdOutlineCancel } from "react-icons/md";
-import Sidebar from "./Sidebar/Sidebar";
-
-const Center = styled.div`
-  height: 92vh;
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-`;
-
-const Main = styled.div`
-  display: "flex";
-  flex: 2;
-`;
+import axios from "axios";
 
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
   height: 680px;
+  min-width: 500px;
   border: 0.5px solid #a2a2a2;
   padding: 20px;
   border-radius: 20px;
   padding-top: 15px;
-  margin-top: 40px;
-  margin-left: 100px;
   margin-right: 100px;
   margin-bottom: 100px;
   box-shadow: 1px 1px 5px 1px #c0c0c0;
@@ -36,8 +22,11 @@ const Wrapper = styled.div`
 const Profile = styled.div`
   display: flex;
   align-items: center;
-  text-decoration: underline;
   margin-left: 10px;
+  position: relative;
+  h3{
+    text-decoration: underline;
+  }
 `;
 
 const ProfileImgContainer = styled.div`
@@ -97,6 +86,7 @@ const PwdInput = styled.input`
 const Input = styled.input`
   ${inputStyle}
   margin-bottom: 16px;
+  
 `;
 
 const EmailInput = styled.input`
@@ -105,6 +95,7 @@ const EmailInput = styled.input`
   font-size: 16px;
   width: 400px;
   border: none;
+  color: black;
   background-color: #d1d1d1;
   margin-bottom: 5px;
   pointer-events: none;
@@ -125,67 +116,87 @@ const SaveButton = styled.button`
   }
 `;
 
-function UserEdit() {
+const EditIcons = styled(AiOutlineEdit)`
+  display: flex;
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  bottom: 23.5px;
+  right: -20px;
+`;
+
+function Setting() {
   const [user, setUser] = useState({
-    email: "example@gmail.com",
-    name: "username",
-    nickname: "nickname",
-    password: ""
+    email: "",
+          name: "",
+          nickname: "",
+          password: ""
   });
   const [file, setFile] = useState("");
-  const [profileImg, setProfileImg] = useState("");
+  const [profileImg, setProfileImg] = useState(null);
   const [nicknameInput, setNicknameInput] = useState(user.nickname);
   const [usernameInput, setUsernameInput] = useState(user.name);
   const [isEditing, setIsEditing] = useState(false);
-
   const [currentPwd, setCurrentPwd] = useState("");
   const [newPwd, setNewPwd] = useState("");
   const [newPwdConfirm, setPwdConfirm] = useState("");
-  const [newUsername, setNewUsername] = useState("");
-  const [error, setError] = useState("");
-  /*
-  const handleUsernameChange = (event) => {
-    const { username, value } = event.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [username]: value
-    }));
-  };
-*/
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    fetch(`http://13.125.111.131:8080/user/info/profile`, {
+      method: "GET",
+      headers: {
+        Authorization: localStorage.getItem("Authorization"),
+        AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+      }
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setUser({
+          email: data.email,
+          name: data.name,
+          nickname: data.nickname,
+        });
+        setNicknameInput(data.nickname);
+        setUsernameInput(data.name);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  },[]);
+
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
   const handleNicknameChange = (event) => {
+    event.preventDefault();
     setNicknameInput(event.target.value);
   };
 
   const handleUsernameChange = (event) => {
+    event.preventDefault();
     setUsernameInput(event.target.value);
   };
 
   const handlePwdChange = (event) => {
-    const { nickname, value } = event.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [nickname]: value
-    }));
+    event.preventDefault();
+    setCurrentPwd(event.target.value);
   };
 
   const handleNewPwdChange = (event) => {
-    const { nickname, value } = event.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [nickname]: value
-    }));
+    event.preventDefault();
+    setNewPwd(event.target.value);
   };
 
   const handleNewPwdConfirmChange = (event) => {
-    const { nickname, value } = event.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [nickname]: value
-    }));
+    event.preventDefault();
+    setPwdConfirm(event.target.value);
   };
 
   const handleFileChange = (event) => {
@@ -202,50 +213,62 @@ function UserEdit() {
     reader.readAsDataURL(selectedFile);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
 
-    if (nicknameInput.trim() !== "" && nicknameInput !== user.nickname)
-      setUser({ ...user, nickname: nicknameInput });
-
-    //새 비밀번호와 비밀번호 확인이 다르면 리턴
-    if (newPwd !== newPwdConfirm) {
-      setError("새 비밀번호와 비밀번호 확인이 일치하지 않습니다!");
+    if (newPwd.trim() !== "" && currentPwd.trim() === "") {//현재 비밀번호를 입력하지 않고 새 비밀번호 입력시
+      alert("현재 비밀번호를 입력해주세요!");
+      return;
+    } 
+    if(newPwd.length < 8) {
+      alert("새 비밀번호는 8자리 이상 입력해주세요!");
+    }
+    if (newPwd !== newPwdConfirm) { //새 비밀번호와 비밀번호 확인이 다르면 리턴
+      alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다!");
       return;
     }
+   const userData =  ({
+      "name": usernameInput,
+      "nickname": nicknameInput,
+      "currentPassword": currentPwd,
+      "newPassword" : newPwd
+    })
 
-    //새로운이름이 빈칸이면 비밀번호만 변경
-    if (newUsername.trim() !== "") {
-      //유저 네임 변경시
+    formData.append("data", new Blob([JSON.stringify(userData)], {type: "application/json"}))
+    
+   // axios.post("/create/list", formData)
+   axios.patch("http://13.125.111.131:8080/user/info/basic", formData, {
+    headers: {
+      "Authorization": localStorage.getItem("Authorization"),
+      "AuthorizationRefresh": localStorage.getItem("AuthorizationRefresh")
     }
-
-    if (newPwd.trim() !== "" && currentPwd.trim() === "") {
-      //현재 비밀번호를 입력하지 않고 새 비밀번호 입력시
-      setError("현재 비밀번호를 입력해주세요!");
-    } else if (newPwd.trim() !== "" && currentPwd.trim() !== "") {
-      //현재 비밀번호가 맞는지 확인
-      //서버로 바뀐 정보 전송
+  })
+  .then((response) => {
+    // 요청 성공 시 실행할 코드 작성
+    console.log(response.data);
+    if (response.status === 200) {
+      alert("프로필을 성공적으로 변경하였습니다");
+      setIsEditing(false);
+      setUsernameInput(usernameInput);
+      setUserData({ ...userData });
+      window.location.reload();
+    } 
+    else if(response.status === 400){
+      alert("현재 비밀번호를 다시 확인해주세요!")
     }
-    /*
-    try {
-      const response = await updateUser(user);
-      console.log(response);
-      alert("유저 정보가 수정되었습니다.");
-    } catch (error) {
-      console.error(error);
-      alert("유저 정보 수정에 실패하였습니다.");
+    else {
+      alert("프로필 변경에 실패하였습니다");
     }
-    */
+  })
+    .catch((error) => {
+      // 요청 실패 시 실행할 코드 작성
+      console.log(error);
+    });
   };
 
   return (
-    <Center>
-      <Sidebar />
-      <Main>
         <Wrapper>
           <ProfileImgContainer>
             <Avatar src={profileImg || profile} alt="프로필 사진" />
@@ -255,8 +278,8 @@ function UserEdit() {
                 type="file"
                 id="profile-image-upload"
                 onChange={handleFileChange}
-                accept="image/*" // 이미지 파일만 선택 가능하도록 설정
-                style={{ display: "none" }} // 실제로 보이지 않도록 숨김 처리
+                accept="image/*" 
+                style={{ display: "none" }} 
               />
             </EditIcon>
           </ProfileImgContainer>
@@ -268,9 +291,12 @@ function UserEdit() {
                 onChange={handleUsernameChange}
               />
             ) : (
+              <>
               <h3 onClick={handleEditClick}>
-                {usernameInput} <AiOutlineEdit onClick={handleEditClick} />
+                {usernameInput}
               </h3>
+              <EditIcons onClick={handleEditClick}/>
+              </>
             )}
           </Profile>
 
@@ -281,6 +307,7 @@ function UserEdit() {
               name="email"
               placeholder="이메일"
               value={user.email}
+              disabled
             />
           </InputContainer>
 
@@ -302,18 +329,21 @@ function UserEdit() {
                 type="password"
                 name="Currentpassword"
                 placeholder="현재 비밀번호"
+                value={currentPwd}
                 onChange={handlePwdChange}
               />
               <PwdInput
                 type="password"
                 name="Newpassword"
                 placeholder="새 비밀번호"
+                value={newPwd}
                 onChange={handleNewPwdChange}
               />
               <PwdInput
                 type="password"
                 name="NewpasswordConfirm"
                 placeholder="새 비밀번호 확인"
+                value={newPwdConfirm}
                 onChange={handleNewPwdConfirmChange}
               />
             </InputContainer>
@@ -322,9 +352,7 @@ function UserEdit() {
             </SaveButton>
           </Form>
         </Wrapper>
-      </Main>
-    </Center>
   );
 }
 
-export default UserEdit;
+export default Setting;

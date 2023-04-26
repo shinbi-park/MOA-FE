@@ -3,6 +3,9 @@ import styled from "styled-components";
 import PageCommentInput from "./PostCommentInput";
 import PostInfoReply from "./PostInfoReply";
 import PostCommentItem from "./PostCommentItem";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const HrCommentLine = styled.hr`
   background: #d9d9d9;
@@ -18,48 +21,146 @@ const CommentUl = styled.ul`
 `;
 
 const PostInfoComment = () => {
-  const [comment, setComment] = useState({
-    userName: "user1",
-    content: "",
-    created_time: "",
-    commentId: 0,
-  });
-
-  const [comment_count, setComment_count] = useState(0);
+  const [comment, setComment] = useState("");
+  const { postId } = useParams();
   const [newComment, setNewComment] = useState([]);
+  const [comment_count, setComment_count] = useState(0);
 
-  const onCommentChange = (e) => {
-    setComment({ ...comment, content: e.target.value });
+  const fetchComment = async () => {
+    await axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}`, {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => {
+        setNewComment(response.data.repliesInfo.info);
+        setComment_count(response.data.repliesInfo.count);
+      })
+
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
-  const onCommentSubmit = (e) => {
+  useEffect(() => {
+    fetchComment();
+  }, []);
+
+  const onCommentChange = (e) => {
     e.preventDefault();
-    comment.created_time = new Date()
-      .toLocaleString()
-      .slice(0, 24)
-      .replace("T", " ");
-    setNewComment((newComment) => {
-      return [comment, ...newComment];
-    });
-    setComment({
-      ...comment,
-      commentId: comment.commentId + 1,
-      content: "",
-    });
-    setComment_count(comment_count + 1);
+    setComment(e.target.value);
+  };
+
+  const onCommentSubmit = async (e) => {
+    e.preventDefault();
+    if (comment.length === 0) {
+      alert("댓글 내용을 입력해주세요!");
+    } else {
+      const params = {
+        content: comment,
+      };
+
+      const response = await axios.post(
+        `http://13.125.111.131:8080/recruitment/${postId}/reply`,
+        null,
+
+        {
+          responseType: "json",
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+
+          params,
+        }
+      );
+      fetchComment();
+      setComment("");
+    }
   };
 
   const onEditComment = (id, newContent) => {
+    axios.put(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+      {
+        content: newContent,
+      },
+
+      {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      }
+    );
+
     setNewComment(
       newComment.map((item) =>
-        item.commentId === id ? { ...item, content: newContent } : item
+        item.replyId === id ? { ...item, content: newContent } : item
       )
     );
   };
 
-  const onDeleteComment = (id) => {
-    setNewComment(newComment.filter((item) => item.commentId !== id));
-    setComment_count(comment_count - 1);
+  const onDeleteComment = async (id) => {
+    if (window.confirm("댓글을 삭제하시겠습니까?")) {
+      await axios.delete(
+        `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      );
+      fetchComment();
+    }
+
+    // setNewComment(newComment.filter((item) => item.replyId !== id));
+  };
+
+  const onReplySubmit = async (reply, id) => {
+    const params = {
+      content: reply,
+      parent: id,
+    };
+
+    const response = await axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply`,
+      null,
+
+      {
+        responseType: "json",
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+
+        params,
+      }
+    );
+    fetchComment();
   };
 
   return (
@@ -72,15 +173,21 @@ const PostInfoComment = () => {
         onCommentChange={onCommentChange}
       />
 
-      {newComment.map((item) => (
-        <CommentUl key={item.commentId}>
+      {newComment?.map((item) => (
+        <CommentUl key={item.replyId}>
           <PostCommentItem
             item={item}
             onDeleteComment={onDeleteComment}
             onEditComment={onEditComment}
           />
 
-          {<PostInfoReply commentId={item.commentId} />}
+          <PostInfoReply
+            item={item}
+            fetchComment={fetchComment}
+            onReplySubmit={onReplySubmit}
+            value={item.subReplies}
+          />
+
           <HrCommentLine />
         </CommentUl>
       ))}

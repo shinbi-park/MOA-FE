@@ -15,14 +15,17 @@ const CurrentRate = styled.div`
   height: 100%;
 `;
 
-const ParticipantRate = () => {
-  const [rate, setRate] = useState(85);
+const ParticipantRate = ({ member }) => {
+  const [total, setTotal] = useState(member.totalAttend);
+  const [attend, setAttend] = useState(member.attend);
+  const rate = parseInt((attend / total) * 100);
+
   return (
     <>
       <RateBar>
         <CurrentRate rate={rate}></CurrentRate>
       </RateBar>
-      {rate}%
+      <>{isNaN(rate) ? " 0%" : <>{rate}%</>}</>
     </>
   );
 };

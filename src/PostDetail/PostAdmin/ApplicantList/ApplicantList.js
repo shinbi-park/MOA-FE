@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import ApplicantListItem from "./ApplicantListItem";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { useRecoilState } from "recoil";
+import { myPostData, userActivity } from "../../../Recoil/atoms";
 
 const ApplicantListDiv = styled.div`
   margin-bottom: 70px;
@@ -40,7 +44,7 @@ const AppliCantWrap = styled.div`
   width: 800px;
 `;
 const ApplycantPosition = styled.h4`
-  padding-left: 20px;
+  padding-left: 40px;
 `;
 
 const ApplycantItemDiv = styled.div`
@@ -50,38 +54,154 @@ const ApplycantItemDiv = styled.div`
 
 const ApplicantList = () => {
   const [toggle, setToggle] = useState(false);
+  const { postId } = useParams();
+  const [applyMember, setApplyMember] = useState([]);
+  const [members, setMembers] = useRecoilState(userActivity);
+  const [post, setPost] = useRecoilState(myPostData);
 
-  // useEffect(async() => {
-  //   const response = await axios.get(`/recruitment/{recruitmentId}/apply/members?statusCode=1`);
-  // conosle.log(response.data);
-  // },[])
+  useEffect(() => {
+    fetchApplicant();
+  }, []);
+
+  const fetchApplicant = async () => {
+    const params = {
+      statusCode: 1,
+    };
+
+    await axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}/apply/members`, {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+        params,
+      })
+      .then((response) => {
+        setApplyMember(response.data.value);
+      });
+  };
+
+  const fetchMember = async () => {
+    await axios
+      .get(
+        `http://13.125.111.131:8080/recruitment/${postId}/approved/members`,
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      )
+      .then((response) => {
+        setMembers(response.data);
+        console.log(response.data);
+      });
+  };
+
+  const fetchPost = async () => {
+    await axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}`, {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => {
+        setPost(response.data.recruitInfo);
+
+        console.log(response.data);
+      });
+  };
+
+  const fetchApproved = async (applyId) => {
+    const params = {
+      statusCode: 2,
+    };
+    if (window.confirm("지원요청을 수락하시겠습니까?")) {
+      await axios.post(
+        `http://13.125.111.131:8080/recruitment/${postId}/apply/${applyId}`,
+        null,
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+          params,
+        }
+      );
+      fetchApplicant();
+      fetchMember();
+      fetchPost();
+    }
+  };
+
+  const fetchRefuse = async (applyId) => {
+    const params = {
+      statusCode: 3,
+    };
+    if (window.confirm("지원요청을 거부하시겠습니까?")) {
+      await axios.post(
+        `http://13.125.111.131:8080/recruitment/${postId}/apply/${applyId}`,
+        null,
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+          params,
+        }
+      );
+      fetchApplicant();
+    }
+  };
+
   return (
     <ApplicantListDiv>
-      <h1>
-        지원자 현황
-        <button onClick={() => setToggle(!toggle)}>*</button>
-      </h1>
+      <h1>지원자 현황</h1>
 
       <ApplicantListBox>
-        {!toggle ? (
-          <ApplicantNull>현재 지원자가 없습니다</ApplicantNull>
-        ) : (
-          <ApplicantDiv>
+        <ApplicantDiv>
+          {applyMember.length >= 1 ? (
             <AppliCantWrap>
-              <ApplycantPosition>Position 1</ApplycantPosition>
-              <ApplycantItemDiv>
-                <ApplicantListItem userName={"user1"} />
-                <ApplicantListItem userName={"user2"} />
-              </ApplycantItemDiv>
+              <ApplycantPosition>
+                {applyMember.map((item, index) => (
+                  <React.Fragment key={index}>
+                    <ApplycantPosition> {item.recruitField}</ApplycantPosition>
+
+                    <ApplycantItemDiv>
+                      <ApplicantListItem
+                        item={item}
+                        fetchApproved={fetchApproved}
+                        fetchRefuse={fetchRefuse}
+                      />
+                    </ApplycantItemDiv>
+                  </React.Fragment>
+                ))}
+              </ApplycantPosition>
             </AppliCantWrap>
-            <AppliCantWrap>
-              <ApplycantPosition>Position 2</ApplycantPosition>
-              <ApplycantItemDiv>
-                <ApplicantListItem userName={"user1"} />
-              </ApplycantItemDiv>
-            </AppliCantWrap>
-          </ApplicantDiv>
-        )}
+          ) : (
+            <ApplicantNull>현재 지원자가 없습니다</ApplicantNull>
+          )}
+        </ApplicantDiv>
       </ApplicantListBox>
     </ApplicantListDiv>
   );

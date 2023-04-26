@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import PostReplyItem from "./PostReplyItem";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const ReplyBtnDiv = styled.div`
   padding-left: 1%;
@@ -56,42 +58,70 @@ const ReplyUl = styled.ul`
   list-style: none;
 `;
 
-const PostInfoReply = ({ commentId }) => {
-  const [reply, setReply] = useState({
-    userName: "user2",
-    content: "",
-    created_time: "",
-    replyId: 0,
-  });
-
+const PostInfoReply = ({ item, onReplySubmit, value, fetchComment }) => {
+  const [reply, setReply] = useState("");
+  const { postId } = useParams();
   const [newReply, setNewReply] = useState([]);
   const [replyToggle, setReplyToggle] = useState(false);
 
-  const onReplySubmit = (e) => {
+  useEffect(() => {
+    setNewReply(value);
+  }, [value]);
+
+  const replySubmitHandle = async (e) => {
     e.preventDefault();
-    reply.created_time = new Date()
-      .toLocaleString()
-      .slice(0, 24)
-      .replace("T", " ");
-    setNewReply((newReply) => {
-      return [reply, ...newReply];
-    });
-    setReply({
-      ...reply,
-      replyId: reply.replyId + 1,
-      content: "",
-    });
+    if (reply.length === 0) {
+      alert("답글 내용을 입력해주세요!");
+    } else {
+      await onReplySubmit(reply, item.replyId);
+      setReply("");
+    }
   };
 
   const onReplyToggle = () => {
     setReplyToggle(!replyToggle);
   };
 
-  const onDeleteReply = (id) => {
+  const onDeleteReply = async (id) => {
+    if (window.confirm("답글을 삭제하시겠습니까?")) {
+      await axios.delete(
+        `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+
+        {
+          headers: {
+            // 로그인 후 받아오는 인증토큰값
+            Authorization: window.localStorage.getItem("Authorization"),
+
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
+        }
+      );
+      fetchComment();
+    }
+
     setNewReply(newReply.filter((it) => it.replyId !== id));
   };
 
   const onEditReply = (id, newContent) => {
+    axios.put(
+      `http://13.125.111.131:8080/recruitment/${postId}/reply/${id}`,
+      {
+        content: newContent,
+      },
+
+      {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      }
+    );
     setNewReply(
       newReply.map((item) =>
         item.replyId === id ? { ...item, content: newContent } : item
@@ -105,16 +135,11 @@ const PostInfoReply = ({ commentId }) => {
         <ReplyBtn onClick={onReplyToggle}>답글</ReplyBtn>
       </ReplyBtnDiv>
       {replyToggle && (
-        <ReplyForm onSubmit={onReplySubmit}>
+        <ReplyForm onSubmit={replySubmitHandle}>
           <ReplyInput
             placeholder="답글을 입력해주세요"
-            value={reply.content}
-            onChange={(e) =>
-              setReply({
-                ...reply,
-                content: e.target.value,
-              })
-            }
+            value={reply}
+            onChange={(e) => setReply(e.target.value)}
           />
           <ReplyAddBtnWrap>
             <ReplyAddBtn>확인</ReplyAddBtn>
@@ -122,17 +147,15 @@ const PostInfoReply = ({ commentId }) => {
         </ReplyForm>
       )}
 
-      {newReply.map((item) => {
-        return (
-          <ReplyUl key={item.replyId}>
-            <PostReplyItem
-              item={item}
-              onDeleteReply={onDeleteReply}
-              onEditReply={onEditReply}
-            />
-          </ReplyUl>
-        );
-      })}
+      {newReply?.map((item) => (
+        <ReplyUl key={item.replyId}>
+          <PostReplyItem
+            item={item}
+            onDeleteReply={onDeleteReply}
+            onEditReply={onEditReply}
+          />
+        </ReplyUl>
+      ))}
     </div>
   );
 };

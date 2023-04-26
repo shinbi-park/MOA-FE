@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { postData, titleState } from "../common/atoms";
+import { useRecoilValue } from "recoil";
+import { myPostData, titleState } from "../Recoil/atoms";
 import { useState } from "react";
-import { useEffect } from "react";
+import TransAddress from "./UserInfo/TransAddress";
+import axios from "axios";
 
 const PostTitlewrap = styled.div`
-  margin-top: 34px; ;
+  margin-top: 34px;
 `;
 
 const PostTitleHeader = styled.div`
@@ -60,16 +61,58 @@ const RecruitState = styled.span`
   }
 `;
 
+const PostTagsDiv = styled.div`
+  margin: 10px 0 auto;
+`;
+
+const PostTags = styled.span`
+  margin-right: 15px;
+  color: gray;
+`;
+
+const PreferLoc = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+`;
+
 const PostTitle = () => {
-  const data = useRecoilValue(postData);
+  const data = useRecoilValue(myPostData);
   const titles = useRecoilValue(titleState);
+  const [user, setUser] = useState(data.postUser);
+  const [Author, setAuthor] = useState(0);
+
+  useEffect(() => {
+    fetchPostUserInfo();
+  }, []);
+
+  const fetchPostUserInfo = async () => {
+    const params = {
+      userId: user.userId,
+    };
+    await axios
+      .get("http://13.125.111.131:8080/user/info/profile", {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
+
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+        params,
+      })
+      .then((response) => {
+        setAuthor(response.data);
+      });
+  };
+
   return (
     <div>
       <PostTitlewrap>
-        <PostTitleHeader>{data[0].title}</PostTitleHeader>
+        <PostTitleHeader>{data.title}</PostTitleHeader>
       </PostTitlewrap>
       <PostRecruitwrap>
-        <RecruitPart>{data[0].postUser.userName}</RecruitPart>
+        <RecruitPart>{user.nickname}</RecruitPart>
         <RecruitState
           className={
             (titles === 1 && "recruiting") ||
@@ -77,6 +120,18 @@ const PostTitle = () => {
             (titles === 3 && "projectDone")
           }
         ></RecruitState>
+        <PostTagsDiv>
+          {data.tags.map((item, index) => (
+            <PostTags key={index}>#{item}</PostTags>
+          ))}
+        </PostTagsDiv>
+        <PreferLoc>
+          선호지역 :
+          <TransAddress
+            lat={Author.locationLatitude}
+            lng={Author.locationLongitude}
+          />
+        </PreferLoc>
       </PostRecruitwrap>
     </div>
   );

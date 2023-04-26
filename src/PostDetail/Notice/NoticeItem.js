@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Dropdownbutton from "./Dropdownbutton";
 import { ImCheckmark, ImCross } from "react-icons/im";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { userStation } from "../../Recoil/atoms";
 
 const NoticeListWrap = styled.div`
   width: 1045px;
@@ -30,6 +34,10 @@ const NoticeListDate = styled.span`
   display: flex;
 `;
 
+const RecommendLoc = styled.span`
+  margin-left: 5px;
+`;
+
 const NoticeDropdownDiv = styled.div`
   position: absolute;
   left: 1080px;
@@ -48,6 +56,13 @@ const NoticeEditInput = styled.textarea`
   resize: none;
   width: 1000px;
   height: 50px;
+`;
+
+const NoticeEditBtn = styled.button`
+  border: none;
+  background-color: #fff;
+  color: #707070;
+  font-size: 12px;
 `;
 
 const VotingBtnDiv = styled.div`
@@ -82,19 +97,37 @@ const NoticeItem = ({
   onNoticeDelete,
   onEditNotice,
   onVoteFinish,
+  fetchAttend,
+  author,
+  fetchNonAttend,
+  fetchUpdateAttend,
+  fetchFinishVote,
 }) => {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [isEdit, setIsEdit] = useState(false);
   const [isVote, setIsVote] = useState(true);
   const [curContent, setCurContent] = useState(newnotice.content);
+  const { postId } = useParams();
+  const station = useRecoilValue(userStation);
 
-  //const response = await axios.post(`/recruitment/${recruitmentId}/apply`,{"value" : "PENDING");
+  const AttendanceHandler = (noticeId) => {
+    fetchAttend(noticeId);
+  };
+
+  const NoAttendanceHandler = (noticeId) => {
+    fetchNonAttend(noticeId);
+  };
 
   const isEditSetting = (EditValue) => {
     setIsEdit(EditValue);
   };
 
   const editNoticeHandler = (id, newContent) => {
+    if (newContent.length === 0) {
+      alert("수정할 내용을 입력해주세요!");
+      setCurContent(newnotice.content);
+      return;
+    }
     onEditNotice(id, newContent);
     setIsEdit(!isEdit);
   };
@@ -105,56 +138,146 @@ const NoticeItem = ({
   };
 
   return (
-    <NoticeListWrap className={!isVote ? "vote_done" : ""}>
-      <NoticeListHeader>
-        <div>
-          <NoticeListDate className={!isVote ? "vote_done" : ""}>
-            {date}
-            {!isVote && <span>추천 지역: 서울역??</span>}
-          </NoticeListDate>
-        </div>
-        <NoticeDropdownDiv>
-          <Dropdownbutton
-            newnotice={newnotice}
-            onNoticeDelete={onNoticeDelete}
-            isEditSetting={isEditSetting}
-            voteFinishHandler={voteFinishHandler}
-          />
-        </NoticeDropdownDiv>
-      </NoticeListHeader>
-
-      {!isEdit ? (
+    <>
+      {/* 글쓴이면 true / 글쓴이가 아니면 false 작용 */}
+      {author ? (
         <>
-          <NoticeListContent> {newnotice.content} </NoticeListContent>
+          {/* 글쓴이인 경우 */}
+          <NoticeListWrap
+            // 투표마감버튼을 눌렀거나 혹은 공지글의 투표 마감값이(finishVote) true인 공지글일때
+            className={!isVote || newnotice.finishVote ? "vote_done" : ""}
+          >
+            <NoticeListHeader>
+              <div>
+                <NoticeListDate>
+                  {date}
+                  {/* 투표마감버튼을 눌렀거나 혹은 공지글의 투표 마감값이(fisihsVote) true인 공지글일때 */}
+                  {(!isVote || newnotice.finishVote) && (
+                    <RecommendLoc>
+                      추천 지역: {newnotice.recommendLocation}
+                    </RecommendLoc>
+                  )}
+                </NoticeListDate>
+              </div>
+              <NoticeDropdownDiv>
+                {/* 투표마감버튼을 누르지않은 상태, 현재 글쓴이인 경우로 author에 true를 전달 */}
+                <Dropdownbutton
+                  isVote={isVote}
+                  author={true}
+                  newnotice={newnotice}
+                  onNoticeDelete={onNoticeDelete}
+                  isEditSetting={isEditSetting}
+                  voteFinishHandler={voteFinishHandler}
+                  fetchUpdateAttend={fetchUpdateAttend}
+                  fetchFinishVote={fetchFinishVote}
+                />
+              </NoticeDropdownDiv>
+            </NoticeListHeader>
+            {/* 수정 중이 아닐 때 */}
+            {!isEdit ? (
+              <>
+                <NoticeListContent>{newnotice.content}</NoticeListContent>
+              </>
+            ) : (
+              // 수정 중 일 때
+              <NoticeListContent>
+                <NoticeEditInput
+                  value={curContent}
+                  onChange={(e) => setCurContent(e.target.value)}
+                />
+                <NoticeEditBtn
+                  onClick={() =>
+                    editNoticeHandler(newnotice.noticeId, curContent)
+                  }
+                >
+                  수정완료
+                </NoticeEditBtn>
+                <NoticeEditBtn onClick={() => setIsEdit(!isEdit)}>
+                  취소
+                </NoticeEditBtn>
+              </NoticeListContent>
+            )}
+            {/* 투표기능이 있는글이고 수정중이 아니고 투표마감버튼 누르지않았고 공지글의 투표 마감값이(fisihsVote) false일때 */}
+            {newnotice.checkVote &&
+              !isEdit &&
+              isVote &&
+              !newnotice.finishVote && (
+                <VotingBtnDiv>
+                  <VotingPositive
+                    onClick={() => AttendanceHandler(newnotice.noticeId)}
+                  >
+                    참여 <ImCheckmark />
+                  </VotingPositive>
+                  <VotingNegative
+                    onClick={() => NoAttendanceHandler(newnotice.noticeId)}
+                  >
+                    불참여 <ImCross />
+                  </VotingNegative>
+                </VotingBtnDiv>
+              )}
+            {/* 투표마감버튼을 눌렀거나 공지글의 투표 마감값이(fisihsVote) true일때 */}
+            {(!isVote || newnotice.finishVote) && (
+              <VoteFinishNotice>투표가 마감되었습니다</VoteFinishNotice>
+            )}
+          </NoticeListWrap>
         </>
       ) : (
-        <NoticeListContent>
-          <NoticeEditInput
-            value={curContent}
-            onChange={(e) => setCurContent(e.target.value)}
-          />
-          <button
-            onClick={() => editNoticeHandler(newnotice.noticeId, curContent)}
+        <>
+          {/* 글쓴이가 아닐 때 */}
+          {/* 투표마감버튼을 눌렀거나 혹은 공지글의 투표 마감값이(finishVote) true인 공지글일때 */}
+          <NoticeListWrap
+            className={!isVote || newnotice.finishVote ? "vote_done" : ""}
           >
-            수정완료
-          </button>
-          <button onClick={() => setIsEdit(!isEdit)}>취소</button>
-        </NoticeListContent>
-      )}
+            <NoticeListHeader>
+              <div>
+                {/* 투표마감버튼을 눌렀거나 혹은 공지글의 투표 마감값이(finishVote) true인 공지글일때 */}
+                <NoticeListDate>
+                  {date}
+                  {(!isVote || newnotice.finishVote) && (
+                    <RecommendLoc>
+                      추천 지역: {newnotice.recommendLocation}
+                    </RecommendLoc>
+                  )}
+                </NoticeListDate>
+              </div>
+              <NoticeDropdownDiv>
+                {/* 현재 글쓴이가 아니므로 author에 false를 전달 */}
+                <Dropdownbutton
+                  author={false}
+                  newnotice={newnotice}
+                  onNoticeDelete={onNoticeDelete}
+                  isEditSetting={isEditSetting}
+                  voteFinishHandler={voteFinishHandler}
+                />
+              </NoticeDropdownDiv>
+            </NoticeListHeader>
 
-      {newnotice.check && !isEdit && (
-        <VotingBtnDiv>
-          <VotingPositive>
-            참여 <ImCheckmark />
-          </VotingPositive>
-          <VotingNegative>
-            불참여 <ImCross />
-          </VotingNegative>
-        </VotingBtnDiv>
+            <>
+              <NoticeListContent>{newnotice.content}</NoticeListContent>
+            </>
+            {/* 투표기능이 있는글이고 공지글의 투표 마감값이(fisihsVote) false일때  */}
+            {newnotice.checkVote && !newnotice.finishVote && (
+              <VotingBtnDiv>
+                <VotingPositive
+                  onClick={() => AttendanceHandler(newnotice.noticeId)}
+                >
+                  참여 <ImCheckmark />
+                </VotingPositive>
+                <VotingNegative
+                  onClick={() => NoAttendanceHandler(newnotice.noticeId)}
+                >
+                  불참여 <ImCross />
+                </VotingNegative>
+              </VotingBtnDiv>
+            )}
+            {/* 투표마감버튼을 눌렀거나  공지글의 투표 마감값이(fisihsVote) true일때*/}
+            {(!isVote || newnotice.finishVote) && (
+              <VoteFinishNotice>투표가 마감되었습니다</VoteFinishNotice>
+            )}
+          </NoticeListWrap>
+        </>
       )}
-
-      {!isVote && <VoteFinishNotice>투표가 마감되었습니다</VoteFinishNotice>}
-    </NoticeListWrap>
+    </>
   );
 };
 

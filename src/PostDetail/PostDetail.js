@@ -2,71 +2,58 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import PostTab from "./PostTab/PostTab";
 import PostTitle from "./PostTitle";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { myPostData, postData } from "../common/atoms";
-import { getPostData } from "../common/selector";
+import { useRecoilState } from "recoil";
+import { myPostData, titleState, userInfo } from "../Recoil/atoms";
 import { useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const PostDetailDiv = styled.div`
   padding-bottom: 5%;
 `;
 
 const PostDetail = () => {
-  const data = useRecoilValue(postData);
   const [isLoading, setIsLoading] = useState(true);
   const [post, setPost] = useRecoilState(myPostData);
+  const [titles, setTitles] = useRecoilState(titleState);
+  const [Info, setInfo] = useRecoilState(userInfo);
+  const { postId } = useParams();
 
-  const tokenA = window.localStorage.getItem("Authorization");
-  const tokenB = window.localStorage.getItem("AuthorizationRefresh");
+  const fetchInfo = async () => {
+    await axios
+      .get("http://13.125.111.131:8080/user/info/profile", {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
 
-  //recoil + axios 예시
-  const fetchData = async () => {
-    const response = await axios.get(
-      "https://jsonplaceholder.typicode.com/users"
-    );
-    setPost(response.data);
-    setIsLoading(false);
-
-    // axios
-    //   .get("http://13.125.111.131:8080/recruitment/1", {
-    //     headers: {
-    //       Authorization: tokenA,
-    //       AuthorizationRefresh: tokenB,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setPost(response.data);
-    //     console.log(data);
-    //     setIsLoading(false);
-    //   })
-
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //   });
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => {
+        setInfo(response.data);
+      });
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    axios
+      .get(`http://13.125.111.131:8080/recruitment/${postId}`, {
+        headers: {
+          Authorization: window.localStorage.getItem("Authorization"),
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://192.168.0.26:8080/recruitment/2", {
-  //       headers: {
-  //         Authorization: tokenA,
-  //         AuthorizationRefresh: tokenB,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       setPostData(response.data);
-  //       console.log(postData.postUser);
-  //     })
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+      })
+      .then((response) => {
+        setPost(response.data.recruitInfo);
+        setIsLoading(false);
+        setTitles(response.data.recruitInfo.state);
+      });
 
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //     });
-  // }, []);
+    fetchInfo();
+  }, [setPost, setTitles, postId]);
 
   return (
     <>
@@ -75,6 +62,7 @@ const PostDetail = () => {
       ) : (
         <PostDetailDiv>
           <PostTitle />
+
           <PostTab />
         </PostDetailDiv>
       )}

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { titleState } from "../../../common/atoms";
-import { useEffect } from "react";
+import { titleState } from "../../../Recoil/atoms";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const SelectDiv = styled.div`
   margin-bottom: 70px;
@@ -29,25 +29,37 @@ const SelectBtn = styled.button`
 
 const PostStateUpdate = () => {
   const [titles, setTitles] = useRecoilState(titleState);
-  const [setting, setSetting] = useState();
+  const [setting, setSetting] = useState(titles);
   const stateArr = [1, 2, 3];
+  const { postId } = useParams();
 
-  // useEffect(() => {
-  //   fetchState();
-  // },[setting])
+  const fetchState = async () => {
+    const params = {
+      status: setting,
+    };
+    await axios.post(
+      `http://13.125.111.131:8080/recruitment/${postId}`,
+      null,
 
-  // const fetchState = async () => {
-  //  await axios.post(`http://192.168.0.26:8080//recruitment/${recruitmentId}?statusCode=${setting}`, {
-  //         headers: {
-  //           Authorization: tokenA,
-  //           AuthorizationRefresh: tokenB,
-  //         },
-  //       })
-  //     }
+      {
+        headers: {
+          // 로그인 후 받아오는 인증토큰값
+          Authorization: window.localStorage.getItem("Authorization"),
 
-  const onChangeSetting = async () => {
+          AuthorizationRefresh: window.localStorage.getItem(
+            "AuthorizationRefresh"
+          ),
+        },
+
+        params,
+      }
+    );
+  };
+
+  const onChangeSetting = () => {
     setTitles(parseInt(setting));
     setSetting(setting);
+    fetchState();
   };
 
   return (

@@ -4,6 +4,15 @@ import Notice from "../Notice/Notice";
 import Schedule from "../Schedule/Schedule";
 import PostInfo from "../PostInfo/PostInfo";
 import PostAdmin from "../PostAdmin/PostAdmin";
+import { useRecoilValue } from "recoil";
+import {
+  FinActivity,
+  myPostData,
+  userActivity,
+  userInfo,
+} from "../../Recoil/atoms";
+import { useParams } from "react-router-dom";
+import { BiLock } from "react-icons/bi";
 
 const Tabwrap = styled.div`
   border-left: none;
@@ -43,13 +52,20 @@ const PostTabContent = styled.div`
 `;
 
 const PostTab = () => {
-  // const [postData, setPostData] = useState();
-  // useEffect(async() => {
-  //   const response = await axios.get(`recruitment/${recruitmentId}`);
-  // setPostData(response.data);
-  // },[])
-
   const [activeTabId, setActiveTabId] = useState(0);
+  const info = useRecoilValue(userInfo);
+  const data = useRecoilValue(myPostData);
+  const activity = useRecoilValue(userActivity);
+  const finProject = useRecoilValue(FinActivity);
+  const { postId } = useParams();
+  const userInfoArr = activity.find(
+    (item) => parseInt(item.recruitmentId) === parseInt(postId)
+  );
+  const finInfoArr = finProject.find(
+    (item) => parseInt(item.recruitmentId) === parseInt(postId)
+  );
+
+  const [user, setUser] = useState(data.postUser);
   const tabArr = [
     {
       tabTitle: <div onClick={() => onClickTab(0)}>정보</div>,
@@ -60,28 +76,53 @@ const PostTab = () => {
       ),
     },
     {
-      tabTitle: <div onClick={() => onClickTab(1)}>회의시간 조사</div>,
-      tabContent: (
-        <div>
-          <Schedule />
-        </div>
+      tabTitle: (
+        <>
+          {user.userId === info.userId ||
+          parseInt(userInfoArr?.recruitmentId) === parseInt(postId) ? (
+            <div onClick={() => onClickTab(1)}>회의시간 조사</div>
+          ) : (
+            <div>
+              <BiLock />
+              회의시간 조사
+            </div>
+          )}
+        </>
       ),
+      tabContent: <Schedule />,
     },
     {
-      tabTitle: <div onClick={() => onClickTab(2)}>공지사항</div>,
-      tabContent: (
-        <div>
-          <Notice />
-        </div>
+      tabTitle: (
+        <>
+          {user.userId === info.userId ||
+          parseInt(userInfoArr?.recruitmentId) === parseInt(postId) ||
+          parseInt(finInfoArr?.recruitmentId) === parseInt(postId) ? (
+            <div onClick={() => onClickTab(2)}>공지사항</div>
+          ) : (
+            <div>
+              <BiLock />
+              공지사항
+            </div>
+          )}
+        </>
       ),
+      tabContent: <Notice />,
     },
     {
-      tabTitle: <div onClick={() => onClickTab(3)}>관리자</div>,
-      tabContent: (
-        <div>
-          <PostAdmin />
-        </div>
+      tabTitle: (
+        <>
+          {user.userId === info.userId ? (
+            <div onClick={() => onClickTab(3)}>관리자</div>
+          ) : (
+            <div>
+              {" "}
+              <BiLock />
+              관리자
+            </div>
+          )}
+        </>
       ),
+      tabContent: <PostAdmin />,
     },
   ];
 

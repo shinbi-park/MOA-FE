@@ -1,45 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import Sidebar from "./Sidebar/Sidebar";
-import ProfileLink from "./Component/ProfileLink"
-import ProfileTag from "./Component/ProfileTag"
-
-import KakaoMap from "../component/KakaoMap";
+import ProfileLink from "./MyPageComponent/ProfileLink";
+import ProfileTag from "./MyPageComponent/ProfileTag";
+import KakaoMap from "../Common/KakaoMap";
+import axios from "axios";
 
 const Wrapper = styled.div`
-  height: 92vh;
   display: flex;
-  flex: 1;
-  flex-direction: row;
-`;
-
-const SidebarContainer = styled.div`
-  flex: 1;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex: 2;
-  margin-top: 23px;
-  align-items: left;
   flex-direction: column;
-  h3{
+  min-width: 450px;
+  h3 {
     margin-bottom: 20px;
     font-size: 22px;
-  }  
+  }
 `;
 
 const EditorWrapper = styled.div`
   border-radius: 4px;
   padding: 8px;
   border: 1px solid #707070;
-  width: 570px;
   padding-top: 0;
-  min-height: 300px;
   font-size: 30px;
-  box-shadow: 2px 1px 5px #BDBDBD;
+  min-height: 300px;
+  min-width: 570px;
+  margin-right: 150px;
+  box-shadow: 2px 1px 5px #bdbdbd;
   .ql-container {
     border: none !important;
   }
@@ -54,74 +41,161 @@ const SaveButton = styled.button`
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 40px;
-  &:hover{
-      cursor: pointer;
-    }
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const SaveButtonContainer = styled.div`
   align-items: center;
   justify-content: center;
   display: flex;
-  width: 580px;
+  min-width: 570px;
+  margin-right: 150px;
   margin-top: 30px;
 `;
 
 const MapWrapper = styled.div`
-display: flex;
-margin-bottom: 20px;
+  display: flex;
+  min-width: 570px;
+  margin-right: 150px;
+  margin-bottom: 20px;
 `;
 
 const Profile = () => {
-    const [introduce, setIntroduce] = useState("");
-    const [location, setLocation] = useState(null);
+  const [data, setData] = useState({
+    details: "",
+    locationLatitude: null,
+    locationLongitude: null,
+    interests: [],
+    link: []
+  });
+  const [introduce, setIntroduce] = useState(data.details);
+  const [location, setLocation] = useState(null);
+  const [tags, setTags] = useState([]);
+  const [UpdateTags, setUpdatedTags] = useState([]);
+  const [links, setLinks] = useState([]);
+  const [UpdateLinkss, setUpdatedLinks] = useState([]);
+  const [userProfileData, setUserProfileData] = useState({});
 
-    const handleUserLocation = (address) => {
-      setLocation(address);
-      console.log(address);// ex. {lat: 37.4, lng: 126.6783068702164}
-    }
+  useEffect(() => {
+    fetchInfo();
+  }, []);
 
-    const handleContentChange = (value) => {
-      setIntroduce(value);
-    };
-    const modules = {
-      toolbar: false,
-    };
+  const fetchInfo = async () => {
+    await axios
+      .get(`http://13.125.111.131:8080/user/info/profile`, {
+        headers: {
+          Authorization: localStorage.getItem("Authorization"),
+          AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+        }
+      })
+      .then((response) => {
+        setData(response.data);
+        setTags(response.data.interests);
+        setLinks(response.data.link);
+        setIntroduce(response.data.details);
+        setLocation({
+          lat: data.locationLatitude || null,
+          lng: data.locationLongitude || null
+        })
+      });
+  };
 
-    return (
-        <Wrapper>
-          <SidebarContainer>
-            <Sidebar />
-          </SidebarContainer>
+  const handleUserLocation = useCallback((address) => {
+    setLocation(address);
+  }, []);
 
-          <Container>
-            <h3>선호 지역</h3>
-            <MapWrapper>
-            <KakaoMap handleUserLocation={handleUserLocation}/>
-          </MapWrapper>
+  const handleContentChange = useCallback((value) => {
+    setIntroduce(value);
+  }, []);
 
-            <h3>링크</h3>
-            <ProfileLink />
+  const handleUserTags = useCallback((value) => {
+    setUpdatedTags(value);
+  }, []);
 
-            <h3>관심 태그</h3>
-            <ProfileTag /> 
+  const handleUserLinks = useCallback((value) => {
+    setUpdatedLinks(value);
+  }, []);
 
-            <h3>상세 소개</h3>
-            <EditorWrapper>
-              <ReactQuill
-                value={introduce}
-                onChange={handleContentChange}
-                modules={modules}
-                theme="snow"
-              />
-          </EditorWrapper>
-
-            <SaveButtonContainer>
-            <SaveButton type="submit" backgroundColor={"black"} >저장하기</SaveButton>
-            </SaveButtonContainer>
-          </Container>
-      </Wrapper>
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      fetch("http://13.125.111.131:8080/user/info/profile", {
+        method: "PATCH",
+        body: JSON.stringify({
+          locationLatitude: location.lat,
+          locationLongitude: location.lng,
+          links: UpdateLinkss,
+          tags: UpdateTags,
+          details: introduce
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("Authorization"),
+          AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
+        }
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          alert("프로필을 성공적으로 변경하였습니다");
+          setUserProfileData({ ...userProfileData });
+        } else {
+          alert("프로필 변경에 실패하였습니다");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    },
+    [location, UpdateLinkss, UpdateTags, introduce, userProfileData]
   );
-}
 
-export default Profile; 
+  const modules = {
+    toolbar: false
+  };
+  return (
+    <Wrapper>
+        <h3>선호 지역</h3>
+        <MapWrapper>
+          {location && (
+            <KakaoMap
+              handleUserLocation={handleUserLocation}
+              data={{
+                lat: data.locationLatitude,
+                lng: data.locationLongitude
+              }}
+            />
+          )}
+      </MapWrapper>
+
+        <h3>링크</h3>
+        <ProfileLink data={links} handleUserLinks={handleUserLinks} />
+
+        <h3>관심 태그</h3>
+        <ProfileTag data={tags} handleUserTags={handleUserTags} />
+
+        <h3>상세 소개</h3>
+        <EditorWrapper>
+          <ReactQuill
+            value={introduce}
+            onChange={handleContentChange}
+            modules={modules}
+            theme="snow"
+          />
+        </EditorWrapper>
+
+        <SaveButtonContainer>
+          <SaveButton
+            type="submit"
+            backgroundColor={"black"}
+            onClick={onSubmit}
+          >
+            저장하기
+          </SaveButton>
+        </SaveButtonContainer>
+    </Wrapper>
+  );
+};
+
+export default Profile;

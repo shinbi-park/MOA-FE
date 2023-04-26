@@ -22,24 +22,33 @@ const BasicInfo = ({
   handleFieldsChange,
   handleTagsChange,
   isEdit,
-  data,
+  Editdata,
 }) => {
   return (
     <>
-      <ProjectIntro>프로젝트 기본 정보</ProjectIntro>
+      {!isEdit ? (
+        <ProjectIntro>프로젝트 기본 정보</ProjectIntro>
+      ) : (
+        <ProjectIntro>모집글 수정하기</ProjectIntro>
+      )}
+
       <Line />
 
       <Category
         handleCategoriesChange={handleCategoriesChange}
         isEdit={isEdit}
-        data={data}
+        Editdata={Editdata.category}
       />
       <Postion
         handleFieldsChange={handleFieldsChange}
         isEdit={isEdit}
-        data={data}
+        Editdata={Editdata.members}
       />
-      <TagBox handleTagsChange={handleTagsChange} isEdit={isEdit} data={data} />
+      <TagBox
+        handleTagsChange={handleTagsChange}
+        isEdit={isEdit}
+        Editdata={Editdata}
+      />
     </>
   );
 };

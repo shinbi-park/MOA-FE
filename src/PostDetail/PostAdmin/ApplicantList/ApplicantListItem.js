@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import InfoDetail from "../../UserInfo/InfoDetail";
 import { useState } from "react";
@@ -31,26 +31,46 @@ const ApplicantBtn = styled.button`
   font-weight: 600;
 `;
 
-const ApplicantListItem = ({ userName }) => {
+const ApplicantListItem = ({ item, fetchApproved, fetchRefuse }) => {
   const [openInfo, setOpenInfo] = useState(false);
   const handlecloseInfo = () => {
     setOpenInfo(false);
+  };
+  const { postId } = useParams();
+
+  const apporvedHandler = (applyId) => {
+    fetchApproved(applyId);
+  };
+
+  const refuseHandler = (applyId) => {
+    fetchRefuse(applyId);
   };
 
   return (
     <>
       <ApplicantItemDiv>
-        <div>{userName}</div>
+        <div>{item.nickname}</div>
         <ApplicantBtnDiv>
           <ApplicantBtn onClick={() => setOpenInfo(!openInfo)}>
             정보보기
           </ApplicantBtn>
 
-          <ApplicantBtn>수락</ApplicantBtn>
-          <ApplicantBtn>거부</ApplicantBtn>
+          <ApplicantBtn onClick={() => apporvedHandler(item.applyId)}>
+            수락
+          </ApplicantBtn>
+          <ApplicantBtn onClick={() => refuseHandler(item.applyId)}>
+            거부
+          </ApplicantBtn>
         </ApplicantBtnDiv>
       </ApplicantItemDiv>
-      {openInfo && <InfoDetail handlecloseInfo={handlecloseInfo} />}
+      {openInfo && (
+        <InfoDetail
+          handlecloseInfo={handlecloseInfo}
+          item={item}
+          apporvedHandler={apporvedHandler}
+          refuseHandler={refuseHandler}
+        />
+      )}
     </>
   );
 };
