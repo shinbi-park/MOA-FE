@@ -149,7 +149,9 @@ const NoticeItem = ({
                 <NoticeListDate>
                   {date}
                   {(!isVote || newnotice.finishVote) && (
-                    <RecommendLoc>추천 지역: {station}</RecommendLoc>
+                    <RecommendLoc>
+                      추천 지역: {newnotice.recommendLocation}
+                    </RecommendLoc>
                   )}
                 </NoticeListDate>
               </div>
@@ -223,7 +225,9 @@ const NoticeItem = ({
                 <NoticeListDate>
                   {date}
                   {(!isVote || newnotice.finishVote) && (
-                    <RecommendLoc>추천 지역: </RecommendLoc>
+                    <RecommendLoc>
+                      추천 지역: {newnotice.recommendLocation}
+                    </RecommendLoc>
                   )}
                 </NoticeListDate>
               </div>
