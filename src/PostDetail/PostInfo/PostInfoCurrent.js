@@ -2,16 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CurrentPosition from "./CurrentPosition";
 import { useRecoilState, useRecoilValue } from "recoil";
-<<<<<<< HEAD
 import {
   FinActivity,
   etcActivity,
   myPostData,
   userActivity,
 } from "../../Recoil/atoms";
-=======
-import { myPostData, userActivity } from "../../Recoil/atoms";
->>>>>>> ef599e5fdfdaf863e0de1af6979c394d31f38689
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -95,31 +91,26 @@ const PostInfoCurrent = () => {
       position: id,
     };
     if (!applyToggle) {
-      await axios
-        .post(
-          `http://13.125.111.131:8080/recruitment/${postId}/apply`,
-          null,
+      await axios.post(
+        `http://13.125.111.131:8080/recruitment/${postId}/apply`,
+        null,
 
-          {
-            responseType: "json",
-            headers: {
-              Authorization: window.localStorage.getItem("Authorization"),
+        {
+          responseType: "json",
+          headers: {
+            Authorization: window.localStorage.getItem("Authorization"),
 
-              AuthorizationRefresh: window.localStorage.getItem(
-                "AuthorizationRefresh"
-              ),
-            },
+            AuthorizationRefresh: window.localStorage.getItem(
+              "AuthorizationRefresh"
+            ),
+          },
 
-            params,
-          }
-        )
-        .then((response) => {
-          console.log(response.data);
-        });
+          params,
+        }
+      );
     }
     fetchList();
   };
-  console.log(etcArr);
 
   return (
     <div>

@@ -5,16 +5,12 @@ import Schedule from "../Schedule/Schedule";
 import PostInfo from "../PostInfo/PostInfo";
 import PostAdmin from "../PostAdmin/PostAdmin";
 import { useRecoilValue } from "recoil";
-<<<<<<< HEAD
 import {
   FinActivity,
   myPostData,
   userActivity,
   userInfo,
 } from "../../Recoil/atoms";
-=======
-import { myPostData, userActivity, userInfo } from "../../Recoil/atoms";
->>>>>>> ef599e5fdfdaf863e0de1af6979c394d31f38689
 import { useParams } from "react-router-dom";
 import { BiLock } from "react-icons/bi";
 
@@ -69,7 +65,6 @@ const PostTab = () => {
     (item) => parseInt(item.recruitmentId) === parseInt(postId)
   );
 
-  console.log(userInfoArr);
   const [user, setUser] = useState(data.postUser);
   const tabArr = [
     {
