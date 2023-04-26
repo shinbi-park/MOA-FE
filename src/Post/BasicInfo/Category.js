@@ -33,8 +33,7 @@ export const Select = styled.select`
 `;
 
 export default function Category({ handleCategoriesChange, isEdit, Editdata }) {
-  const [selected, setSelected] = useState("PROGRAMMING");
-  console.log(selected);
+  const [selected, setSelected] = useState("");
   const categoryOptions = [
     { value: "PROGRAMMING", label: "프로그래밍" },
     { value: "EXAMINATION", label: "고시" },
@@ -62,6 +61,9 @@ export default function Category({ handleCategoriesChange, isEdit, Editdata }) {
       };
       setSelected(editDataMap[Editdata]);
     }
+    else {
+      setSelected("PROGRAMMING");
+    }
   }, []);
 
   const handleCategory = (event) => {
@@ -73,19 +75,22 @@ export default function Category({ handleCategoriesChange, isEdit, Editdata }) {
 
   return (
     <CategoryBlock>
-      <Label htmlFor="category"> 카테고리 </Label>
-      <Select
-        name="select-category"
-        id="category"
-        defaultValue={isEdit ? selected : "PROGRAMMING"}
-        onChange={handleCategory}
-      >
-        {categoryOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </Select>
+    <Label htmlFor="category"> 카테고리 </Label>
+    {
+      selected === "" ? "" : 
+        <Select
+          name="select-category"
+          id="category"
+          defaultValue={ isEdit ? selected : "PROGRAMMING"}
+          onChange={handleCategory}
+        >
+          {categoryOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+    }
     </CategoryBlock>
   );
 }

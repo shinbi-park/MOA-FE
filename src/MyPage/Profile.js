@@ -71,10 +71,7 @@ const Profile = () => {
     link: []
   });
   const [introduce, setIntroduce] = useState(data.details);
-  const [location, setLocation] = useState({
-    lat: data.locationLatitude,
-    lng: data.locationLongitude
-  });
+  const [location, setLocation] = useState(null);
   const [tags, setTags] = useState([]);
   const [UpdateTags, setUpdatedTags] = useState([]);
   const [links, setLinks] = useState([]);
@@ -98,6 +95,10 @@ const Profile = () => {
         setTags(response.data.interests);
         setLinks(response.data.link);
         setIntroduce(response.data.details);
+        setLocation({
+          lat: data.locationLatitude || null,
+          lng: data.locationLongitude || null
+        })
       });
   };
 
@@ -120,14 +121,6 @@ const Profile = () => {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-
-      console.log({
-        locationLatitude: location.lat,
-        locationLongitude: location.lng,
-        links: UpdateLinkss,
-        tags: UpdateTags,
-        details: introduce
-      })
       fetch("http://13.125.111.131:8080/user/info/profile", {
         method: "PATCH",
         body: JSON.stringify({
@@ -155,18 +148,17 @@ const Profile = () => {
         console.log(error);
       });
     },
-    [location.lat, location.lng, UpdateLinkss, UpdateTags, introduce, userProfileData]
+    [location, UpdateLinkss, UpdateTags, introduce, userProfileData]
   );
 
   const modules = {
     toolbar: false
   };
-
   return (
     <Wrapper>
         <h3>선호 지역</h3>
         <MapWrapper>
-          {data.locationLatitude && (
+          {location && (
             <KakaoMap
               handleUserLocation={handleUserLocation}
               data={{

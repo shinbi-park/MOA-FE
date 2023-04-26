@@ -18,6 +18,7 @@ const Post = ({ isEdit }) => {
   const [tags, setTags] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [state, setState] = useState(null);
   const [editData, setEdit] = useState(null);
   const { postId } = useParams();
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ const Post = ({ isEdit }) => {
         setTags(response.data.recruitInfo.tags)
         setTitle(response.data.recruitInfo.title)
         setContent(response.data.recruitInfo.content);
+        setState(response.data.recruitInfo.state);
       });
     }
     else{
@@ -111,7 +113,6 @@ const Post = ({ isEdit }) => {
         })
       });
       if(categoryName === undefined) setCategoryName("PROGRAMMING");
-      console.log(categoryName);
       axios
         .post(
           "http://13.125.111.131:8080/recruitment",
@@ -147,7 +148,7 @@ const Post = ({ isEdit }) => {
              {
               title: title,
               content: content,
-              state: 1,
+              state: state,
               memberFields: members,
               categoryName: categoryName,
               tags: tags,

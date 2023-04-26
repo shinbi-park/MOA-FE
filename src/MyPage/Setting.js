@@ -133,7 +133,7 @@ function Setting() {
           password: ""
   });
   const [file, setFile] = useState("");
-  const [profileImg, setProfileImg] = useState("");
+  const [profileImg, setProfileImg] = useState(null);
   const [nicknameInput, setNicknameInput] = useState(user.nickname);
   const [usernameInput, setUsernameInput] = useState(user.name);
   const [isEditing, setIsEditing] = useState(false);
@@ -222,7 +222,9 @@ function Setting() {
       alert("현재 비밀번호를 입력해주세요!");
       return;
     } 
-   
+    if(newPwd.length < 8) {
+      alert("새 비밀번호는 8자리 이상 입력해주세요!");
+    }
     if (newPwd !== newPwdConfirm) { //새 비밀번호와 비밀번호 확인이 다르면 리턴
       alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다!");
       return;

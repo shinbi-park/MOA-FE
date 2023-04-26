@@ -214,7 +214,7 @@ const PostComponent = ({
     else {
       setIsMain(true);
     }
-    if ((isMyLiked || isMain ) && localStorage.getItem("Authorization")) {
+    if ((type === "MyLike" || type === "main" ) && localStorage.getItem("Authorization")) {
       axios
         .get(`http://13.125.111.131:8080/user/info/concern`, {
           headers: {
