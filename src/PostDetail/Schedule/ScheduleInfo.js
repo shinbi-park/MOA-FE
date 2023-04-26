@@ -6,7 +6,7 @@ import {
   ScheduleLeftUser,
   ScheduleSelect,
   ScheduleUser,
-} from "../../common/atoms";
+} from "../../Recoil/atoms";
 
 const ScheduleInfoDiv = styled.div`
   margin-left: 200px;

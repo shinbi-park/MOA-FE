@@ -4,7 +4,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ProfileLink from "./MyPageComponent/ProfileLink";
 import ProfileTag from "./MyPageComponent/ProfileTag";
-import KakaoMap from "../component/KakaoMap";
+import KakaoMap from "../Common/KakaoMap";
 import axios from "axios";
 
 const Wrapper = styled.div`

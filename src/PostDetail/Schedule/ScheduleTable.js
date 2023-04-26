@@ -8,8 +8,8 @@ import {
   ScheduleSelect,
   ScheduleUser,
   scheduleTime,
-} from "../../common/atoms";
-import { scheduleDummy } from "../../common/DummyData";
+} from "../../Recoil/atoms";
+import { scheduleDummy } from "../../Recoil/DummyData";
 import { useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";

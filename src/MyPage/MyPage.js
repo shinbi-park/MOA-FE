@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import styled from "styled-components";
-import profileImg from "../component/profileImg.png";
-import UserPopularity from "../component/UserPopularity";
+import profileImg from "../Common/profileImg.png";
+import UserPopularity from "../Common/UserPopularity";
 
 const Profile = lazy(() => import("./Profile"));
 const Likedlist = lazy(() => import("./Likedlist"));

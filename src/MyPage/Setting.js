@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import profile from "../component/profileImg.png";
+import profile from "../Common/profileImg.png";
 import { AiOutlineEdit } from "react-icons/ai";
 import axios from "axios";
 

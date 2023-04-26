@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import { myPostData, titleState } from "../common/atoms";
+import { myPostData, titleState } from "../Recoil/atoms";
 import { useState } from "react";
 
 const PostTitlewrap = styled.div`

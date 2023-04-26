@@ -4,7 +4,7 @@ import NoticeItem from "./NoticeItem";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { myPostData, userInfo } from "../../common/atoms";
+import { myPostData, userInfo } from "../../Recoil/atoms";
 
 const NoticeWrap = styled.div`
   width: 1025px;

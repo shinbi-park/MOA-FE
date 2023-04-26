@@ -4,7 +4,7 @@ import MemberListItem from "./MemberListItem";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { userActivity } from "../../../common/atoms";
+import { userActivity } from "../../../Recoil/atoms";
 
 const MemberListDiv = styled.div`
   margin-bottom: 70px;
