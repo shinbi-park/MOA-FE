@@ -60,6 +60,9 @@ const Position = ({ handleFieldsChange, isEdit, Editdata }) => {
   const lastPosition = positions[positions?.length - 1];
   const lastId = lastPosition ? lastPosition.recruitMemberId : 0;
 
+  useEffect(()=>{
+    handleFieldsChange(positions)
+  }, [handleFieldsChange,positions])
   useEffect(() => {
     if (isEdit) {
       const member = Editdata.filter(
@@ -70,6 +73,10 @@ const Position = ({ handleFieldsChange, isEdit, Editdata }) => {
   }, [isEdit, Editdata]);
 
   const onInsert = useCallback(() => {
+    if(positions.length > 8) {
+      alert("모집 포지션은 8개까지 추가할 수 있습니다");
+      return;
+    }
     const position = {
       recruitMemberId: nextId.current,
       totalCount: 1,

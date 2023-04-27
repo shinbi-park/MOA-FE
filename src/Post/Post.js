@@ -22,6 +22,7 @@ const Post = ({ isEdit }) => {
   const [editData, setEdit] = useState(null);
   const { postId } = useParams();
   const navigate = useNavigate();
+  console.log(memberFields);
   useEffect(()=>{
     if(isEdit){
       axios
@@ -35,7 +36,6 @@ const Post = ({ isEdit }) => {
         }
       )
       .then((response) => {
-        console.log(response.data.recruitInfo);
         setEdit(response.data.recruitInfo);
         setCategoryName(response.data.recruitInfo?.category);
         setMemberFields(response.data.recruitInfo.members);
@@ -68,12 +68,13 @@ const Post = ({ isEdit }) => {
   }, [editData]);
   
   const handleCategoriesChange = (category) => {
-    console.log("c", category);
     setCategoryName(category);
   };
 
   const handleFieldsChange = useCallback((updatedFields) => {
-    setMemberFields(updatedFields.map(({ id, ...rest }) => rest));
+   // setMemberFields(updatedFields.map(({ id, ...rest }) => rest));
+    console.log(updatedFields);
+    setMemberFields(updatedFields);
   }, []);
 
   const handleTagsChange = (tagslist) => {
@@ -92,7 +93,7 @@ const Post = ({ isEdit }) => {
   const handleContentChange = (event) => {
     setContent(event);
   };
-
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     if (content.trim() === "") {
@@ -137,11 +138,15 @@ const Post = ({ isEdit }) => {
     } else {
       let members = [];
       memberFields.map((member) => {
+        console.log(member.recruitMemberId)
         members.push({
+          "recruitMemberId": member.recruitMemberId < 8 ?  null : member.recruitMemberId,
           "field": member.recruitField,
           "total": member.totalCount
         })
       });
+      console.log(members);
+      
          axios
            .patch(
              `http://13.125.111.131:8080/recruitment/${postId}`,
