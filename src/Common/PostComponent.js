@@ -195,6 +195,7 @@ const PostComponent = ({
   replyCount,
   onClickCategory,
   onClickTag,
+  getPostList,
 }) => {
   const [isMypost, setIsMypost] = useState(false);
   const [isMyLiked, setIsMyLiked] = useState(false);
@@ -290,9 +291,13 @@ const PostComponent = ({
           },
         })
         .then((response) => {
-          response.status === 200
-            ? alert("글이 삭제되었습니다!")
-            : alert("글 삭제에 실패하였습니다");
+          if (response.status === 200 ){
+            alert("글이 삭제되었습니다!");
+            getPostList();
+          }
+          else{
+            alert("글 삭제에 실패하였습니다");
+          }
         });
     }
   };
