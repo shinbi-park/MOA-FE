@@ -30,7 +30,7 @@ function UserPopularity( {rate}) {
     };
     useEffect(() => {
         setRatesResArr(calcStarRates);
-    }, [])
+    }, [rate])
     return (
         <StarWrapper>
             {STAR_IDX_ARR.map((item, idx) => {
