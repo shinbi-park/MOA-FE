@@ -72,7 +72,6 @@ const AddNotice = () => {
       })
       .then((response) => {
         setNewNotice(response.data.notices);
-        console.log(response.data.notices);
       });
   };
 

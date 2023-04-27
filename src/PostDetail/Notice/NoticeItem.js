@@ -6,6 +6,8 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userStation } from "../../Recoil/atoms";
+import KakaoMap from "../../Common/KakaoMap";
+import ModalLocation from "./ModalLocation";
 
 const NoticeListWrap = styled.div`
   width: 1045px;
@@ -35,7 +37,7 @@ const NoticeListDate = styled.span`
 `;
 
 const RecommendLoc = styled.span`
-  margin-left: 5px;
+  margin-left: 25px;
 `;
 
 const NoticeDropdownDiv = styled.div`
@@ -92,6 +94,13 @@ const VoteFinishNotice = styled.p`
   left: 5px;
 `;
 
+const LocationBtn = styled.button`
+  border-radius: 5px;
+  background-color: #f2fefd;
+  border: none;
+  font-weight: bold;
+  padding: 3px 12px;
+`;
 const NoticeItem = ({
   newnotice,
   onNoticeDelete,
@@ -108,7 +117,8 @@ const NoticeItem = ({
   const [isVote, setIsVote] = useState(true);
   const [curContent, setCurContent] = useState(newnotice.content);
   const { postId } = useParams();
-  const station = useRecoilValue(userStation);
+  const Location = useRecoilValue(userStation);
+  const [isModal, setIsModal] = useState(false);
 
   const AttendanceHandler = (noticeId) => {
     fetchAttend(noticeId);
@@ -154,7 +164,9 @@ const NoticeItem = ({
                   {/* 투표마감버튼을 눌렀거나 혹은 공지글의 투표 마감값이(fisihsVote) true인 공지글일때 */}
                   {(!isVote || newnotice.finishVote) && (
                     <RecommendLoc>
-                      추천 지역: {newnotice.recommendLocation}
+                      <LocationBtn onClick={() => setIsModal(!isModal)}>
+                        추천 지역
+                      </LocationBtn>
                     </RecommendLoc>
                   )}
                 </NoticeListDate>
@@ -235,7 +247,9 @@ const NoticeItem = ({
                   {date}
                   {(!isVote || newnotice.finishVote) && (
                     <RecommendLoc>
-                      추천 지역: {newnotice.recommendLocation}
+                      <LocationBtn onClick={() => setIsModal(!isModal)}>
+                        추천 지역
+                      </LocationBtn>
                     </RecommendLoc>
                   )}
                 </NoticeListDate>
@@ -277,6 +291,8 @@ const NoticeItem = ({
           </NoticeListWrap>
         </>
       )}
+
+      <ModalLocation isModal={isModal} newnotice={newnotice} />
     </>
   );
 };
