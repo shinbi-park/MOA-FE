@@ -359,7 +359,7 @@ const PostComponent = ({
       <Line />
       <Bottom>
         <Profile>
-          <UserImg src={profile} alt="프로필 사진" />
+          <UserImg src={ profileImg || profile} alt="프로필 사진" />
           <p>{author}</p>
         </Profile>
         <CommentBox onClick={linkToDetail}>
