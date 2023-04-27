@@ -116,7 +116,7 @@ const ProjectList = React.memo(({ projects, color, className }) => (
   </ProjectListBlock>
 ));
 
-const CancelApply = (recruitmentId) => {
+const CancelApply = (recruitmentId, getActivity) => {
   const result = window.confirm(
     "지원을 취소하겠습니까?"
   );
@@ -131,15 +131,20 @@ const CancelApply = (recruitmentId) => {
     }).then((response) =>
       {
         console.log(response);
-        response.status === 200
-        ? alert("지원이 취소되었습니다!")
-        : alert("지원 취소에 실패하였습니다")}
+
+        if (response.status === 200){
+          alert("지원이 취소되었습니다!");
+          getActivity();
+        }
+        else{
+          alert("지원 취소에 실패하였습니다")}
+        }
     );
   }
 };
 
 const ApplyItem = React.memo(
-  ({ recruitmentId, title, position, status }) => (
+  ({ recruitmentId, title, position, status,getActivity }) => (
     <Project className="Apply">
       <Title><span className="title">{title}</span> </Title>
       <Position><span className="position">{position}</span></Position>
@@ -156,7 +161,7 @@ const ApplyItem = React.memo(
       <ButtonContainer>
         <Button
           style={{ visibility: status === "대기중" ? "visible" : "hidden" }}
-          onClick={() => CancelApply(recruitmentId)}
+          onClick={() => CancelApply(recruitmentId, getActivity)}
         >
           지원취소
         </Button>
@@ -172,7 +177,7 @@ const ApplyItem = React.memo(
   )
 );
 
-const ApplyList = React.memo(({ projects }) => (
+const ApplyList = React.memo(({ projects, getActivity }) => (
   <ProjectListBlock>
     {projects.map((project) => (
       <ApplyItem
@@ -182,6 +187,7 @@ const ApplyList = React.memo(({ projects }) => (
         position={project.field}
         status={project.status}
         detailsUri={project.detailsUri}
+        getActivity={getActivity}
       />
     ))}
   </ProjectListBlock>
@@ -190,7 +196,7 @@ const ApplyList = React.memo(({ projects }) => (
 const MyActivity = () => {
   const [userActivity, setUserActivity] = useState({});
 
-  useEffect(() => {
+  const getActivity = () => {
     fetch("http://13.125.111.131:8080/user/info/activity", {
       method: "GET",
       headers: {
@@ -210,6 +216,9 @@ const MyActivity = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
+  }
+  useEffect(() => {
+    getActivity();
   }, []);
 
   const currentProject = userActivity?.approvedProjects?.CONCURRENT;
@@ -231,7 +240,7 @@ const MyActivity = () => {
 
         <h3>지원한 프로젝트</h3>
         {applyProject?.length > 0 ? (
-          <ApplyList projects={applyProject} />
+          <ApplyList projects={applyProject} getActivity={getActivity}/>
         ) : (
           <EmptyProject> 지원한 프로젝트가 없습니다 </EmptyProject>
         )}

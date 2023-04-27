@@ -56,9 +56,10 @@ const SidebarTab = styled.div`
   }
 `;
 const Avatar = styled.img`
-  width: 50%;
-  height: auto;
+  width: 100px;
+  height: 100px;
   border-radius: 100%;
+  margin-bottom: 10px;
 `;
 
 const Menu = styled.div`
@@ -103,6 +104,7 @@ const PopularityContainer = styled.div`
 
 const MyPage = () => {
   const [popularity, setPopularity] = useState(0);
+  const [getProfileImg, setProfileImg] = useState(profileImg);
 
   useEffect(() => {
     fetch(`http://13.125.111.131:8080/user/info/profile`, {
@@ -121,6 +123,9 @@ const MyPage = () => {
       .then((data) => {
         //console.log(data);
         setPopularity(data.popularity.rate);
+        if(data.image !== null) {
+          setProfileImg("data:image/jpeg;base64," + data?.image);
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -197,7 +202,7 @@ const MyPage = () => {
     <Wrapper>
       <SidebarContainer>
         <SidebarTab>
-          <Avatar src={profileImg} alt="프로필 사진"></Avatar>
+          <Avatar src={getProfileImg || profileImg} alt="프로필 사진"></Avatar>
           <PopularityContainer>
             <UserPopularity rate={popularity} />
           </PopularityContainer>

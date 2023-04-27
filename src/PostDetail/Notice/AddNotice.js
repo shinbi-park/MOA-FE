@@ -116,8 +116,7 @@ const AddNotice = () => {
             "AuthorizationRefresh"
           ),
         },
-      },
-      { responseType: "json" }
+      }
     );
     setNewNotice(newNotice.filter((item) => item.noticeId !== id));
   };

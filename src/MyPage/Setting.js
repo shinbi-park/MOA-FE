@@ -24,7 +24,7 @@ const Profile = styled.div`
   align-items: center;
   margin-left: 10px;
   position: relative;
-  h3{
+  h3 {
     text-decoration: underline;
   }
 `;
@@ -86,7 +86,6 @@ const PwdInput = styled.input`
 const Input = styled.input`
   ${inputStyle}
   margin-bottom: 16px;
-  
 `;
 
 const EmailInput = styled.input`
@@ -128,12 +127,12 @@ const EditIcons = styled(AiOutlineEdit)`
 function Setting() {
   const [user, setUser] = useState({
     email: "",
-          name: "",
-          nickname: "",
-          password: ""
+    name: "",
+    nickname: "",
+    password: "",
   });
   const [file, setFile] = useState("");
-  const [profileImg, setProfileImg] = useState(null);
+  const [profileImg, setProfileImg] = useState(profile);
   const [nicknameInput, setNicknameInput] = useState(user.nickname);
   const [usernameInput, setUsernameInput] = useState(user.name);
   const [isEditing, setIsEditing] = useState(false);
@@ -147,8 +146,8 @@ function Setting() {
       method: "GET",
       headers: {
         Authorization: localStorage.getItem("Authorization"),
-        AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh")
-      }
+        AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+      },
     })
       .then((response) => {
         if (response.status !== 200) {
@@ -157,6 +156,7 @@ function Setting() {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         setUser({
           email: data.email,
           name: data.name,
@@ -164,11 +164,14 @@ function Setting() {
         });
         setNicknameInput(data.nickname);
         setUsernameInput(data.name);
+        if (data.image !== null) {
+          setProfileImg("data:image/jpeg;base64," + data.image);
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-  },[]);
+  }, []);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -200,8 +203,7 @@ function Setting() {
   };
 
   const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
+    setFile(() => event.target.files[0]);
 
     const reader = new FileReader();
 
@@ -210,148 +212,147 @@ function Setting() {
       setProfileImg(profileImgDataUrl);
     };
 
-    reader.readAsDataURL(selectedFile);
+    reader.readAsDataURL(event.target.files[0]);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("image", profileImg);
 
-    if (newPwd.trim() !== "" && currentPwd.trim() === "") {//현재 비밀번호를 입력하지 않고 새 비밀번호 입력시
+    if (newPwd.trim() !== "" && currentPwd.trim() === "") {
+      //현재 비밀번호를 입력하지 않고 새 비밀번호 입력시
       alert("현재 비밀번호를 입력해주세요!");
       return;
-    } 
-    if(newPwd.length < 8) {
+    }
+    if (newPwd !== "" && newPwd.length < 8) {
       alert("새 비밀번호는 8자리 이상 입력해주세요!");
     }
-    if (newPwd !== newPwdConfirm) { //새 비밀번호와 비밀번호 확인이 다르면 리턴
+    if (newPwd !== newPwdConfirm) {
+      //새 비밀번호와 비밀번호 확인이 다르면 리턴
       alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다!");
       return;
     }
-   const userData =  ({
-      "name": usernameInput,
-      "nickname": nicknameInput,
-      "currentPassword": currentPwd,
-      "newPassword" : newPwd
-    })
+    const userData = {
+      name: usernameInput,
+      nickname: nicknameInput,
+      currentPassword: currentPwd,
+      newPassword: newPwd,
+    };
+    formData.append(
+      "request",
+      new Blob([JSON.stringify(userData)], { type: "application/json" })
+    );
 
-    formData.append("data", new Blob([JSON.stringify(userData)], {type: "application/json"}))
-    
-   // axios.post("/create/list", formData)
-   axios.patch("http://13.125.111.131:8080/user/info/basic", formData, {
-    headers: {
-      "Authorization": localStorage.getItem("Authorization"),
-      "AuthorizationRefresh": localStorage.getItem("AuthorizationRefresh")
-    }
-  })
-  .then((response) => {
-    // 요청 성공 시 실행할 코드 작성
-    console.log(response.data);
-    if (response.status === 200) {
-      alert("프로필을 성공적으로 변경하였습니다");
-      setIsEditing(false);
-      setUsernameInput(usernameInput);
-      setUserData({ ...userData });
-      window.location.reload();
-    } 
-    else if(response.status === 400){
-      alert("현재 비밀번호를 다시 확인해주세요!")
-    }
-    else {
-      alert("프로필 변경에 실패하였습니다");
-    }
-  })
-    .catch((error) => {
-      // 요청 실패 시 실행할 코드 작성
-      console.log(error);
-    });
+    axios
+      .patch("http://13.125.111.131:8080/user/info/basic", formData, {
+        headers: {
+          Authorization: localStorage.getItem("Authorization"),
+          AuthorizationRefresh: localStorage.getItem("AuthorizationRefresh"),
+        },
+      })
+      .then((response) => {
+        // 요청 성공 시 실행할 코드 작성
+        console.log(response.data);
+        if (response.status === 200) {
+          alert("프로필을 성공적으로 변경하였습니다");
+          setIsEditing(false);
+          setUsernameInput(usernameInput);
+          setUserData({ ...userData });
+          window.location.reload();
+        } else if (response.status === 400) {
+          alert("현재 비밀번호를 다시 확인해주세요!");
+        } else {
+          alert("프로필 변경에 실패하였습니다");
+        }
+      })
+      .catch((error) => {
+        // 요청 실패 시 실행할 코드 작성
+        console.log(error);
+      });
   };
-
   return (
-        <Wrapper>
-          <ProfileImgContainer>
-            <Avatar src={profileImg || profile} alt="프로필 사진" />
-            <EditIcon htmlFor="profile-image-upload">
-              <AiOutlineEdit />
-              <input
-                type="file"
-                id="profile-image-upload"
-                onChange={handleFileChange}
-                accept="image/*" 
-                style={{ display: "none" }} 
-              />
-            </EditIcon>
-          </ProfileImgContainer>
-          <Profile>
-            {isEditing ? (
-              <Input
-                type="text"
-                value={usernameInput}
-                onChange={handleUsernameChange}
-              />
-            ) : (
-              <>
-              <h3 onClick={handleEditClick}>
-                {usernameInput}
-              </h3>
-              <EditIcons onClick={handleEditClick}/>
-              </>
-            )}
-          </Profile>
+    <Wrapper>
+      <ProfileImgContainer>
+        <Avatar src={profileImg} alt="프로필 사진" />
+        <EditIcon htmlFor="profile-image-upload">
+          <AiOutlineEdit />
+          <input
+            type="file"
+            id="profile-image-upload"
+            onChange={handleFileChange}
+            accept="image/*"
+            style={{ display: "none" }}
+          />
+        </EditIcon>
+      </ProfileImgContainer>
+      <Profile>
+        {isEditing ? (
+          <Input
+            type="text"
+            value={usernameInput}
+            onChange={handleUsernameChange}
+          />
+        ) : (
+          <>
+            <h3 onClick={handleEditClick}>{usernameInput}</h3>
+            <EditIcons onClick={handleEditClick} />
+          </>
+        )}
+      </Profile>
 
-          <InputContainer>
-            <h4>E-mail</h4>
-            <EmailInput
-              type="email"
-              name="email"
-              placeholder="이메일"
-              value={user.email}
-              disabled
-            />
-          </InputContainer>
+      <InputContainer>
+        <h4>E-mail</h4>
+        <EmailInput
+          type="email"
+          name="email"
+          placeholder="이메일"
+          value={user.email}
+          disabled
+        />
+      </InputContainer>
 
-          <Form onSubmit={handleSubmit}>
-            <InputContainer>
-              <h4>닉네임 변경</h4>
-              <Input
-                type="text"
-                name="name"
-                placeholder="닉네임 변경하기"
-                value={nicknameInput}
-                onChange={handleNicknameChange}
-              />
-            </InputContainer>
+      <Form onSubmit={handleSubmit}>
+        <InputContainer>
+          <h4>닉네임 변경</h4>
+          <Input
+            type="text"
+            name="name"
+            placeholder="닉네임 변경하기"
+            value={nicknameInput}
+            onChange={handleNicknameChange}
+          />
+        </InputContainer>
 
-            <InputContainer>
-              <h4>비밀번호 변경</h4>
-              <Input
-                type="password"
-                name="Currentpassword"
-                placeholder="현재 비밀번호"
-                value={currentPwd}
-                onChange={handlePwdChange}
-              />
-              <PwdInput
-                type="password"
-                name="Newpassword"
-                placeholder="새 비밀번호"
-                value={newPwd}
-                onChange={handleNewPwdChange}
-              />
-              <PwdInput
-                type="password"
-                name="NewpasswordConfirm"
-                placeholder="새 비밀번호 확인"
-                value={newPwdConfirm}
-                onChange={handleNewPwdConfirmChange}
-              />
-            </InputContainer>
-            <SaveButton type="submit" backgroundColor={"black"}>
-              저장하기
-            </SaveButton>
-          </Form>
-        </Wrapper>
+        <InputContainer>
+          <h4>비밀번호 변경</h4>
+          <Input
+            type="password"
+            name="Currentpassword"
+            placeholder="현재 비밀번호"
+            value={currentPwd}
+            onChange={handlePwdChange}
+          />
+          <PwdInput
+            type="password"
+            name="Newpassword"
+            placeholder="새 비밀번호"
+            value={newPwd}
+            onChange={handleNewPwdChange}
+          />
+          <PwdInput
+            type="password"
+            name="NewpasswordConfirm"
+            placeholder="새 비밀번호 확인"
+            value={newPwdConfirm}
+            onChange={handleNewPwdConfirmChange}
+          />
+        </InputContainer>
+        <SaveButton type="submit" backgroundColor={"black"}>
+          저장하기
+        </SaveButton>
+      </Form>
+    </Wrapper>
   );
 }
 

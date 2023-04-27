@@ -35,7 +35,7 @@ const ComponentWrapper = styled.div`
 const MyPostList = () => {
   const [myPost, setMyPost] = useState([]);
 
-  useEffect(() => {
+  const getPostList = () => {
     axios
       .get("http://13.125.111.131:8080/user/info/writing", {
         headers: {
@@ -52,6 +52,9 @@ const MyPostList = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
+  }
+  useEffect(() => {
+    getPostList();
   }, []);
 
   return (
@@ -73,6 +76,7 @@ const MyPostList = () => {
               recruitStatus={post.recruitStatus}
               date={post.createdDate}
               replyCount={post.replyCount}
+              getPostList={getPostList}
             />
           ))}
         </ComponentWrapper>
