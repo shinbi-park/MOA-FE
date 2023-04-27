@@ -133,7 +133,7 @@ function Setting() {
           password: ""
   });
   const [file, setFile] = useState("");
-  const [profileImg, setProfileImg] = useState(null);
+  const [profileImg, setProfileImg] = useState(profile);
   const [nicknameInput, setNicknameInput] = useState(user.nickname);
   const [usernameInput, setUsernameInput] = useState(user.name);
   const [isEditing, setIsEditing] = useState(false);
@@ -157,6 +157,7 @@ function Setting() {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         setUser({
           email: data.email,
           name: data.name,
@@ -164,6 +165,9 @@ function Setting() {
         });
         setNicknameInput(data.nickname);
         setUsernameInput(data.name);
+        if(data.image !== null ){
+          setProfileImg("data:image/jpeg;base64," + data.image);
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -200,8 +204,7 @@ function Setting() {
   };
 
   const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
+    setFile(()=>event.target.files[0]);
 
     const reader = new FileReader();
 
@@ -210,19 +213,19 @@ function Setting() {
       setProfileImg(profileImgDataUrl);
     };
 
-    reader.readAsDataURL(selectedFile);
+    reader.readAsDataURL(event.target.files[0]);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("image", profileImg);
 
     if (newPwd.trim() !== "" && currentPwd.trim() === "") {//현재 비밀번호를 입력하지 않고 새 비밀번호 입력시
       alert("현재 비밀번호를 입력해주세요!");
       return;
     } 
-    if(newPwd.length < 8) {
+    if(newPwd !== "" && newPwd.length < 8) {
       alert("새 비밀번호는 8자리 이상 입력해주세요!");
     }
     if (newPwd !== newPwdConfirm) { //새 비밀번호와 비밀번호 확인이 다르면 리턴
@@ -235,14 +238,12 @@ function Setting() {
       "currentPassword": currentPwd,
       "newPassword" : newPwd
     })
-
-    formData.append("data", new Blob([JSON.stringify(userData)], {type: "application/json"}))
+    formData.append("request", new Blob([JSON.stringify(userData)], {type: "application/json"}))
     
-   // axios.post("/create/list", formData)
    axios.patch("http://13.125.111.131:8080/user/info/basic", formData, {
     headers: {
       "Authorization": localStorage.getItem("Authorization"),
-      "AuthorizationRefresh": localStorage.getItem("AuthorizationRefresh")
+      "AuthorizationRefresh": localStorage.getItem("AuthorizationRefresh"),
     }
   })
   .then((response) => {
@@ -267,11 +268,10 @@ function Setting() {
       console.log(error);
     });
   };
-
   return (
         <Wrapper>
           <ProfileImgContainer>
-            <Avatar src={profileImg || profile} alt="프로필 사진" />
+            <Avatar src={profileImg} alt="프로필 사진" />
             <EditIcon htmlFor="profile-image-upload">
               <AiOutlineEdit />
               <input
