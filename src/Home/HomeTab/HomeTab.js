@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   margin-bottom: 100px;
+  margin-top: 50px;
 `;
 
 const TabContainer = styled.div`
@@ -72,7 +73,7 @@ const SearchBox = styled.input`
   border-radius: 20px;
   border: 1.5px solid #b2b2b2;
   font-size: 20px;
-  width: 600px;
+  min-width: 700px;
   height: 30px;
   padding: 10px 0 10px 30px;
   justify-items: center;
