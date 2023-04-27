@@ -45,6 +45,10 @@ const AppliCantWrap = styled.div`
 `;
 const ApplycantPosition = styled.h4`
   padding-left: 40px;
+  p{
+    font-size: 20px;
+    font-weight: 650;
+  }
 `;
 
 const ApplycantItemDiv = styled.div`
@@ -186,7 +190,7 @@ const ApplicantList = () => {
               <ApplycantPosition>
                 {applyMember.map((item, index) => (
                   <React.Fragment key={index}>
-                    <ApplycantPosition> {item.recruitField}</ApplycantPosition>
+                    <p> {item.recruitField}</p>
 
                     <ApplycantItemDiv>
                       <ApplicantListItem
