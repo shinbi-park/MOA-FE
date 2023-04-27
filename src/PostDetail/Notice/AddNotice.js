@@ -72,6 +72,7 @@ const AddNotice = () => {
       })
       .then((response) => {
         setNewNotice(response.data.notices);
+        console.log(response.data.notices);
       });
   };
 
@@ -116,8 +117,7 @@ const AddNotice = () => {
             "AuthorizationRefresh"
           ),
         },
-      },
-      { responseType: "json" }
+      }
     );
     setNewNotice(newNotice.filter((item) => item.noticeId !== id));
   };
