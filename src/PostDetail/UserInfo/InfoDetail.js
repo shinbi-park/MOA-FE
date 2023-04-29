@@ -83,7 +83,7 @@ const StarContaienr = styled.div`
 
 const IntroContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   border: solid #bbb9b9;
   border-radius: 4px;
   width: 500px;
